@@ -27,6 +27,8 @@ class SysMLv2APIClient:
         """
         self.base_url = base_url 
 
+    # TODO 
+    # Check the generated URL for gfetting the model data inside the database 
     def get_model(self, model_id: str) -> dict:
         """
         Fetches a SysMLv2 model with the given ID.
@@ -46,17 +48,16 @@ class SysMLv2APIClient:
 
     def save_response(self, data: dict, file_path: str):
         """
-        Saves the API response into a JSON file.
+        Saves the API response into a JSON file using the json_utils 
 
         Args:
             data (dict): The JSON data to be saved.
             file_path (str): The file path where the data should be saved.
         """
-        try:
-            with open(file_path, "w") as file:
-                json.dump(data, file, indent=4)
-        except IOError as e:
-            raise IOError(f"Error saving the file: {e}") from e
+        if save_json(file_path=file_path, data=data):
+            print(f"SysML response (JSON) '{file_path}' saved successfully. ({__name__}.save_response)")
+        else:
+            print(f"Error saving SysML response (JSON) to {file_path} in {__name__}")
 
 
 class SysMLv2App:
@@ -64,7 +65,7 @@ class SysMLv2App:
     Main application for the GUI, managing user interaction.
     Uses Tkinter for the user interface.
     """
-    def __init__(self, root):
+    def __init__(self, root, api_client):
         """
         Initializes the Tkinter GUI.
 
@@ -75,13 +76,17 @@ class SysMLv2App:
         self.root.title("SysMLv2 API Client")
 
         # Initialize the API client
-        self.api_client = SysMLv2APIClient(base_url="http://localhost:8080")
+        self.api_client = api_client 
 
         # Create GUI elements
         self.create_widgets()
 
     def create_widgets(self):
         """Creates the GUI elements."""
+        # Use own ttk style to avoid visual issues (e.g. macOS darkmode)
+        style = ttk.Style()
+        style.theme_use('default')
+
         # Input for Model ID
         ttk.Label(self.root, text="Model ID:").grid(row=0, column=0, padx=5, pady=5)
         self.model_id_entry = ttk.Entry(self.root, width=30)
@@ -153,12 +158,14 @@ def main():
     # Load Default Config File from config folder
     DEFAULT_CONFIG = load_config(DEFAULT_CONFIG_FILE)
 
+    api_client = SysMLv2APIClient(base_url=DEFAULT_CONFIG["base_url"])
+
     
 
     # Start the Tkinter app
     root = tk.Tk()
-    app = SysMLv2App(root)
-    root.mainloop()
+    app = SysMLv2App(root, api_client=api_client)
+    root.mainloop() 
 
 if __name__ == "__main__":
     main() 
