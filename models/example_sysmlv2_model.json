@@ -1,0 +1,8 @@
+{
+    "@type" : "example_type", 
+    "defaultBranch" : {
+        "@id" : "example_branch_id"
+    },
+    "name" :  "My Model", 
+    "description" :  "This is a example description"
+}

@@ -59,6 +59,36 @@ class SysMLv2APIClient:
         else:
             print(f"Error saving SysML response (JSON) to {file_path} in {__name__}")
 
+    def create_model_project(self): 
+        """
+        Creates an initial sysmlv2 model as a project a POST request to given URL (here base local server url).
+        It is not needed to provide a header since the request library automatically chooses the best (currenty working)
+        """
+        
+        file_path = "./models/example_sysmlv2_model.json"
+        url = "http://localhost:9000/projects"
+
+        try: 
+        
+            with open(file_path, 'r') as file:
+                model_content = file.read()
+                print(model_content +"\n"+" with data type: ", type(model_content))
+                response = requests.post(url=url, headers={'Content-Type': 'application/json'}, json={"model": model_content})
+
+                #response = requests.post(self.base_url, files=model)
+
+                if response.status_code == 200: 
+                    print("Successfully uploaded model!")
+                    return response.json() 
+                else: 
+                    print("Failed to upload model")
+                    return None
+
+        except Exception as e: 
+            raise e
+
+    
+
 
 class SysMLv2App:
     """
@@ -159,13 +189,13 @@ def main():
     DEFAULT_CONFIG = load_config(DEFAULT_CONFIG_FILE)
 
     api_client = SysMLv2APIClient(base_url=DEFAULT_CONFIG["base_url"])
-
+    api_client.create_model_project()
     
 
     # Start the Tkinter app
-    root = tk.Tk()
-    app = SysMLv2App(root, api_client=api_client)
-    root.mainloop() 
+    #root = tk.Tk()
+    #app = SysMLv2App(root, api_client=api_client)
+    #root.mainloop() 
 
 if __name__ == "__main__":
     main() 
