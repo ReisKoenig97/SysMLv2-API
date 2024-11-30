@@ -1,4 +1,5 @@
 {
+    "@id" : "7a0edf80-e754-4a6f-8808-ccc757d5d06f",
     "@type" : "example_type", 
     "defaultBranch" : {
         "@id" : "example_branch_id"

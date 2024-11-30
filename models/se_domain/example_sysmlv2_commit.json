@@ -1,0 +1,19 @@
+{
+    "@type" : "Commit",
+    "change" : [
+        {
+            "@type" : "DataVersion",
+            "payload" : {
+                "@type" : "PartDefinition",
+                "name" : "Part A"
+            }
+        },
+        {
+            "@type" : "DataVersion",
+            "payload" : {
+                "@type" : "PartDefinition",
+                "name" : "Part B"
+            }
+        }
+    ]
+}

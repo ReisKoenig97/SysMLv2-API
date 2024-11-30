@@ -15,12 +15,17 @@ from utils.json_utils import save_json, load_json
 
 # Initial centralized Logging Setup to control all logs. Takes all logs from each .py file etc
 def setup_logging(): 
+    log_file = "app.log"
+    # Remove log file if it exist to clear old content. Comment this line in case you dont want to clear old log
+    if os.path.exists(log_file):
+        os.remove(log_file)
+
     logging.basicConfig(
         level=logging.DEBUG, # Log-Level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
-        format="%(asctime)s - (name)s - %(levelname)s - %(message)s - %(pathname)s - Line: %(lineno)d", # Log format 
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", # Log format.Additional info: - Line: %(lineno)d 
         handlers=[
-            logging.FileHandler("app.log"), # Write Logs in file 'app.log'
-            logging.StreamHandler() # Write Logs to Console
+            logging.FileHandler(log_file), # Write Logs in file 'app.log', mode="w"
+            logging.StreamHandler() # Write Logs to Console, # Comment this line to reduce clutter
         ]
     )
 
@@ -59,37 +64,42 @@ class SysMLv2GUI:
 
         # Input for Model ID
         ttk.Label(self.root, text="Model ID:").grid(row=0, column=0, padx=5, pady=5)
-        self.model_id_entry = ttk.Entry(self.root, width=30)
-        self.model_id_entry.grid(row=0, column=1, padx=5, pady=5)
+        self.project_id_entry = ttk.Entry(self.root, width=30)
+        self.project_id_entry.grid(row=0, column=1, padx=5, pady=5)
 
-        # Button to fetch the model
+        # Button to fetch the model (get project)
         fetch_button = ttk.Button(self.root, text="Fetch Model", command=self.fetch_model)
         fetch_button.grid(row=1, column=0, columnspan=2, pady=10)
 
+        # TODO: 
+        # Button to make create a model 
+        # Button to make a new Commit 
+        
+
     def fetch_model(self):
         """Fetches a model and saves the response."""
-        model_id = self.model_id_entry.get()
+        project_id = self.project_id_entry.get()
 
-        if not model_id:
+        if not project_id:
             self.logger.warning("Fetch model attempted without entering a Model ID")
             messagebox.showwarning("Warning", "Please enter a Model ID.")
             return
 
         try:
-            self.logger.info(f"Attempting to fetch model with ID: {model_id}")
+            self.logger.info(f"Attempting to fetch model with ID: {project_id}")
             # Fetch the model
-            data = self.api_client.get_model(model_id)
-            messagebox.showinfo("Success", f"Model {model_id} successfully fetched!")
+            data = self.api_client.get_model(project_id)
+            messagebox.showinfo("Success", f"Model {project_id} successfully fetched!")
 
             # Save the response
-            save_path = os.path.join(os.getcwd(), f"{model_id}_model.json")
+            save_path = os.path.join(os.getcwd(), f"{project_id}_model.json")
             self.api_client.save_response(data, save_path)
             messagebox.showinfo("Saved", f"Model has been saved at:\n{save_path}")
         except ConnectionError as e:
-            self.logger.error(f"Connection error while fetching model {model_id}: {e}")
+            self.logger.error(f"Connection error while fetching model {project_id}: {e}")
             messagebox.showerror("Connection Error", str(e))
         except IOError as e:
-            self.logger.error(f"File save error for model {model_id}: {e}")
+            self.logger.error(f"File save error for model {project_id}: {e}")
             messagebox.showerror("Save Error", str(e))
 
 

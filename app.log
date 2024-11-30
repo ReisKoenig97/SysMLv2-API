@@ -1,0 +1,10 @@
+2024-11-29 14:10:37,969 - sysmlv2_api_client - INFO - Initializing API Client with URL: http://localhost:9000/docs/
+2024-11-29 14:10:37,973 - sysmlv2_api_client - DEBUG - Model content read from ./models/se_domain/example_sysmlv2_model.json: {
+    "@type" : "example_type", 
+    "defaultBranch" : {
+        "@id" : "example_branch_id"
+    },
+...
+2024-11-29 14:10:37,974 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:9000
+2024-11-29 14:10:38,027 - urllib3.connectionpool - DEBUG - http://localhost:9000 "POST /projects HTTP/1.1" 200 204
+2024-11-29 14:10:38,027 - sysmlv2_api_client - INFO - Successfully uploaded model from ./models/se_domain/example_sysmlv2_model.json!
