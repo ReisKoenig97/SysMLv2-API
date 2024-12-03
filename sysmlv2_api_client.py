@@ -2,7 +2,7 @@ import logging
 from utils.api_utils import send_request
 from utils.json_utils import load_json, save_json
 import requests
-import pprint 
+#import pprint 
 
 
 
@@ -51,7 +51,7 @@ class SysMLv2APIClient:
         # 3) Additional Logs and Prints 
         if get_project_response: 
             self.logger.info(f"Successfully fetched project with id {project_id}. ({__name__}.get_project)")
-            pprint("Fetched Project: ", get_project_response)
+            ##print("Fetched Project: ", get_project_response)
         else: 
             self.logger.error(f"Failed to fetch project with ID {project_id}. ({__name__}.get_project)")
 
@@ -70,7 +70,7 @@ class SysMLv2APIClient:
             self.logger.error(f"Error saving SysML response (JSON) to {file_path}. ({__name__}.save_response)")
 
 
-    def create_model(self, project_id : str): 
+    def create_model(self): 
         """
         Creates an initial sysmlv2 model as a project with a POST request to the given URL (here base local server URL).
         It is not needed to provide a header since the request library automatically chooses the best (currently working).
@@ -87,8 +87,8 @@ class SysMLv2APIClient:
                                                    data=create_model_data)
         # 5) Additional Logs and Prints 
         if create_model_post_response: 
-            self.logger.info(f"Successfully uploaded new model from {file_path} with model id {project_id}. ({__name__}.create_model)")
-            pprint("New Model created: ", create_model_post_response)
+            self.logger.info(f"Successfully uploaded new model from {file_path}. ({__name__}.create_model)")
+            #print("New Model created: ", create_model_post_response)
         else: 
             self.logger.error(f"Failed to upload new model. ({__name__}.create_model)")
         
@@ -111,8 +111,32 @@ class SysMLv2APIClient:
         # 5) Additional Logs and Prints 
         if commit_post_response: 
             self.logger.info(f"Successfully uploaded new commit from {file_path} with model id {project_id}. ({__name__}.create_commit)")
-            pprint("New Commit created: ", commit_post_response)
+            #print("New Commit created: ", commit_post_response)
         else: 
             self.logger.error(f"Failed to upload new commit. ({__name__}.create_commit)")
 
+    def get_model_by_id(self):
+        """Fetches a model and saves the response."""
+        project_id = self.project_id_entry.get()
 
+        if not project_id:
+            self.logger.warning("Fetch model attempted without entering a Model ID")
+            #messagebox.showwarning("Warning", "Please enter a Model ID.")
+            return
+
+        try:
+            self.logger.info(f"Attempting to fetch model with ID: {project_id}")
+            # Fetch the model
+            data = self.api_client.get_model(project_id)
+            #messagebox.showinfo("Success", f"Model {project_id} successfully fetched!")
+
+            # Save the response
+            save_path = os.path.join(os.getcwd(), f"{project_id}_model.json")
+            self.api_client.save_response(data, save_path)
+            #messagebox.showinfo("Saved", f"Model has been saved at:\n{save_path}")
+        except ConnectionError as e:
+            self.logger.error(f"Connection error while fetching model {project_id}: {e}")
+            #messagebox.showerror("Connection Error", str(e))
+        except IOError as e:
+            self.logger.error(f"File save error for model {project_id}: {e}")
+            # messagebox.showerror("Save Error", str(e))

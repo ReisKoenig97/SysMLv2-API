@@ -76,31 +76,7 @@ class SysMLv2GUI:
         # Button to make a new Commit 
         
 
-    def fetch_model(self):
-        """Fetches a model and saves the response."""
-        project_id = self.project_id_entry.get()
-
-        if not project_id:
-            self.logger.warning("Fetch model attempted without entering a Model ID")
-            messagebox.showwarning("Warning", "Please enter a Model ID.")
-            return
-
-        try:
-            self.logger.info(f"Attempting to fetch model with ID: {project_id}")
-            # Fetch the model
-            data = self.api_client.get_model(project_id)
-            messagebox.showinfo("Success", f"Model {project_id} successfully fetched!")
-
-            # Save the response
-            save_path = os.path.join(os.getcwd(), f"{project_id}_model.json")
-            self.api_client.save_response(data, save_path)
-            messagebox.showinfo("Saved", f"Model has been saved at:\n{save_path}")
-        except ConnectionError as e:
-            self.logger.error(f"Connection error while fetching model {project_id}: {e}")
-            messagebox.showerror("Connection Error", str(e))
-        except IOError as e:
-            self.logger.error(f"File save error for model {project_id}: {e}")
-            messagebox.showerror("Save Error", str(e))
+    
 
 
 
@@ -116,13 +92,13 @@ def main():
     DEFAULT_CONFIG = load_config(DEFAULT_CONFIG_FILE)
 
     api_client = SysMLv2APIClient(base_url=DEFAULT_CONFIG["base_url"])
-    api_client.create_model_project()
+    #api_client.create_model()
     
-
+    
     # Start the Tkinter app
-    #root = tk.Tk()
-    #app = SysMLv2GUI(root, api_client=api_client)
-    #root.mainloop() 
+    root = tk.Tk()
+    app = SysMLv2GUI(root, api_client=api_client)
+    root.mainloop() 
 
 if __name__ == "__main__":
     main() 

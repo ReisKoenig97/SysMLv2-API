@@ -1,10 +1,10 @@
-2024-11-29 14:10:37,969 - sysmlv2_api_client - INFO - Initializing API Client with URL: http://localhost:9000/docs/
-2024-11-29 14:10:37,973 - sysmlv2_api_client - DEBUG - Model content read from ./models/se_domain/example_sysmlv2_model.json: {
-    "@type" : "example_type", 
-    "defaultBranch" : {
-        "@id" : "example_branch_id"
-    },
-...
-2024-11-29 14:10:37,974 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:9000
-2024-11-29 14:10:38,027 - urllib3.connectionpool - DEBUG - http://localhost:9000 "POST /projects HTTP/1.1" 200 204
-2024-11-29 14:10:38,027 - sysmlv2_api_client - INFO - Successfully uploaded model from ./models/se_domain/example_sysmlv2_model.json!
+2024-12-02 20:17:28,105 - json_utils, load_json - DEBUG - Successfully read file: <_io.TextIOWrapper name='config/default_config.json' mode='r' encoding='cp1252'>. (utils.json_utils_load_json)
+2024-12-02 20:17:28,105 - sysmlv2_api_client - INFO - Initializing API Client with URL: http://localhost:9000
+2024-12-02 20:17:28,106 - sysmlv2_api_client - DEBUG - Creating new model and send a POST request
+2024-12-02 20:17:28,106 - json_utils, load_json - DEBUG - Successfully read file: <_io.TextIOWrapper name='./models/se_domain/example_sysmlv2_model.json' mode='r' encoding='cp1252'>. (utils.json_utils_load_json)
+2024-12-02 20:17:28,107 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:9000
+2024-12-02 20:17:28,125 - urllib3.connectionpool - DEBUG - http://localhost:9000 "POST /projects HTTP/11" 200 231
+2024-12-02 20:17:28,125 - api_utils - DEBUG - Request to http://localhost:9000/projects with method=POST, data={'@type': 'Project', 'description': 'TEST Description', 'name': 'example project'}, params=None
+2024-12-02 20:17:28,125 - api_utils - INFO - Request to http://localhost:9000/projects succeeded.
+2024-12-02 20:17:28,126 - sysmlv2_api_client - INFO - Successfully uploaded new model from ./models/se_domain/example_sysmlv2_model.json. (sysmlv2_api_client.create_model)
+2024-12-02 20:17:28,165 - __main__ - DEBUG - Creating Widgets for SysMLv2GUI
