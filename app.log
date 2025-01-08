@@ -1,10 +1,4 @@
-2024-12-02 20:17:28,105 - json_utils, load_json - DEBUG - Successfully read file: <_io.TextIOWrapper name='config/default_config.json' mode='r' encoding='cp1252'>. (utils.json_utils_load_json)
-2024-12-02 20:17:28,105 - sysmlv2_api_client - INFO - Initializing API Client with URL: http://localhost:9000
-2024-12-02 20:17:28,106 - sysmlv2_api_client - DEBUG - Creating new model and send a POST request
-2024-12-02 20:17:28,106 - json_utils, load_json - DEBUG - Successfully read file: <_io.TextIOWrapper name='./models/se_domain/example_sysmlv2_model.json' mode='r' encoding='cp1252'>. (utils.json_utils_load_json)
-2024-12-02 20:17:28,107 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:9000
-2024-12-02 20:17:28,125 - urllib3.connectionpool - DEBUG - http://localhost:9000 "POST /projects HTTP/11" 200 231
-2024-12-02 20:17:28,125 - api_utils - DEBUG - Request to http://localhost:9000/projects with method=POST, data={'@type': 'Project', 'description': 'TEST Description', 'name': 'example project'}, params=None
-2024-12-02 20:17:28,125 - api_utils - INFO - Request to http://localhost:9000/projects succeeded.
-2024-12-02 20:17:28,126 - sysmlv2_api_client - INFO - Successfully uploaded new model from ./models/se_domain/example_sysmlv2_model.json. (sysmlv2_api_client.create_model)
-2024-12-02 20:17:28,165 - __main__ - DEBUG - Creating Widgets for SysMLv2GUI
+ json_utils, load_json - DEBUG - Successfully read file: <_io.TextIOWrapper name='config/default_config.json' mode='r' encoding='cp1252'>. (utils.json_utils_load_json)
+ __main__ - DEBUG - Creating Widgets for SysMLv2GUI
+ __main__ - DEBUG - Setting up layout for SysMLv2GUI
+ __main__ - DEBUG - Opening popup to map data

@@ -1,4 +1,8 @@
 
 {
-  "base_url": "http://localhost:9000"
+  "base_url": "http://localhost:9000",
+  "base_se_path": "models/se_domain/",
+  "base_se_model": "example_drone.sysml"
+
+
 }

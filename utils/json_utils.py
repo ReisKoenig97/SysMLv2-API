@@ -26,7 +26,7 @@ def load_json(file_path):
 
 def save_json(file_path, data):
     """
-    Saves data to a JSON file.
+    Saves data to a JSON file to given path 
 
     Args:
         file_path (str): The path where the JSON file should be saved.

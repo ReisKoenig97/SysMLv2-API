@@ -4,15 +4,34 @@ package DroneExample {
     import RequirementsDefinitions::*; 
     import PartDefinitions::*; 
     import PartDefinitions::Drone::*; // for concerns 
+    import Views::*; // for views and viewpoints
     public import ModelingMetadata::*; // includes the Metadata SysML Library (comes with SysMLv2)
-
+    import ScalarValues::*; // includes the ScalarValues SysML Library (comes with SysMLv2) 
 
     item def Person;
     item def Commands;
 
+    // PACKAGE APPROACH using metadata to tag certain elements 
+    metadata def 'PCBDesign'{
+        attribute isCritical : Boolean; 
+
+    }
+    //used to "tag" the elements 
+    @PCBDesign about 
+        DroneExample::PartDefinitions::Drone::FlightController::pcb::max_length, // metadata about is divided by , and ends with ; 
+        DroneExample::PartDefinitions::Drone::FlightController::pcb::max_width; 
+        // TODO: add more elements to tag
+        //DroneExample::PartDefinitions::Drone; 
+        //attribute max_current = 120[A];
+        //attribute min_voltage_input = 11.1 [V]; 
+        //attribute max_voltage_input = 14.8 [V]; 
+
+        //@StatusInfo{
+            //originator = "E/E Domain"; 
+        //} 
+
 
     package PartDefinitions{
-        // TODO; max_values als constraint oder requirement
         part def Drone {
             attribute id = "drone-001";
             attribute name = "Drone";
@@ -35,6 +54,12 @@ package DroneExample {
             part def 'Systems Engineer';
             part def 'E/E Engineer';
             part def 'Software Engineer';
+            part def 'Mechanical Engineer';
+
+            metadata def 'PCB'{
+                    attribute isMandatory : Boolean; 
+                    attribute isCustom : Boolean; 
+            }  
 
             ref item pilot : Person; //system model may reference discrete items that interact with or pass through the system
             ref item cmds : Commands; 
@@ -56,18 +81,24 @@ package DroneExample {
                 attribute name = "fc-123";
                 attribute mass : MassValue; 
                 attribute description = "";
+                @PCBDesign; 
+                
+                
+                
                 
                 part def pcb {
-                    attribute id = "pcb-001-123";
+                    @PCBDesign; 
+                    attribute id = "pcb-001-123"; 
                     attribute name = "PCB-123";
                     attribute description = "";
                     attribute mass : MassValue; 
                     attribute max_length = 70[mm]; 
                     attribute max_width = 70[mm];  
+                
+                }
 
-                    metadata StatusInfo{
-                        
-                    }
+                part def pcb_2 {
+                    @PCBDesign; 
                 }
             }
 
@@ -155,6 +186,7 @@ package DroneExample {
             }
 
             part def Transmitter{
+                
                 attribute id = "transmitter-001";
                 attribute name = "FPV Transmitter";
                 attribute description = "";
@@ -289,9 +321,6 @@ package DroneExample {
         doc /* Used RequirementsDefinition are specified here with concrete values. 
         A requirement is the usage of a requirement definition */
 
-       
-        
-
         requirement DroneSpecification{
             subject drone : Drone; // has to be included from the import PartDefinitions::*; 
 
@@ -324,6 +353,42 @@ package DroneExample {
             }
         }
     }
+    // VIEW APPROACH 
+    concern pcb_functionality{
+        // represents specific topics or issues that included stakeholders care about 
+        doc /*Ensure that the PCB provides full functionality under specific environmental conditions*/  
+        stakeholder ee : 'E/E Engineer';
+        stakeholder me : 'Mechanical Engineer';
+    }
+    
+    viewpoint def 'Eletrical Perspective' { //defines a viewpoint
+        // viewpoint def frames the concerns that will be addessed by a view that satisfies the viewpoint
+        // can also be framed in a viewpoint
+        frame pcb_functionality; 
+        require constraint {
+            doc /*
+            Electrical perspective shall show all relevant Parts and Usages related to the PCB design 
+            */
+        }
+    }
+
+    viewpoint 'E/E Viewpoint' : 'Eletrical Perspective' { //usage of viewpoint def 'Eletrical Perspective'
+        
+        subject pcb : PartDefinitions::Drone::FlightController::pcb; //subject is the element that the viewpoint is focused on
+    }
+    
+    view def pcbHousingView{ // specifies the criteria for including elements in the view such as filters 
+        // filter elements to be included or as a type 
+        filter @SysML::PartDefinition;  // filters only PartDefinitions
+    }
+
+    view eeEngineerView : pcbHousingView{
+        expose PartDefinitions::Drone::FlightController::pcb; //exposes only ee related elements (PCB) 
+        //expose PartUsages::**; // in this case it includes every part usages as well 
+        render asTreeDiagram; 
+    }
+
+
 
     // Concern is a specific topic that one or more stakeholders desire to be addressed
     concern 'system breakdown' {
@@ -368,3 +433,7 @@ package DroneExample {
     }
 }
 
+package 'PCB Concerns'{
+    public import DroneExample::**; //import DroneExample package and all nested elements 
+    filter @PCBDesign;
+}

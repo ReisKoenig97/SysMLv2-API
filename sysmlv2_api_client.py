@@ -1,4 +1,6 @@
+import json
 import logging
+import os
 from utils.api_utils import send_request
 from utils.json_utils import load_json, save_json
 import requests
@@ -29,8 +31,110 @@ class SysMLv2APIClient:
         self.base_url = base_url 
         self.se_file_path = "./models/se_domain"
 
-    # TODO 
-    # Check the generated URL for gfetting the model data inside the database 
+        # Project IDs, Element IDs, Commit IDs, Branch IDs, etc. can be stored here
+        self.project_id = ""
+        self.element_id = ""
+        self.commit_id = ""
+        self.branch_id = ""
+
+    def get_commits(self,project_id):
+        element_get_url = f"{self.base_url}/projects/{project_id}/commits/" 
+
+        element_get_response = requests.get(element_get_url)
+
+        if element_get_response.status_code == 200:
+            elements = element_get_response.json()
+            print(elements)
+            #elements_data = list(map(lambda b: {'Element Name':b['name'], 'Element ID':b['@id']}, elements))
+            #print(elements_data)
+            #df = pd.DataFrame.from_records(elements_data).sort_values(by='Element Name').style.hide(axis='index')
+            #display(df)
+        else:
+            print(f"Problem in fetching elements in the DroneExample project {project_id}.")
+            print(element_get_response)
+            if element_get_response.status_code == 404:
+                print(f"Project with ID {project_id} not found.")   
+    
+    
+    # Get Methods are from API Cookbook 
+    def get_element(self,project_id, commit_id, element_id, indent):
+        # Fetch the element in the given commit of the given project
+        element_url = f"{self.base_url}/projects/{project_id}/commits/{commit_id}/elements/{element_id}" 
+        response = requests.get(element_url)
+        
+        if response.status_code == 200:
+            element_data = response.json()
+            element_name_to_print = element_data['name'] if element_data['name'] else 'N/A'
+            element_type = element_data ['@type']
+            print(f"{indent} - {element_name_to_print} ({element_type})")
+            return element_data
+        else:
+            return None
+    
+    def get_owned_elements_immediate(self, project_id, commit_id, element_id, indent):
+            # Returns direct / immediate owned elements for a given element in a given commit of a given project
+
+            # Fetch the element in the given commit of the given project
+            element_data = self.get_element(project_id, commit_id, element_id, indent)
+            
+            if element_data:
+                owned_elements = element_data['ownedElement']
+                if len(owned_elements) > 0:
+                    for owned_element in owned_elements:
+                        self.get_element(project_id, commit_id, owned_element['@id'], indent + '  ')
+            else:
+                print(f"Unable to fetch element with id '{element_id}' in commit '{commit_id}' of project '{project_id}'")
+
+    def get_owned_elements(self, project_id, commit_id, element_id, indent):
+        # Returns directly / immediate owned elements for a given element in a given commit of a given project
+        
+        # Fetch the element in the given commit of the given project
+        element_data = self.get_element(project_id, commit_id, element_id, indent)
+        
+        if element_data:
+            owned_elements = element_data['ownedElement']
+            if len(owned_elements) > 0:
+                for owned_element in owned_elements:
+                    self.get_owned_elements(project_id, commit_id, owned_element['@id'], indent+' ')
+        else:
+            print(f"Unable to fetch element with id '{element_id}' in commit '{commit_id}' of project '{project_id}'")
+
+    def post_model(self, file_path : str): 
+        """ Try sending a POST request to local sysmlv2 server by utilizing API"""
+
+        self.logger.debug(f"Posting Model from {file_path} to Server")
+
+    
+
+        post_url = f"{self.base_url}/projects"
+        project_name = f"DroneExample project with Element CRUD"
+        project_data = {
+        "@type":"Project",
+        "name": project_name,
+        "description": "Drone Description"
+        }
+
+        #data = load_json(file_path)
+        #print(data)
+
+        project_post_url = post_url
+
+        project_post_response = requests.post(project_post_url, 
+                                      headers={"Content-Type": "application/json"}, 
+                                      data=json.dumps(project_data))
+
+
+        if project_post_response.status_code == 200:
+            project_response_json = project_post_response.json()
+            print(project_response_json)
+            self.project_id = project_response_json['@id']
+            self.logger.info(f"Created Model with Project ID: {self.project_id}")
+            project_name = project_response_json['name']
+        else:
+            self.logger.debug(f"Problem in creating a new DroneExample project")
+            print(project_post_response)
+
+    
     def get_project(self, project_id: str) -> dict:
         """
         Fetches a SysMLv2 model with the given ID.
