@@ -23,7 +23,6 @@ def load_json(file_path):
         logger.error(f"Error decoding JSON from {file_path} in {__name__}: {e}")
         return None
 
-
 def save_json(file_path, data):
     """
     Saves data to a JSON file to given path 

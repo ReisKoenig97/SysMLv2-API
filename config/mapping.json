@@ -1,0 +1,31 @@
+{
+    "SysMLv2": [
+        {
+            "uuid": "d14c57c7-dc2d-43a7-a307-9d72eebdebc6",
+            "name": "len",
+            "value": "String",
+            "elementPath": "metadata_test.partA.len",
+            "filePath": "models/se_domain/metadata_test.sysml",
+            "created": "20.01.2025",
+            "lastModified": "20.01.2025"
+        }
+    ],
+    "Mappings": [
+        {
+            "sourceUUID": "21d398e4-b5fd-4dc3-bcf0-05646fbd726f",
+            "targetUUID": "d14c57c7-dc2d-43a7-a307-9d72eebdebc6",
+            "created": "20.01.2025"
+        }
+    ],
+    "Gerber": [
+        {
+            "uuid": "21d398e4-b5fd-4dc3-bcf0-05646fbd726f",
+            "name": "X",
+            "value": "7.43",
+            "elementPath": "GeneralSpecs.Size.X",
+            "filePath": "models/ee_domain/Hades_project-job.gbrjob",
+            "created": "20.01.2025",
+            "lastModified": "20.01.2025"
+        }
+    ]
+}

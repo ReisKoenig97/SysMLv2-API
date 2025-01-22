@@ -1,4 +1,45 @@
  json_utils, load_json - DEBUG - Successfully read file: <_io.TextIOWrapper name='config/default_config.json' mode='r' encoding='cp1252'>. (utils.json_utils_load_json)
- __main__ - DEBUG - Creating Widgets for SysMLv2GUI
- __main__ - DEBUG - Setting up layout for SysMLv2GUI
+ metadata_manager - INFO - Initialized MetadataManager
+ metadata_manager - DEBUG - Creating mapping.json from template
+ metadata_manager - INFO - Mapping file already exists at ./config/mapping.json
+ __main__ - DEBUG - Creating Widgets for GUI
+ __main__ - DEBUG - Setting up layout for GUI
  __main__ - DEBUG - Opening popup to map data
+ __main__ - DEBUG - Mapping selected elements
+ file_parser - DEBUG - Initializing SysmlParser
+ file_parser - DEBUG - Validating element path: metadata_test.partC.id
+ file_parser - WARNING - SysML model is None! Attempting to load model.
+ file_parser - DEBUG - Successfully loaded sysml model
+ file_parser - DEBUG - Derived path: ['metadata_test', 'partC', 'id']
+ __main__ - INFO - User provided an invalid sysml element pathing: metadata_test.partC.id
+ __main__ - DEBUG - Loading Model with type: domain
+ __main__ - DEBUG - Selected user path: models/ee_domain/Hades_project-job.gbrjob
+ __main__ - INFO - Using user-provided path: 'models/ee_domain/Hades_project-job.gbrjob'
+ __main__ - DEBUG - Found type domain
+ __main__ - DEBUG - Loading file content from file path: models/ee_domain/Hades_project-job.gbrjob
+ __main__ - DEBUG - Loading Model with type: sysml
+ __main__ - DEBUG - Selected user path: models/se_domain/metadata_test.sysml
+ __main__ - INFO - Using user-provided path: 'models/se_domain/metadata_test.sysml'
+ __main__ - DEBUG - Found type: sysml
+ __main__ - DEBUG - Loading file content from file path: models/se_domain/metadata_test.sysml
+ __main__ - DEBUG - Mapping selected elements
+ file_parser - DEBUG - Initializing SysmlParser
+ file_parser - DEBUG - Validating element path: metadata_test.partC.len
+ file_parser - WARNING - SysML model is None! Attempting to load model.
+ file_parser - DEBUG - Successfully loaded sysml model
+ file_parser - DEBUG - Derived path: ['metadata_test', 'partC', 'len']
+ __main__ - INFO - User provided an invalid sysml element pathing: metadata_test.partC.len
+ __main__ - DEBUG - Mapping selected elements
+ file_parser - DEBUG - Initializing SysmlParser
+ file_parser - DEBUG - Validating element path: metadata_test.partC.len
+ file_parser - WARNING - SysML model is None! Attempting to load model.
+ file_parser - DEBUG - Successfully loaded sysml model
+ file_parser - DEBUG - Derived path: ['metadata_test', 'partC', 'len']
+ __main__ - INFO - User provided an invalid sysml element pathing: metadata_test.partC.len
+ __main__ - DEBUG - Mapping selected elements
+ file_parser - DEBUG - Initializing SysmlParser
+ file_parser - DEBUG - Validating element path: metadata_test.partC.id
+ file_parser - WARNING - SysML model is None! Attempting to load model.
+ file_parser - DEBUG - Successfully loaded sysml model
+ file_parser - DEBUG - Derived path: ['metadata_test', 'partC', 'id']
+ __main__ - INFO - User provided an invalid sysml element pathing: metadata_test.partC.id

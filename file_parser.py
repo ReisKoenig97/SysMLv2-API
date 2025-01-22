@@ -7,36 +7,192 @@ from utils.json_utils import load_json
 # Each class should have methods to read, load, save, and extract metadata
 # Use 'json_utils' to standardize json file handling such as reading, writing and saving JSON files 
 
-class Sysml_parser: 
-    # Parses specific sysml files by getting "metadata" / "@" (abreviation)
-    """
-    TODO: 
-    1) Query SysMLv2 File for 'metadata' or '@' with regex; Metadata acts basically like a tag
-        1.1) If found metadata -> Display User the metadata
-            1.1.1) Wait until user selects metadata so that the tagged data can be prepared/extracted 
-                    for the domain engineer -> only gets "his view of the system with the relevant data"
-            1.1.2) Script generated a view (better package by using in-built element filters) based on tagged data 
-
-        1.2) If not found metadata -> Display User that no metadata was found
-            1.2.1) User can manually tag data by getting a view of the sysml file with selectable/clickable
-                    elements that can be tagged with metadata
-            1.2.2) Script generates 
-                a) 'metadata def <user variable>
-                b) '<user variable> about ...' 
-                c) view based on tagged data (analogue to 1.1.2)
-
-    2) Prepare / Extract tagged metadata: 
-        here we need to identify if the tagged data is a part, item etc to compare 
-        Is the metadata used with the libraries or fully custom? 
-        Use Element Filters (graphical representation) 
-        Use a recursive import to include all nested elements that are tagged by metadata 'about'
-    """
-
-    def __init__(self):
-        pass 
+class SysmlParser: 
+    """ Parses specific sysml files by getting "metadata" / "@" (abreviation)
+    searching for a specific Structure
+    
+    DEMONSTRATION 
+        To identify if the sysml file has a metadata that the script can parse: 
+        1) Metadata def with or without content
+            metadata def <name> { ... }
+            metadata def <name>; 
         
+        2) About paths to tag certain elements of the model
+            metadata<name> about 
+            @<name> about
+        NOTE: 
+            - Inside each line of about paths there can't be any comments after ';'
+    """
 
-class Gerber_parser:    
+    def __init__(self, sysml_path):
+        self.logger = logging.getLogger(__name__)
+        self.logger.debug("Initializing SysmlParser")
+
+        self.sysml_path = sysml_path
+        self.sysml_model = None #sysml_model will be extracted from sysml_path
+
+        # if self.sysml_path: 
+        #     self.sysml_model = self.load_sysml_model()
+        # else:
+        #     self.logger.error(f"Given SysML Path is not correct: {self.sysml_path}") 
+
+    def load_sysml_model(self): 
+        """Parses and loads model from self.sysml_path.
+        Returns:
+            str: The content of the file as a string.
+        """
+        try:
+            with open(self.sysml_path, 'r') as file:
+                content = file.read()
+                self.logger.debug(f"Successfully loaded sysml model")
+            return content
+        except Exception as e:
+            self.logger.error(f"Failed to load file {self.sysml_path}: {e}")
+
+    def check_metadata_exist(self): 
+        # TODO: REDO this helper function 
+        """Parses the SysML model and extracts metadata definitions and references.
+        
+        NOTE: 
+            current metadata to check:    
+                'metadata def test123{ }'
+                AND 
+                ' metadata test123 about '
+        Returns:
+            List of of the found metadata definitions names or empty list if not found that structure
+        """
+        self.logger.debug(f"Checking for certain metadata structure inside sysml model")
+        self.sysml_model = self.load_sysml_model() 
+        # 1 Check if sysml model can be loaded from initialized class sysml model path 
+        if not self.sysml_model:
+            self.logger.warning("No SysML model loaded.")
+            return  
+        # DEBUG 
+        first_few_lines = "\n".join(self.sysml_model.splitlines()[:15]) # Only shows :x lines inside the app.log 
+        self.logger.debug(f"Given SysML model: {first_few_lines}")
+
+        # Regex for 'metadata def <name>' and 'metadata def <name>{...}'
+        #metadata_def_pattern = r'metadata\s+def\s+(\w+)\s*(?=\s*(\{|\s*;))'
+        # ['\"] includes optinal ' or " for the name 
+        metadata_def_pattern = r"metadata\s+def\s+['\"]?(\w+)['\"]?\s*(?=\{)"
+
+        #metadata_def_pattern = r'metadata\s+def\s+(\w+)\s*(\{*.?\})?' # . represent any character 
+        metadata_def_matches = re.findall(metadata_def_pattern, self.sysml_model, re.DOTALL) #re.DOTALL includes line breaks
+
+        # Regex for '@<name> about' or 'metadata <name> about'
+        metadata_about_pattern = r"@(\w)\s+|metadata\s+(\w)['\"]?\s+about"
+        metadata_about_matches = re.findall(metadata_about_pattern, self.sysml_model, re.DOTALL)
+
+        self.logger.debug(f"metadata def matches: {metadata_def_matches}")
+        # Extract only the metadata names from the match results
+        metadata_names = [match for match in metadata_def_matches]
+
+        self.logger.debug(f"'Metadata def' names: {metadata_names}")
+        #self.logger.debug(f"'Metadata about' matches: {metadata_about_matches}")
+
+        # Return list containing found metadata def names 
+        # OPTIONAL: Include about matches for the content 
+        return metadata_names
+    
+    def get_metadata_about_elements(self, metadata_name):
+        """ Helper function 
+        Extracts all elements with metadata tag '@<name> about' or 'metadata <name>
+
+        Parameters: 
+            medata_name : String. Name of the metadata def to search for inside sysml model  
+        """
+        if not self.sysml_model:
+            self.logger.warning("No SysML model loaded.")
+            return 
+
+        # Flexible regex to handle multi-line and complex formats e.g. packageA::partDefs::partA, ... 
+        #metadata_about_pattern = r'@' + re.escape(metadata_name) + r'\s+about\s+([\w\:\-\.]+(?:\s*,\s*[\w\:\-\.]+)*\s*);'
+        metadata_about_pattern = (
+        r"@['\"]?" + re.escape(metadata_name) + r"['\"]?\s+about\s+"
+        r"([\w\:\-\.]+(?:\s*,\s*[\w\:\-\.]+)*\s*);"
+        )
+
+        matches = re.findall(metadata_about_pattern, self.sysml_model, re.DOTALL)
+
+        # If matches were found, split them and return as a list
+        if matches:
+            elements = matches[0].split(',')  # Split elements separated by commas
+            # return [e.strip() for e in elements]  # Remove unnecessary spaces
+            # OPTIONAL
+            # For each element, split by ':' and take the last part
+            # e.g. 'packageA::partDefinitions::partB' -> extracts 'partB'  
+            processed_elements = [e.strip().split(':')[-1] for e in elements]
+            return processed_elements
+        return []
+    
+    def validate_element_path(self, element_path):
+        self.logger.debug(f"Validating element path: {element_path}")
+
+        if not self.sysml_model:
+            self.logger.warning("SysML model is None! Attempting to load model.")
+            self.sysml_model = self.load_sysml_model()
+
+        path_splitted = element_path.split('.')
+        self.logger.debug(f"Derived path: {path_splitted}")
+        valid_keywords = ["part def", "part", "attribute", "package"]
+
+        try:
+            with open(self.sysml_path, 'r') as sysml_file:
+                content = sysml_file.read()
+                # content = self.remove_comments(content)  # Remove comments for cleaner parsing
+        except FileNotFoundError:
+            self.logger.error(f"SysMLv2 File not found: {self.sysml_path}")
+            raise
+
+        # Initialize current content and expected depth
+        current_content = content
+        expected_depth = 0
+
+        for index, partial_path in enumerate(path_splitted):
+            # Match the current element with valid keywords at the current depth
+            match = re.search(rf'({"|".join(valid_keywords)})\s+{re.escape(partial_path)}\b', current_content)
+            #self.logger.debug(f"Current Match for '{partial_path}' at depth {expected_depth}: {match}")
+            
+            if not match:
+                self.logger.warning(f"Keyword '{partial_path}' not found or not preceded by valid keyword.")
+                return False
+
+            # Get remaining content after the current match
+            remaining_content = current_content[match.end():]
+            #self.logger.debug(f"Remaining content after '{partial_path}': {remaining_content}")
+
+            # Look for opening and closing braces to confirm depth
+            open_brace_index = remaining_content.find('{')
+            close_brace_index = remaining_content.find('}')
+
+            if open_brace_index != -1 and (close_brace_index == -1 or open_brace_index < close_brace_index):
+                #self.logger.debug(f"Entering deeper level after '{partial_path}'.")
+                expected_depth += 1
+                current_content = remaining_content[open_brace_index + 1:]
+            elif close_brace_index != -1:
+                #self.logger.warning(f"Unexpected closing brace after '{partial_path}' at depth {expected_depth}.")
+                return False
+            else:
+                # If neither an opening nor a closing brace is found, the structure is invalid
+                #self.logger.warning(f"Invalid structure: No valid braces after '{partial_path}'.")
+                return False
+
+            # Check if it's the last element and ensure we're not expecting further depth
+            if index == len(path_splitted) - 1:
+                self.logger.debug(f"Final element '{partial_path}' reached.")
+                break
+
+        # After the loop, ensure the depth is consistent with the last element
+        if expected_depth != len(path_splitted):
+            self.logger.warning(f"Depth mismatch: Expected {len(path_splitted)}, but got {expected_depth}.")
+            return False
+
+        self.logger.debug(f"Path '{element_path}' is valid in SysMLv2 model.")
+        return True
+
+
+
+class GerberParser:    
     # Parses specific files (Gerber X2/3) from the E/E Engineering Domain 
     """
     TODO: 
