@@ -21,6 +21,7 @@
         part def partA{
             attribute id : String;
             attribute len : Real {@UUID {uuid = "123e4567-e89b-12d3-a456-426614174000";}}
+            attribute mass : Real; 
         }
         part def partB{
             attribute id : String {@UUID {uuid = "124e4567-e89b-12d3-a456-426614174000";}}
