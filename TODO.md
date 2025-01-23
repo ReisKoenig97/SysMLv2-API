@@ -19,21 +19,25 @@
             - [ ]   
             - [ ]   
 - [x] Helper Functions REDO and highlight logic ! 
-- [ ] Option frame for Map Data 
-    - [ ] part, part def, attribute, attribute def mit data verlinken. 
+- [x] Option frame for Map Data 
+    - [x] part, part def, attribute, attribute def mit data verlinken. 
     - [x] data von domain specific file per entry widget verlinken
     - [x] UID für values research
     - [x] mapping datei erschaffen / Template
-- [ ]
-- [ ]
+- [ ] domain file format selection als dropdown, damit user nur auswählen darf -> besser für mapping
+- [ ] text widget read only machen??  
 - [x] UUID (Universally Unique Identifier) for program demonstration only tag mapped elements with uuid  
     - [x] When user selects two elements to map together create for both elements uuids and save them in mapping json
     - [x] Save inside Mapping.json
     - [ ]
-- [ ] metadata manager and file parser functions to follow user given paths(generalspecs.size.x)
+- [x] metadata manager and file parser functions to follow user given paths(generalspecs.size.x) -> für sysml file 
+- [x] wie und was soll versioniert werden? siehe MIRO 
+- [ ] "Diff viewer" einbauen 
+    - [ ] später: two treeviews for commit selection? 
+    - [ ] file git commiten/speichern -> erstmal per terminal testen 
+    - [ ] 
 - [ ] 
-- [ ]
-- [ ]
+- [ ] 
 
 
 

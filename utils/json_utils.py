@@ -11,7 +11,7 @@ def load_json(file_path):
     Returns:
         dict: The loaded JSON data or None if an error occurred.
     """
-    logger = logging.getLogger("json_utils, load_json")
+    logger = logging.getLogger("json_utils: load_json")
     try:
         with open(file_path, 'r') as file:
             logger.debug(f"Successfully read file: {file}. ({__name__}_load_json)")
@@ -34,7 +34,7 @@ def save_json(file_path, data):
     Returns:
         bool: True if the save was successful, False otherwise.
     """
-    logger = logging.getLogger("json_utils, save_json")
+    logger = logging.getLogger("json_utils: save_json")
     try:
         with open(file_path, 'w') as file:
             json.dump(data, file, indent=4)

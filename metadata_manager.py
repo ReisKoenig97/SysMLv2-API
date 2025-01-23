@@ -9,15 +9,16 @@ class MetadataManager:
     Class to manage metadata between domain models and SysMLv2
     Writes, extracts and maps data inside a mapping.json
     Creates UUIDS for each mapped element
+    Responsible for versioning, commits and traceability 
     """
-    def __init__(self, config):
+    def __init__(self):
         """
         Initializes the metadata manager
         """
         self.logger = logging.getLogger(__name__)
         self.logger.info(f"Initialized MetadataManager")
         
-        self.config = config
+        #self.config = config
         self.mapping_template_file_path = "./config/mapping_template.json"
         self.mapping_file_path = "./config/mapping.json"
         # Parameters will be set later by functions  

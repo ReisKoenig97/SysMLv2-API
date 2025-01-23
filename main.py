@@ -10,6 +10,7 @@ from sysmlv2_api_client import SysMLv2APIClient
 from utils.config_utils import save_config, load_config
 from utils.json_utils import save_json, load_json
 from metadata_manager import MetadataManager
+from versioncontrol import VersionControl 
 
 import customtkinter as ctk
 
@@ -37,14 +38,17 @@ class GUI:
     Main application for the GUI, managing user interaction.
     Uses Tkinter for the user interface.
     """
-    def __init__(self, config, metadatamanager): 
+    def __init__(self, config): 
         self.logger = logging.getLogger(__name__)
+        self.logger.debug(f"Initializing GUI") 
         self.config = config
 
         self.sysml_model = None #initialized object from sysml parser of file_parser sysml_parser
         self.sysml_model_standard_path = "" 
 
-        self.mm = metadatamanager
+        self.logger.debug(f"Initializing MetadataManager and VersionControl (in class GUI)")
+        self.mm = MetadataManager
+        self.vc = VersionControl
 
         self.root = ctk.CTk() 
         self.root.title("GUI")
@@ -67,6 +71,7 @@ class GUI:
         # Buttons
         self.btn_edit_sysml_model = ctk.CTkButton(self.main_frame, text="Edit SysML Model", command=self.popup_edit_sysml_model)
         self.btn_map_data = ctk.CTkButton(self.main_frame, text="Map Data", command=self.popup_map_data)  
+        self.btn_version_control = ctk.CTkButton(self.main_frame, text="Version Control", command=self.popup_version_control)
         
     def setup_layout(self):
         """Sets up the layout of the GUI elements."""
@@ -79,6 +84,7 @@ class GUI:
 
         self.btn_edit_sysml_model.grid(row=0, column=0, padx=5, pady=(10,5), sticky="ew")
         self.btn_map_data.grid(row=1, column=0, padx=5, pady=5, sticky="ew") 
+        self.btn_version_control.grid(row=2, column=0, padx=5, pady=5, sticky="ew")
 
     def popup_edit_sysml_model(self):
         """Opens a popup to edit the SysML model.
@@ -102,47 +108,47 @@ class GUI:
         popup.grid_columnconfigure(1, weight=1) # 5:1 ratio for left and right frame
 
         # LEFT FRAME for Options to load, save, tag, delete metadata, etc.
-        popup_left_frame = ctk.CTkFrame(popup, fg_color="lightgrey")
-        popup_left_frame.grid(row=0, column=0, padx=3, pady=3, sticky="nsew")
-        popup_left_frame.rowconfigure((0,1,2), weight=0) 
-        popup_left_frame.columnconfigure(0, weight=1)
+        options_frame = ctk.CTkFrame(popup, fg_color="lightgrey")
+        options_frame.grid(row=0, column=0, padx=3, pady=3, sticky="nsew")
+        options_frame.rowconfigure((0,1,2), weight=0) 
+        options_frame.columnconfigure(0, weight=1)
         
         # RIGHT FRAME for displaying the SysML model
-        popup_right_frame = ctk.CTkFrame(popup, fg_color="lightgrey")
-        popup_right_frame.grid(row=0, column=1, padx=3, pady=3, sticky="nsew")
-        popup_right_frame.rowconfigure(0, weight=0)
-        popup_right_frame.rowconfigure(1, weight=1)
-        popup_right_frame.columnconfigure(0, weight=1)
+        display_frame = ctk.CTkFrame(popup, fg_color="lightgrey")
+        display_frame.grid(row=0, column=1, padx=3, pady=3, sticky="nsew")
+        display_frame.rowconfigure(0, weight=0)
+        display_frame.rowconfigure(1, weight=1)
+        display_frame.columnconfigure(0, weight=1)
 
         # LABELS for the content frames
-        popup_left_frame_label = ctk.CTkLabel(popup_left_frame, text="Options", height=30, font=("default",14), text_color="black") 
-        popup_right_frame_label = ctk.CTkLabel(popup_right_frame, text="Displayed SysML Model", height=30, font=("default",14), text_color="black")
+        options_frame_label = ctk.CTkLabel(options_frame, text="Options", height=30, font=("default",14), text_color="black") 
+        display_frame_label = ctk.CTkLabel(display_frame, text="Displayed SysML Model", height=30, font=("default",14), text_color="black")
 
         ###### WIDGETS #####
         # User Input for SysML Model Path
-        model_path_entry_label = ctk.CTkLabel(popup_left_frame, text="SysMLv2 Model Path:", font=("default", 12), text_color="black")
-        model_path_entry = ctk.CTkEntry(popup_left_frame, width=150, placeholder_text="Enter SysML model path here...")
+        model_path_entry_label = ctk.CTkLabel(options_frame, text="SysMLv2 Model Path:", font=("default", 12), text_color="black")
+        model_path_entry = ctk.CTkEntry(options_frame, width=150, placeholder_text="Enter SysML model path here...")
         self.sysml_model_standard_path = os.path.join(self.config["base_se_path"], self.config["base_se_model"])
         model_path_entry.insert(0,self.sysml_model_standard_path) # Insert into entry widget 
-        sysml_file_text_widget = tk.Text(popup_right_frame, wrap=tk.WORD)
+        sysml_file_text_widget = tk.Text(display_frame, wrap=tk.WORD)
         # lambda is used to make sure that the function is called when the button is pressed 
-        btn_load_model = ctk.CTkButton(popup_left_frame, text="Load", width=100,
+        btn_load_model = ctk.CTkButton(options_frame, text="Load", width=100,
                                        command=lambda: self.load_model_path_preference(entry_widget=model_path_entry, text_widget=sysml_file_text_widget, model_type="sysml")) 
         
         # Button to parse and highlight elements that are tagged with a specific structure (here: '@<name> about')
-        btn_highlight_tagged_elements_by_metadata = ctk.CTkButton(popup_left_frame, text="Highlight", width=100,
+        btn_highlight_tagged_elements_by_metadata = ctk.CTkButton(options_frame, text="Highlight", width=100,
                                                                   command=lambda: self.highlight_tagged_elements_by_metadata(text_widget=sysml_file_text_widget, entry_widget=model_path_entry)) 
         
-
+        ###### LAYOUT ######
         # LEFT FRAME GRID LAYOUT 
-        popup_left_frame_label.grid(row=0, column=0, columnspan=2, pady=2, sticky="ew")
+        options_frame_label.grid(row=0, column=0, columnspan=2, pady=2, sticky="ew")
         model_path_entry_label.grid(row=1, column=0, padx=10, pady=5, sticky="w") #pady=(10, 5) 
         model_path_entry.grid(row=2, column=0, padx=10, pady=(0, 10), sticky="ew")
         btn_load_model.grid(row=2, column=1, padx=(5, 5), pady=(0, 10), sticky="w")
         btn_highlight_tagged_elements_by_metadata.grid(row=3, column=1, padx=(5, 5), pady=(0, 10), sticky="news") 
 
         # RIGHT FRAME GRID LAYOUT 
-        popup_right_frame_label.grid(row=0, column=0, pady=2, sticky="ew") 
+        display_frame_label.grid(row=0, column=0, pady=2, sticky="ew") 
         sysml_file_text_widget.grid(row=1, column=0, padx=5, pady=5, sticky="nsew")   
 
     def highlight_tagged_elements_by_metadata(self, text_widget, entry_widget, highlight_nested_element = True):
@@ -446,6 +452,116 @@ class GUI:
                 # Notify the user about the failure of mapping
                 messagebox.showerror
 
+    def popup_version_control(self): 
+        """Opens a popup where the user can select different commits and versions of a selected file 
+        and can see the history of changes 
+        Assumptions: User wants to see changes between latest and selected commit (all shown commits are previous ones)
+        NOTE: 
+            1) User selects file path (therefore user compares changes to (latest) model file)
+            2) script loads the commit history inside the treeview widget
+            3) after selection and Button press
+            4) Display git diff 
+        """
+        self.logger.debug(f"Opening popup to see version changes")
+        popup = tk.Toplevel(self.main_frame)
+        popup.title("Versioncontrol")
+        popup.geometry("1200x800")
+        popup.grid_rowconfigure(0, weight=1)
+        popup.grid_columnconfigure(0, weight=0)
+        popup.grid_columnconfigure(1, weight=1)
+
+        # OPTIONS FRAME (LEFT)
+        options_frame = ctk.CTkFrame(popup, fg_color="lightgrey")
+        options_frame.grid(row=0, column=0, padx=3, pady=3, sticky="nsew")
+        options_frame.rowconfigure((0,1,2,3), weight=0) # depends on number of lines with widgets
+        options_frame.columnconfigure(0, weight=1)
+        options_frame.columnconfigure(1, weight=0)
+
+        # COMMIT/VERSION FRAME (INSIDE OPTIONS FRAME)
+        version_frame = ctk.CTkFrame(options_frame, fg_color="lightgrey")
+        version_frame.grid(row=4, column=0, columnspan=2, padx=(3,3), pady=(5,5), sticky="news")
+        version_frame.rowconfigure(0, weight=1)
+        version_frame.columnconfigure(0, weight=1)
+        version_frame.columnconfigure(1, weight=0)
+        
+        # DIFF FRAME for displaying the changes (RIGHT)
+        diff_frame = ctk.CTkFrame(popup, fg_color="lightgrey")
+        diff_frame.grid(row=0, column=1, padx=3, pady=3, sticky="nsew")
+        diff_frame.rowconfigure(0, weight=0)
+        diff_frame.rowconfigure(1, weight=1)
+        diff_frame.columnconfigure(0, weight=1)
+
+        # LABELS for content frames 
+        options_frame_label = ctk.CTkLabel(options_frame, text="Options", height=30, font=("default",14), text_color="black") 
+        diff_frame_label = ctk.CTkLabel(diff_frame, text="Displayed Changes", height=30, font=("default",14), text_color="black")
+
+        ###### WIDGETS ######
+        # User input file to track changes of git 
+        file_path_entry_label = ctk.CTkLabel(options_frame, text="File Path:", font=("default", 12), text_color="black")
+        file_path_entry = ctk.CTkEntry(options_frame, width=200, placeholder_text="Enter a file path for version control")
+        # Create and configure Treeview style
+        style = ttk.Style()
+        style.configure("Treeview", foreground="black", font=("default", 12))
+        style.configure("Treeview.Heading", foreground="black", font=("default", 12, "bold"))
+
+        # Treeview for commit history
+        version_tree = ttk.Treeview(
+            version_frame, 
+            columns=("Commit", "Message", "Date"), 
+            show="headings", 
+            height=20
+        )
+        version_tree.heading("Commit", text="Commit Hash")
+        version_tree.heading("Message", text="Message")
+        version_tree.heading("Date", text="Date")
+        version_tree.column("Commit", width=150)
+        version_tree.column("Message", width=200)
+        version_tree.column("Date", width=100)
+        # Add vertical scrollbar
+        scrollbar = ttk.Scrollbar(version_frame, orient="vertical", command=version_tree.yview)
+        version_tree.configure(yscroll=scrollbar.set)
+
+        # NOTE: default path is the latest sysml model 
+        self.sysml_model_standard_path = os.path.join(self.config["base_se_path"], self.config["base_se_model"])
+        default_path = self.sysml_model_standard_path
+        file_path_entry.insert(0, default_path) # Insert into entry widget (user input) 
+        diff_text_widget = tk.Text(diff_frame, wrap=tk.WORD)
+
+        btn_show_version_history = ctk.CTkButton(options_frame, text="Show History", width=30,
+                                                command=lambda: self.show_version_history(file_path=file_path_entry, treeview_widget=version_tree))
+        btn_load_diff = ctk.CTkButton(options_frame, text="See changes", width=100,
+                                      command=lambda: self.load_commit_history_from_file_path(file_path=file_path_entry, text_widget=diff_text_widget))
+        ###### LAYOUT ######
+        # OPTIONS FRAME LAYOUT (LEFT)
+        options_frame_label.grid(row=0, column=0, columnspan=2, pady=2, sticky="ew")
+        file_path_entry_label.grid(row=1, column=0, padx=10, pady=5, sticky="w")
+        file_path_entry.grid(row=2, column=0, padx=10, pady=(0,10), sticky="ew")
+        version_tree.grid(row=0, column=0, padx=(10,0), pady=(0,10), sticky="news")
+        scrollbar.grid(row=0, column=1, padx=(5,10), pady=(0,10), sticky="ns") 
+        btn_show_version_history.grid(row=2, column=1, padx=(0,10), pady=(0,10), sticky="ew") 
+        btn_load_diff.grid(row=5, column=0, columnspan=2, padx=(10,10), pady=(0,10), sticky="ew")
+        # DIFF FRAME LAYOUT (RIGHT)
+        diff_frame_label.grid(row=0, column=0, pady=2, sticky="ew")
+        diff_text_widget.grid(row=1, column=0, padx=5, pady=5, sticky="news")
+        
+    def show_version_diff(self):
+        """Displays the differences/changes between the selected commits to the text widget (used in the diff_frame)"""
+        pass 
+    
+    def show_version_history(self, file_path_entry_widget, treeview_widget): 
+        """Displays the commit history for user selection (used for popup_version_control)
+            inside the treeview widget
+        """
+        self.logger.debug(f"Showing Version History")
+
+        # Empty treeview before adding elements 
+        for row in treeview_widget.get_children():
+            treeview_widget.delete(row)
+        self.logger.debug(f"Treeview widget cleared")
+
+        self.vc.load_commit_history_from_file_path(file_path=file_path_entry_widget, treeview_widget=treeview_widget)
+
+        
 
 def main(): 
     # Run Initial Log Setup for debugging
@@ -453,8 +569,6 @@ def main():
     # Load Default Config File from config folder   
     DEFAULT_CONFIG_FILE = "config/default_config.json" 
     DEFAULT_CONFIG = load_config(DEFAULT_CONFIG_FILE)
-
-    mm = MetadataManager(config=DEFAULT_CONFIG) 
 
     #api_client = SysMLv2APIClient(base_url=DEFAULT_CONFIG["base_url"])
     #api_client.post_model(file_path="models/se_domain/example_drone.sysml")
@@ -470,7 +584,7 @@ def main():
     #print(gbrjob_metadata)
 
     # Start the Tkinter app
-    app = GUI(config=DEFAULT_CONFIG, metadatamanager = mm)
+    app = GUI(config=DEFAULT_CONFIG)
     app.root.mainloop() 
 
 if __name__ == "__main__":
