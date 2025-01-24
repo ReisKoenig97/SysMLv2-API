@@ -35,7 +35,7 @@
 - [ ] "Diff viewer" einbauen 
     - [ ] später: two treeviews for commit selection? 
     - [ ] file git commiten/speichern -> erstmal per terminal testen 
-    - [ ] 
+    - [ ] test with example_drone.sysml commit history 
 - [ ] 
 - [ ] 
 

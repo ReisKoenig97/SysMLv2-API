@@ -47,8 +47,8 @@ class GUI:
         self.sysml_model_standard_path = "" 
 
         self.logger.debug(f"Initializing MetadataManager and VersionControl (in class GUI)")
-        self.mm = MetadataManager
-        self.vc = VersionControl
+        self.mm = MetadataManager() 
+        self.vc = VersionControl() 
 
         self.root = ctk.CTk() 
         self.root.title("GUI")
@@ -497,29 +497,30 @@ class GUI:
 
         ###### WIDGETS ######
         # User input file to track changes of git 
-        file_path_entry_label = ctk.CTkLabel(options_frame, text="File Path:", font=("default", 12), text_color="black")
+        file_path_entry_label = ctk.CTkLabel(options_frame, text="File Path (to load the commit history):", font=("default", 12), text_color="black")
         file_path_entry = ctk.CTkEntry(options_frame, width=200, placeholder_text="Enter a file path for version control")
         # Create and configure Treeview style
         style = ttk.Style()
-        style.configure("Treeview", foreground="black", font=("default", 12))
-        style.configure("Treeview.Heading", foreground="black", font=("default", 12, "bold"))
-
+        style.configure("Treeview", foreground="black", background="white", font=("default", 12), fieldbackground="white")
+        style.configure("Treeview.Heading", foreground="black", background="white", font=("default", 12, "bold"))
+        
         # Treeview for commit history
-        version_tree = ttk.Treeview(
-            version_frame, 
+        self.version_tree = ttk.Treeview(
+            version_frame,
+            style="Custom.Treeview",
             columns=("Commit", "Message", "Date"), 
             show="headings", 
             height=20
         )
-        version_tree.heading("Commit", text="Commit Hash")
-        version_tree.heading("Message", text="Message")
-        version_tree.heading("Date", text="Date")
-        version_tree.column("Commit", width=150)
-        version_tree.column("Message", width=200)
-        version_tree.column("Date", width=100)
+        self.version_tree.heading("Commit", text="Commit Hash")
+        self.version_tree.heading("Message", text="Message")
+        self.version_tree.heading("Date", text="Date")
+        self.version_tree.column("Commit", width=100)
+        self.version_tree.column("Message", width=200)
+        self.version_tree.column("Date", width=150)
         # Add vertical scrollbar
-        scrollbar = ttk.Scrollbar(version_frame, orient="vertical", command=version_tree.yview)
-        version_tree.configure(yscroll=scrollbar.set)
+        scrollbar = ttk.Scrollbar(version_frame, orient="vertical", command=self.version_tree.yview)
+        self.version_tree.configure(yscroll=scrollbar.set)
 
         # NOTE: default path is the latest sysml model 
         self.sysml_model_standard_path = os.path.join(self.config["base_se_path"], self.config["base_se_model"])
@@ -527,16 +528,20 @@ class GUI:
         file_path_entry.insert(0, default_path) # Insert into entry widget (user input) 
         diff_text_widget = tk.Text(diff_frame, wrap=tk.WORD)
 
+        
         btn_show_version_history = ctk.CTkButton(options_frame, text="Show History", width=30,
-                                                command=lambda: self.show_version_history(file_path=file_path_entry, treeview_widget=version_tree))
+                                                command=lambda: self.show_version_history(file_path=file_path_entry.get(), 
+                                                                                          treeview_widget=self.version_tree))
         btn_load_diff = ctk.CTkButton(options_frame, text="See changes", width=100,
-                                      command=lambda: self.load_commit_history_from_file_path(file_path=file_path_entry, text_widget=diff_text_widget))
+                                      command=lambda:
+                                      self.show_version_diff(file_path=file_path_entry.get(), 
+                                                             text_widget=diff_text_widget))
         ###### LAYOUT ######
         # OPTIONS FRAME LAYOUT (LEFT)
         options_frame_label.grid(row=0, column=0, columnspan=2, pady=2, sticky="ew")
         file_path_entry_label.grid(row=1, column=0, padx=10, pady=5, sticky="w")
         file_path_entry.grid(row=2, column=0, padx=10, pady=(0,10), sticky="ew")
-        version_tree.grid(row=0, column=0, padx=(10,0), pady=(0,10), sticky="news")
+        self.version_tree.grid(row=0, column=0, padx=(10,0), pady=(0,10), sticky="news")
         scrollbar.grid(row=0, column=1, padx=(5,10), pady=(0,10), sticky="ns") 
         btn_show_version_history.grid(row=2, column=1, padx=(0,10), pady=(0,10), sticky="ew") 
         btn_load_diff.grid(row=5, column=0, columnspan=2, padx=(10,10), pady=(0,10), sticky="ew")
@@ -544,22 +549,74 @@ class GUI:
         diff_frame_label.grid(row=0, column=0, pady=2, sticky="ew")
         diff_text_widget.grid(row=1, column=0, padx=5, pady=5, sticky="news")
         
-    def show_version_diff(self):
-        """Displays the differences/changes between the selected commits to the text widget (used in the diff_frame)"""
-        pass 
-    
-    def show_version_history(self, file_path_entry_widget, treeview_widget): 
+    def show_version_diff(self, file_path, text_widget):
+        """
+        Displays the differences/changes between the selected commits to the text widget (used in the diff_frame)
+        
+        Parameters:
+            file_path : String. Contains relative path to the file to be searched with commit history
+            text_widget: (tk) Text object. To be filled with content from git diff 
+        Returns: 
+            Updated (tk) Text widget with content (string format)
+        """
+        # Clear current text widget 
+        text_widget.delete("1.0", tk.END)
+
+        # Check if file path exists
+        if not file_path: 
+            self.logger.error("No file path provided")
+            text_widget.insert(tk.END, "No file path provided")
+            return
+
+        # Get selected commit has from Treeview
+        selected_item = self.version_tree.selection()
+        if not selected_item: 
+            self.logger.error("No commit selected")
+            text_widget.insert(tk.END, "No commit selected. Please select inside the Options menu.")
+            return
+
+        # column 0 := hash; first treeview heading 
+        selected_commit_hash = self.version_tree.item(selected_item, "values")[0]
+        self.logger.debug(f"User selected commit with hash: {selected_commit_hash}")
+        # Call Versioncontrol function to get the git diff 
+        diff = self.vc.get_diff_with_latest(file_path=file_path, commit_hash=selected_commit_hash)
+        if not diff: 
+            text_widget.insert(tk.END, "No differences found")
+
+        # Parse and display diff with colors
+        for line in diff.splitlines():
+            if line.startswith("diff --git") or line.startswith("index") or line.startswith("---") or line.startswith("+++"):
+                continue  # Skip unnecessary lines
+            elif line.startswith("@@"):
+                text_widget.insert(tk.END, f"{line}\n", "header")
+            elif line.startswith("+"):
+                text_widget.insert(tk.END, f"{line}\n", "added")
+            elif line.startswith("-"):
+                text_widget.insert(tk.END, f"{line}\n", "removed")
+            else:
+                text_widget.insert(tk.END, f"{line}\n", "normal")
+
+        # Apply color tags
+        text_widget.tag_configure("added", background="green") #foreground 
+        text_widget.tag_configure("removed", background="red")
+        text_widget.tag_configure("header", background="blue", font=("default", 12, "bold"))
+        text_widget.tag_configure("normal", background="black")
+        text_widget.tag_configure("error", background="red", font=("default", 12, "italic"))
+        text_widget.tag_configure("info", background="blue", font=("default", 12, "italic"))
+
+    def show_version_history(self, file_path, treeview_widget): 
         """Displays the commit history for user selection (used for popup_version_control)
             inside the treeview widget
         """
         self.logger.debug(f"Showing Version History")
+        self.logger.debug(f"User provided file path: {file_path}")
 
         # Empty treeview before adding elements 
         for row in treeview_widget.get_children():
             treeview_widget.delete(row)
-        self.logger.debug(f"Treeview widget cleared")
-
-        self.vc.load_commit_history_from_file_path(file_path=file_path_entry_widget, treeview_widget=treeview_widget)
+        #self.logger.debug(f"Treeview widget cleared")
+        # versioncontrol.py function
+        self.vc.load_commit_history_from_file_path(file_path=file_path, treeview_widget=treeview_widget)
 
         
 
