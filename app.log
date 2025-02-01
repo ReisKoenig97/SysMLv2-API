@@ -1,35 +1,23 @@
- json_utils: load_json - DEBUG - Successfully read file: <_io.TextIOWrapper name='config/default_config.json' mode='r' encoding='UTF-8'>. (utils.json_utils_load_json)
+ json_utils: load_json - DEBUG - Successfully read file: <_io.TextIOWrapper name='config/default_config.json' mode='r' encoding='cp1252'>. (utils.json_utils_load_json)
  config_utils: load_config - INFO - Config file 'config/default_config.json' loaded successfully.
- __main__ - DEBUG - Initializing GUI
- __main__ - DEBUG - Initializing MetadataManager and VersionControl (in class GUI)
+ versioncontrol - DEBUG - VersionControl initialized.
  metadata_manager - INFO - Initialized MetadataManager
  metadata_manager - DEBUG - Creating mapping.json from template
  metadata_manager - INFO - Mapping file already exists at ./config/mapping.json
- git.util - DEBUG - Failed checking if running in CYGWIN due to: FileNotFoundError(2, 'No such file or directory')
+ metadata_manager - DEBUG - MetadataManager initialized
+ __main__ - DEBUG - Updating SysML model with metadata
+ metadata_manager - INFO - Startig update_sysml_model
+ json_utils: load_json - DEBUG - Successfully read file: <_io.TextIOWrapper name='./config/mapping.json' mode='r' encoding='cp1252'>. (utils.json_utils_load_json)
+ metadata_manager - DEBUG - Updating value in SysMLv2 model: metadata_test.partD.id with value: Hades_project
+ metadata_manager - DEBUG - Updated content: ['package metadata_test{\n', '    \n', '    public import SI::*; \n', '    public import ScalarValues::*; \n', '\n', '    metadata def PCB{\n', '        doc /* This metadata def is mainly used to tag\n', '            * certain elements of the model for better\n', '            * grouping. \n', '            */\n', '    }    \n', '\n', '    metadata def UUID{\n', '        uuid : String;\n', '    }\n', '\n', '    @PCB about\n', '        partA,\n', '        partB;\n', '    \n', '    part def partA{\n', '        private import SI::mm; \n', '        attribute id : String;\n', '        attribute mass = 50.1; // 50.1 \n', '    }\n', '    part def partB{\n', '        attribute id = "Pcbnew";\n', '        attribute len = 7.43[mm];\n', '    }   \n', '    part def partC{\n', '        attribute id : String;\n', '        attribute len : Real; \n', '        attribute lenA = 10.12[mm];  \n', '    }   \n', '    part def partD{\n', '        attribute id = "Hades_project";\n', '    }\n', '}\n']
+ metadata_manager - DEBUG - Updating value in SysMLv2 model: metadata_test.partA.len with value: 7.43
+ metadata_manager - DEBUG - Updated content: ['package metadata_test{\n', '    \n', '    public import SI::*; \n', '    public import ScalarValues::*; \n', '\n', '    metadata def PCB{\n', '        doc /* This metadata def is mainly used to tag\n', '            * certain elements of the model for better\n', '            * grouping. \n', '            */\n', '    }    \n', '\n', '    metadata def UUID{\n', '        uuid : String;\n', '    }\n', '\n', '    @PCB about\n', '        partA,\n', '        partB;\n', '    \n', '    part def partA{\n', '        private import SI::mm; \n', '        attribute id : String;\n', '        attribute mass = 50.1; // 50.1 \n', '    }\n', '    part def partB{\n', '        attribute id = "Pcbnew";\n', '        attribute len = 7.43[mm];\n', '    }   \n', '    part def partC{\n', '        attribute id : String;\n', '        attribute len : Real; \n', '        attribute lenA = 10.12[mm];  \n', '    }   \n', '    part def partD{\n', '        attribute id = "Hades_project";\n', '    }\n', '}\n']
+ metadata_manager - DEBUG - Updating value in SysMLv2 model: metadata_test.partB.id with value: Pcbnew
+ metadata_manager - DEBUG - Updated content: ['package metadata_test{\n', '    \n', '    public import SI::*; \n', '    public import ScalarValues::*; \n', '\n', '    metadata def PCB{\n', '        doc /* This metadata def is mainly used to tag\n', '            * certain elements of the model for better\n', '            * grouping. \n', '            */\n', '    }    \n', '\n', '    metadata def UUID{\n', '        uuid : String;\n', '    }\n', '\n', '    @PCB about\n', '        partA,\n', '        partB;\n', '    \n', '    part def partA{\n', '        private import SI::mm; \n', '        attribute id : String;\n', '        attribute mass = 50.1; // 50.1 \n', '    }\n', '    part def partB{\n', '        attribute id = "Pcbnew";\n', '        attribute len = 7.43[mm];\n', '    }   \n', '    part def partC{\n', '        attribute id : String;\n', '        attribute len : Real; \n', '        attribute lenA = 10.12[mm];  \n', '    }   \n', '    part def partD{\n', '        attribute id = "Hades_project";\n', '    }\n', '}\n']
+ __main__ - DEBUG - Initializing GUI
+ __main__ - DEBUG - Initializing MetadataManager and VersionControl (in class GUI)
  __main__ - DEBUG - Creating Widgets for GUI
  __main__ - DEBUG - Setting up layout for GUI
+ __main__ - DEBUG - Opening popup to map data
  __main__ - DEBUG - Opening popup to see version changes
- __main__ - DEBUG - Showing Version History
- __main__ - DEBUG - User provided file path: models/se_domain/metadata_test.sysml
- versioncontrol - DEBUG - Loading commits from file path: models/se_domain/metadata_test.sysml
- versioncontrol - DEBUG - repo: <git.repo.base.Repo '/Users/reiskoenig/Nextcloud/MASTER ARBEIT/Code/SysMLv2 API Code/.git'>
- versioncontrol - DEBUG - relative path: models/se_domain/metadata_test.sysml
- git.cmd - DEBUG - Popen(['git', 'cat-file', '--batch-check'], cwd=/Users/reiskoenig/Nextcloud/MASTER ARBEIT/Code/SysMLv2 API Code, stdin=<valid stream>, shell=False, universal_newlines=False)
- git.cmd - DEBUG - Popen(['git', 'rev-list', 'cfad27dda9e733f2c95b872ea86bd920d530bd70', '--', 'models/se_domain/metadata_test.sysml'], cwd=/Users/reiskoenig/Nextcloud/MASTER ARBEIT/Code/SysMLv2 API Code, stdin=None, shell=False, universal_newlines=False)
- versioncontrol - DEBUG - current commit: 271af30b3b196962cc2caea17edd168212e02789
- git.cmd - DEBUG - Popen(['git', 'cat-file', '--batch'], cwd=/Users/reiskoenig/Nextcloud/MASTER ARBEIT/Code/SysMLv2 API Code, stdin=<valid stream>, shell=False, universal_newlines=False)
- versioncontrol - DEBUG - current commit: eb05db398c675ad2616ed29cbf6587896a63bc79
- versioncontrol - DEBUG - current commit: 792199c1e29ebfe38d15782f2e5296f3d468d0a9
- versioncontrol - DEBUG - current commit: b3c49a557cff18eec90c273bd60222b96a907133
- __main__ - DEBUG - User selected commit with hash: 271af30
- versioncontrol - DEBUG - Calculating diff for file: models/se_domain/metadata_test.sysml and commit: 271af30
- git.cmd - DEBUG - Popen(['git', 'diff', '271af30', '--', 'models/se_domain/metadata_test.sysml'], cwd=/Users/reiskoenig/Nextcloud/MASTER ARBEIT/Code/SysMLv2 API Code, stdin=None, shell=False, universal_newlines=False)
- __main__ - DEBUG - User selected commit with hash: b3c49a5
- versioncontrol - DEBUG - Calculating diff for file: models/se_domain/metadata_test.sysml and commit: b3c49a5
- git.cmd - DEBUG - Popen(['git', 'diff', 'b3c49a5', '--', 'models/se_domain/metadata_test.sysml'], cwd=/Users/reiskoenig/Nextcloud/MASTER ARBEIT/Code/SysMLv2 API Code, stdin=None, shell=False, universal_newlines=False)
- __main__ - DEBUG - User selected commit with hash: 271af30
- versioncontrol - DEBUG - Calculating diff for file: models/se_domain/metadata_test.sysml and commit: 271af30
- git.cmd - DEBUG - Popen(['git', 'diff', '271af30', '--', 'models/se_domain/metadata_test.sysml'], cwd=/Users/reiskoenig/Nextcloud/MASTER ARBEIT/Code/SysMLv2 API Code, stdin=None, shell=False, universal_newlines=False)
- __main__ - DEBUG - User selected commit with hash: eb05db3
- versioncontrol - DEBUG - Calculating diff for file: models/se_domain/metadata_test.sysml and commit: eb05db3
- git.cmd - DEBUG - Popen(['git', 'diff', 'eb05db3', '--', 'models/se_domain/metadata_test.sysml'], cwd=/Users/reiskoenig/Nextcloud/MASTER ARBEIT/Code/SysMLv2 API Code, stdin=None, shell=False, universal_newlines=False)
+ __main__ - DEBUG - Opening popup to map data

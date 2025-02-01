@@ -25,7 +25,7 @@
     - [x] UID für values research
     - [x] mapping datei erschaffen / Template
 - [ ] domain file format selection als dropdown, damit user nur auswählen darf -> besser für mapping
-- [ ] text widget read only machen??  
+- [x] text widget read only machen??  -> eigtl egal, da sowieso nciht gespeichtert etc 
 - [x] UUID (Universally Unique Identifier) for program demonstration only tag mapped elements with uuid  
     - [x] When user selects two elements to map together create for both elements uuids and save them in mapping json
     - [x] Save inside Mapping.json
@@ -34,8 +34,19 @@
 - [x] wie und was soll versioniert werden? siehe MIRO 
 - [ ] "Diff viewer" einbauen 
     - [ ] später: two treeviews for commit selection? 
-    - [ ] file git commiten/speichern -> erstmal per terminal testen 
-    - [ ] test with example_drone.sysml commit history 
+    - [x] file git commiten/speichern -> erstmal per terminal testen 
+    - [x] test with example_drone.sysml commit history 
+- [ ] 
+- [ ] 
+- [x] Domain files sollen anhand der mapping datei überschrieben werden (Skript öffnet mapping.json, extrahiert die Files per Parser und überschreibt das sysml modell + erzeugt Git push)
+    - [ ] git push fehlt aktuell 
+- [ ] mm soll checken ob domain files aktualisiert wurden (letzter commit), wenn ja -> benachrichtigen den user und fragen ob sysml modell geupdatet werden soll 
+- [ ] ACHTUNG: wenn values in sysmlv2 model reingeschrieben werden, muss auf den DataType geachtet werden. zB attribute len : Real ---> wird überschrieben zu -> 
+- [ ] Datatypes und values check in mapping 
+- [ ] Unit Check TODO: Add unit selection in GUI
+- [ ] Unit check in Sysmlv2 
+- [ ] Case: Was wenn nur attribute mass; und es noch nicht vom user definiert ist? 
+- [ ] 
 - [ ] 
 - [ ] 
 

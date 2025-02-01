@@ -18,7 +18,7 @@ class VersionControl:
         repo : (git.Repo). The Git repository object for performing Git operations.
     """
 
-    def __init__(self, mapping_path=None, repo_path=None):
+    def __init__(self, config, mapping_path=None, repo_path=None):
         """
         Initializes the VersionControl class with the repository path and mapping file path.
 
@@ -28,10 +28,13 @@ class VersionControl:
         """
         self.logger = logging.getLogger(__name__)
         #MacOS: /Users/reiskoenig/Nextcloud/MASTER ARBEIT/Code
-        #Windows: "C:\\Users\\user\\projects\\my_git_repo"
-        self.repo_path = "/Users/reiskoenig/Nextcloud/MASTER ARBEIT/Code/SysMLv2 API Code" #absolute path to the git folder 
+        #Windows: "C:\Users\tommy\Nextcloud\MASTER ARBEIT\Code\SysMLv2 API Code"
+        self.config = config
+        self.repo_path = self.config["repo_path"] #r"C:\Users\tommy\Nextcloud\MASTER ARBEIT\Code\SysMLv2 API Code" #absolute path to the git folder 
         self.mapping_path = mapping_path 
         self.repo = git.Repo(repo_path)
+
+        self.logger.debug("VersionControl initialized.")
 
     def get_files_from_mapping(self):
         """
@@ -99,9 +102,9 @@ class VersionControl:
         Returns: 
             treeview_widget updated/filled with git commits 
         """ 
-        #file_path = file_path.get() # Convert entry widget information to string 
         self.logger.debug(f"Loading commits from file path: {file_path}")
         # Calling git commands to get the commit history of the specific file (user given file path)
+        
         try: 
             repo = Repo(self.repo_path) 
             self.logger.debug(f"repo: {repo}") 
@@ -122,7 +125,7 @@ class VersionControl:
         except Exception as e: 
             self.logger.error(f"Failed to load commits: {e}")
 
-    def get_diff_with_latest(self, file_path, commit_hash):
+    def get_diff_with_specific_commit(self, file_path, commit_hash):
         """
         Fetches the git diff between the selected commit and the latest version of the file.
 
@@ -144,3 +147,23 @@ class VersionControl:
         except Exception as e:
             self.logger.error(f"Failed to get diff: {e}")
             return f"Error fetching diff: {e}"
+
+    def get_diff_with_latest(self, file_path): 
+        """
+        Checks if file (e.g. mapping.json) has changed since last git commit
+        
+        Returns: 
+            BOOL. True if mapping.json has changed, False if not
+        """
+        self.logger.debug(f"Checking if mapping.json has changed since last git commit")    
+        try: 
+            relative_path = os.path.relpath(file_path, self.repo_path)
+            #repo = Repo(self.repo_path)
+
+            diff = self.repo.git.diff('HEAD', '--', relative_path)
+            return bool(diff) # true if diff has changes 
+
+        
+        except Exception as e: 
+            self.logger.error(f"Failed to check if mapping.json has changed: {e}")
+            return False

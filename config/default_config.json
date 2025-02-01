@@ -4,5 +4,6 @@
   "base_se_path": "models/se_domain/",
   "base_se_model": "metadata_test.sysml",
   "base_ee_path": "models/ee_domain/",
-  "base_ee_model": "Hades_project-job.gbrjob"
+  "base_ee_model": "Hades_project-job.gbrjob",
+  "repo_path" : "C:\\Users\\tommy\\Nextcloud\\MASTER ARBEIT\\Code\\SysMLv2 API Code"
 }

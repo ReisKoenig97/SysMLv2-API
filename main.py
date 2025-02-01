@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
+from tkinter import StringVar # used for Dropdown menus 
 import os
 import logging
 
@@ -38,17 +39,19 @@ class GUI:
     Main application for the GUI, managing user interaction.
     Uses Tkinter for the user interface.
     """
-    def __init__(self, config): 
+    def __init__(self, config, metadatamanager=None, versioncontrol=None): 
         self.logger = logging.getLogger(__name__)
         self.logger.debug(f"Initializing GUI") 
         self.config = config
+        # This list acts as the accepted file formats (used inside the map popup)
+        self.available_file_formats = ["GerberJobFile"]
 
         self.sysml_model = None #initialized object from sysml parser of file_parser sysml_parser
         self.sysml_model_standard_path = "" 
 
         self.logger.debug(f"Initializing MetadataManager and VersionControl (in class GUI)")
-        self.mm = MetadataManager() 
-        self.vc = VersionControl() 
+        self.mm = metadatamanager
+        self.vc = versioncontrol
 
         self.root = ctk.CTk() 
         self.root.title("GUI")
@@ -69,7 +72,7 @@ class GUI:
         self.logger.debug(f"Creating Widgets for GUI")
 
         # Buttons
-        self.btn_edit_sysml_model = ctk.CTkButton(self.main_frame, text="Edit SysML Model", command=self.popup_edit_sysml_model)
+        self.btn_edit_sysml_model = ctk.CTkButton(self.main_frame, text="View/Edit SysML Model", command=self.popup_edit_sysml_model)
         self.btn_map_data = ctk.CTkButton(self.main_frame, text="Map Data", command=self.popup_map_data)  
         self.btn_version_control = ctk.CTkButton(self.main_frame, text="Version Control", command=self.popup_version_control)
         
@@ -235,16 +238,16 @@ class GUI:
         """
         self.logger.debug(f"Loading Model with type: {model_type}")
         user_path = entry_widget.get().strip()
-        self.logger.debug(f"Selected user path: {user_path}")
+        #self.logger.debug(f"Selected user path: {user_path}")
 
         # If user provides a path, prioritize it; otherwise, use default from config
         if user_path and os.path.exists(user_path):
             self.logger.info(f"Using user-provided path: '{user_path}'")
             if model_type == "sysml":
-                self.logger.debug(f"Found type: sysml")
+                #self.logger.debug(f"Found type: sysml")
                 self.sysml_model_standard_path = user_path
             if model_type == "domain": 
-                self.logger.debug(f"Found type domain")
+                #self.logger.debug(f"Found type domain")
                 self.domain_model_standard_path = user_path
         else:
             self.logger.warning(f"User-provided path is invalid or empty.")
@@ -305,7 +308,7 @@ class GUI:
         
         ########## WIDGETS ########## 
 
-        # SYSML FRAME:      Label, Entry, Text and Button for user input to load sysml model 
+        # OPTIONS FRAME SYSML FRAME:      Label, Entry, Text and Button for user input to load sysml model 
         options_frame_sysml_path_entry_label = ctk.CTkLabel(options_frame, text="SysMLv2 Model Path:",
                                                              font=("default",12),text_color="black")
         options_frame_sysml_path_entry = ctk.CTkEntry(options_frame, width=150, 
@@ -315,11 +318,12 @@ class GUI:
         sysml_frame_model_text_widget = tk.Text(sysml_frame, wrap=tk.WORD)
         btn_load_model_sysml = ctk.CTkButton(options_frame, text="Load SysML Model", width=50,
                                              command=lambda: self.load_model_path_preference(entry_widget=options_frame_sysml_path_entry, text_widget=sysml_frame_model_text_widget, model_type="sysml"))
-        # DOMAIN FRAME:     Label, Entry, Text and Button for user input to load domain model 
+        # OPTIONS FRAME DOMAIN FRAME:     Label, Entry, Text and Button for user input to load domain model 
         options_frame_domain_file_format_entry_label = ctk.CTkLabel(options_frame, text="Domain File Format",
                                                         font=("default", 12), text_color="black")
-        options_frame_domain_file_format_entry = ctk.CTkEntry(options_frame, width=150,
-                                                              placeholder_text="Enter Domain File Format e.g. GerberJobFile")
+        selected_domain_format = StringVar(value=self.available_file_formats[0]) #[0] first element is the default value
+        options_frame_domain_file_format_dropdown = ctk.CTkOptionMenu(options_frame, values=self.available_file_formats,
+                                                              variable=selected_domain_format)
         options_frame_domain_path_entry_label = ctk.CTkLabel(options_frame, text="Domain Model Path:",
                                                              font=("default",12),text_color="black")
         options_frame_domain_path_entry = ctk.CTkEntry(options_frame, width=150, 
@@ -342,12 +346,15 @@ class GUI:
         map_frame_domain_value_label = ctk.CTkLabel(map_frame, text="Domain Element Value:",
                                                     font=("default", 12), text_color="black") 
         map_frame_domain_value_entry = ctk.CTkEntry(map_frame, placeholder_text="Enter corresponding element value e.g. '7.42'")
+        map_frame_domain_unit_entry = ctk.CTkEntry(map_frame, placeholder_text="Enter corresponding unit e.g. 'mm'")
+        map_frame_domain_unit_label = ctk.CTkLabel(map_frame, text="Domain Element Unit:",
+                                                   font=("default", 12), text_color="black")
 
         btn_map_elements = ctk.CTkButton(map_frame, text="Map elements", width=100, 
                                          command=lambda: self.map_elements(options_frame_sysml_path_entry,
                                                                    map_frame_sysml_name_entry,
                                                                    map_frame_sysml_value_entry,
-                                                                   options_frame_domain_file_format_entry,
+                                                                   selected_domain_format,
                                                                    options_frame_domain_path_entry, 
                                                                    map_frame_domain_name_entry, 
                                                                    map_frame_domain_value_entry))
@@ -362,7 +369,7 @@ class GUI:
         btn_load_model_sysml.grid(row=2, column=1, padx=(5, 5), pady=(5, 0), sticky="ew") 
         #   Load domain model 
         options_frame_domain_file_format_entry_label.grid(row=3, column=0, padx=5, pady=(5,0), sticky="w")
-        options_frame_domain_file_format_entry.grid(row=4, column=0, padx=5, pady=(2,0), sticky="w") 
+        options_frame_domain_file_format_dropdown.grid(row=4, column=0, padx=5, pady=(2,0), sticky="w") 
         options_frame_domain_path_entry_label.grid(row=5, column=0, padx=5, pady=(5,0), sticky="w")
         options_frame_domain_path_entry.grid(row=6, column=0, padx=5, pady=(2,0), sticky="ew")
         btn_load_model_domain.grid(row=6, column=1, padx=(5, 5), pady=(5, 0), sticky="ew")
@@ -382,12 +389,15 @@ class GUI:
         map_frame_sysml_value_label.grid(row=3, column=0, columnspan=2, padx=(10,5), pady=(5,0), sticky="w")
         map_frame_sysml_value_entry.grid(row=4, column=0, columnspan=2, padx=(10,5), pady=(2,5), sticky="ew")
         
+
         map_frame_domain_name_label.grid(row=1, column=2, columnspan=2, padx=(5,10), pady=(5,0), sticky="w")
         map_frame_domain_name_entry.grid(row=2, column=2, columnspan=2, padx=(5,10), pady=(2,5), sticky="ew")
         map_frame_domain_value_label.grid(row=3, column=2, columnspan=2, padx=(5,10), pady=(5,0), sticky="w")
         map_frame_domain_value_entry.grid(row=4, column=2, columnspan=2, padx=(5,10), pady=(2,5), sticky="ew")
+        map_frame_domain_unit_label.grid(row=5, column=2, columnspan=2, padx=(5,10), pady=(5,0), sticky="w")
+        map_frame_domain_unit_entry.grid(row=6, column=2, columnspan=2, padx=(5,10), pady=(2,5), sticky="ew")
 
-        btn_map_elements.grid(row=5, column=1, columnspan=2, padx=(5,5), pady=(10,10), sticky="ew")
+        btn_map_elements.grid(row=7, column=1, columnspan=2, padx=(5,5), pady=(10,10), sticky="ew")
         
     def load_file_content(self, file_path, text_widget):
         """Loads file content into the given text widget."""
@@ -420,6 +430,7 @@ class GUI:
         domain_element_value = domain_element_value.get()
         #Initialize SysmlParser analog to 'popup_edit_sysml_model'
         self.sysml_model = SysmlParser(sysml_path=sysml_path) 
+        self.logger.debug(f"Created SysML Parser instance: {self.sysml_model}")
         # Validate user given element path (function from file parser)
         if not self.sysml_model.validate_element_path(element_path=sysml_element_path): 
             self.logger.info(f"User provided an invalid sysml element pathing: {sysml_element_path}")
@@ -501,8 +512,8 @@ class GUI:
         file_path_entry = ctk.CTkEntry(options_frame, width=200, placeholder_text="Enter a file path for version control")
         # Create and configure Treeview style
         style = ttk.Style()
-        style.configure("Treeview", foreground="black", background="white", font=("default", 12), fieldbackground="white")
-        style.configure("Treeview.Heading", foreground="black", background="white", font=("default", 12, "bold"))
+        style.configure("Treeview", foreground="black", background="white", font=("default", 10), fieldbackground="white") # , fieldbackground="white" #, foreground="black", background="white"
+        style.configure("Treeview.Heading", foreground="black", background="white", font=("default", 10, "bold"))
         
         # Treeview for commit history
         self.version_tree = ttk.Treeview(
@@ -515,8 +526,8 @@ class GUI:
         self.version_tree.heading("Commit", text="Commit Hash")
         self.version_tree.heading("Message", text="Message")
         self.version_tree.heading("Date", text="Date")
-        self.version_tree.column("Commit", width=100)
-        self.version_tree.column("Message", width=200)
+        self.version_tree.column("Commit", width=120)
+        self.version_tree.column("Message", width=250)
         self.version_tree.column("Date", width=150)
         # Add vertical scrollbar
         scrollbar = ttk.Scrollbar(version_frame, orient="vertical", command=self.version_tree.yview)
@@ -579,7 +590,7 @@ class GUI:
         selected_commit_hash = self.version_tree.item(selected_item, "values")[0]
         self.logger.debug(f"User selected commit with hash: {selected_commit_hash}")
         # Call Versioncontrol function to get the git diff 
-        diff = self.vc.get_diff_with_latest(file_path=file_path, commit_hash=selected_commit_hash)
+        diff = self.vc.get_diff_with_specific_commit(file_path=file_path, commit_hash=selected_commit_hash)
         if not diff: 
             text_widget.insert(tk.END, "No differences found")
 
@@ -596,11 +607,11 @@ class GUI:
             else:
                 text_widget.insert(tk.END, f"{line}\n", "normal")
 
-        # Apply color tags
+        # Apply color tags 
         text_widget.tag_configure("added", background="green") #foreground 
         text_widget.tag_configure("removed", background="red")
         text_widget.tag_configure("header", background="blue", font=("default", 12, "bold"))
-        text_widget.tag_configure("normal", background="black")
+        text_widget.tag_configure("normal", background="white") #background="black"
         text_widget.tag_configure("error", background="red", font=("default", 12, "italic"))
         text_widget.tag_configure("info", background="blue", font=("default", 12, "italic"))
 
@@ -623,6 +634,7 @@ class GUI:
 def main(): 
     # Run Initial Log Setup for debugging
     setup_logging() 
+    logger = logging.getLogger(__name__)
     # Load Default Config File from config folder   
     DEFAULT_CONFIG_FILE = "config/default_config.json" 
     DEFAULT_CONFIG = load_config(DEFAULT_CONFIG_FILE)
@@ -639,9 +651,14 @@ def main():
     #DEFAULT_GBRJOB_KEYWORDS = ["Name", "GUID", "Version", "Vendor", "Application", "CreationDate", "X", "Y", "LayerNumber", "BoardThickness"]
     #gbrjob_metadata = gerberjobfile.parse_gerber_job_file(sections= DEFAULT_GBRJOB_SECTIONS,keywords=DEFAULT_GBRJOB_KEYWORDS)
     #print(gbrjob_metadata)
+    
+    vc = VersionControl(config=DEFAULT_CONFIG)
+    mm = MetadataManager(config=DEFAULT_CONFIG, versioncontrol=vc) 
+    logger.debug(f"Updating SysML model with metadata")
+    mm.update_sysml_model()
 
     # Start the Tkinter app
-    app = GUI(config=DEFAULT_CONFIG)
+    app = GUI(config=DEFAULT_CONFIG, metadatamanager=mm, versioncontrol=vc)
     app.root.mainloop() 
 
 if __name__ == "__main__":

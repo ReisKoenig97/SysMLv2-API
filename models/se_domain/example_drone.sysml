@@ -1,13 +1,13 @@
 package DroneExample {
 
-    import SI::*; 
-    import RequirementsDefinitions::*; 
-    import PartDefinitions::*; 
-    import PartDefinitions::Drone::*; // for concerns 
-    import Views::*; // for views and viewpoints
+    public import SI::*; 
+    public import RequirementsDefinitions::*; 
+    public import PartDefinitions::*; 
+    public import PartDefinitions::Drone::*; // for concerns 
+    public import Views::*; // for views and viewpoints
     public import ModelingMetadata::*; // includes the Metadata SysML Library (comes with SysMLv2)
-    import ScalarValues::*; // includes the ScalarValues SysML Library (comes with SysMLv2) 
-
+    public import ScalarValues::*; // Real, ... includes the ScalarValues SysML Library (comes with SysMLv2)
+    
     item def Person;
     item def Commands;
 

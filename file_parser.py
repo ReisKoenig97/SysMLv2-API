@@ -1,6 +1,9 @@
 import logging 
 import re #regex for parsing 
+import os
+
 from utils.json_utils import load_json
+from utils.config_utils import load_config
 
 
 # Contains all standardized (for this masters thesis) file parser as a single class for each file format 
@@ -24,23 +27,26 @@ class SysmlParser:
             - Inside each line of about paths there can't be any comments after ';'
     """
 
-    def __init__(self, sysml_path):
+    def __init__(self, config=None, sysml_path=None):
         self.logger = logging.getLogger(__name__)
-        self.logger.debug("Initializing SysmlParser")
-
+        #self.logger.debug("Initializing SysmlParser")
+        self.config = config
+        if self.config is None:
+            self.config = load_config(config_file_path="config/default_config.json")
+        
         self.sysml_path = sysml_path
         self.sysml_model = None #sysml_model will be extracted from sysml_path
-
-        # if self.sysml_path: 
-        #     self.sysml_model = self.load_sysml_model()
-        # else:
-        #     self.logger.error(f"Given SysML Path is not correct: {self.sysml_path}") 
+        self.logger.debug(f"SysmlParser initialized")
 
     def load_sysml_model(self): 
         """Parses and loads model from self.sysml_path.
         Returns:
             str: The content of the file as a string.
         """
+        if not self.sysml_path:
+            self.logger.debug(f"No SysML model path provided. Using default path: {os.path.join(self.config['base_se_path'], self.config['base_se_model'])}") 
+            self.sysml_path = os.path.join(self.config['base_se_path'], self.config['base_se_model'])
+        
         try:
             with open(self.sysml_path, 'r') as file:
                 content = file.read()
@@ -137,6 +143,7 @@ class SysmlParser:
         valid_keywords = ["part def", "part", "attribute", "package"]
 
         try:
+            #self.logger.debug(f"Opening SysMLv2 file with path: {self.sysml_path}")
             with open(self.sysml_path, 'r') as sysml_file:
                 content = sysml_file.read()
                 # content = self.remove_comments(content)  # Remove comments for cleaner parsing
@@ -150,7 +157,7 @@ class SysmlParser:
 
         for index, partial_path in enumerate(path_splitted):
             # Match the current element with valid keywords at the current depth
-            match = re.search(rf'({"|".join(valid_keywords)})\s+{re.escape(partial_path)}\b', current_content)
+            match = re.search(rf'({"|".join(valid_keywords)})\s+{re.escape(partial_path)}(\s*:\s*\w+)?\b', current_content)
             #self.logger.debug(f"Current Match for '{partial_path}' at depth {expected_depth}: {match}")
             
             if not match:
@@ -161,35 +168,31 @@ class SysmlParser:
             remaining_content = current_content[match.end():]
             #self.logger.debug(f"Remaining content after '{partial_path}': {remaining_content}")
 
-            # Look for opening and closing braces to confirm depth
-            open_brace_index = remaining_content.find('{')
-            close_brace_index = remaining_content.find('}')
+            # Check if it's the last element and ensure we're not expecting further depth
+            if index == len(path_splitted) - 1:
+                # Final element must not expect further depth
+                # NOTE: We assume that the final element is an attribute or a semicolon
+                if "attribute" in match.group(1) or ";" in remaining_content:
+                    self.logger.debug(f"Final element '{partial_path}' is valid.")
+                    return True
+                else:
+                    self.logger.warning(f"Invalid final element structure for '{partial_path}'.")
+                    return False
 
-            if open_brace_index != -1 and (close_brace_index == -1 or open_brace_index < close_brace_index):
+            # Look for opening to go one level deeper
+            open_brace_index = remaining_content.find('{')
+
+            if open_brace_index != -1:
                 #self.logger.debug(f"Entering deeper level after '{partial_path}'.")
                 expected_depth += 1
                 current_content = remaining_content[open_brace_index + 1:]
-            elif close_brace_index != -1:
-                #self.logger.warning(f"Unexpected closing brace after '{partial_path}' at depth {expected_depth}.")
-                return False
             else:
                 # If neither an opening nor a closing brace is found, the structure is invalid
-                #self.logger.warning(f"Invalid structure: No valid braces after '{partial_path}'.")
+                self.logger.warning(f"Invalid structure: No valid braces after '{partial_path}'.")
                 return False
-
-            # Check if it's the last element and ensure we're not expecting further depth
-            if index == len(path_splitted) - 1:
-                self.logger.debug(f"Final element '{partial_path}' reached.")
-                break
-
-        # After the loop, ensure the depth is consistent with the last element
-        if expected_depth != len(path_splitted):
-            self.logger.warning(f"Depth mismatch: Expected {len(path_splitted)}, but got {expected_depth}.")
-            return False
 
         self.logger.debug(f"Path '{element_path}' is valid in SysMLv2 model.")
         return True
-
 
 
 class GerberParser:    
