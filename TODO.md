@@ -24,7 +24,7 @@
     - [x] data von domain specific file per entry widget verlinken
     - [x] UID für values research
     - [x] mapping datei erschaffen / Template
-- [ ] domain file format selection als dropdown, damit user nur auswählen darf -> besser für mapping
+- [x] domain file format selection als dropdown, damit user nur auswählen darf -> besser für mapping
 - [x] text widget read only machen??  -> eigtl egal, da sowieso nciht gespeichtert etc 
 - [x] UUID (Universally Unique Identifier) for program demonstration only tag mapped elements with uuid  
     - [x] When user selects two elements to map together create for both elements uuids and save them in mapping json
@@ -41,13 +41,15 @@
 - [x] Domain files sollen anhand der mapping datei überschrieben werden (Skript öffnet mapping.json, extrahiert die Files per Parser und überschreibt das sysml modell + erzeugt Git push)
     - [ ] git push fehlt aktuell 
 - [ ] mm soll checken ob domain files aktualisiert wurden (letzter commit), wenn ja -> benachrichtigen den user und fragen ob sysml modell geupdatet werden soll 
-- [ ] ACHTUNG: wenn values in sysmlv2 model reingeschrieben werden, muss auf den DataType geachtet werden. zB attribute len : Real ---> wird überschrieben zu -> 
+- [x] ACHTUNG: wenn values in sysmlv2 model reingeschrieben werden, muss auf den DataType geachtet werden. zB attribute len : Real ---> wird überschrieben zu -> = 1.23[mm]
 - [ ] Datatypes und values check in mapping 
-- [ ] Unit Check TODO: Add unit selection in GUI
+- [x] Unit Check TODO: Add unit selection in GUI
 - [ ] Unit check in Sysmlv2 
 - [ ] Case: Was wenn nur attribute mass; und es noch nicht vom user definiert ist? 
-- [ ] 
-- [ ] 
+- [ ] Mapping datatype und unit check
+    - [ ] wenn mapping erstellt wird -> sysml datei (target element) check ob target element unit hat -> daraus automatisch datatype ableiten
+    - [ ] 
+    - [ ] 
 - [ ] 
 
 

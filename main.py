@@ -43,8 +43,11 @@ class GUI:
         self.logger = logging.getLogger(__name__)
         self.logger.debug(f"Initializing GUI") 
         self.config = config
-        # This list acts as the accepted file formats (used inside the map popup)
+        # List acts as the accepted file formats (used inside the map popup)
         self.available_file_formats = ["GerberJobFile"]
+        # List for available datatypes and si units
+        self.available_datatypes = ["int", "float", "string", "bool"]
+        self.available_units = ["", "m", "kg", "s", "A", "K", "mol", "m^2", "m^3", "N", "Pa", "J", "W", "C", "V", "F"]
 
         self.sysml_model = None #initialized object from sysml parser of file_parser sysml_parser
         self.sysml_model_standard_path = "" 
@@ -340,24 +343,34 @@ class GUI:
         map_frame_sysml_value_label = ctk.CTkLabel(map_frame, text="SysML Element Value:",
                                                    font=("default", 12), text_color="black")
         map_frame_sysml_value_entry = ctk.CTkEntry(map_frame, placeholder_text="Enter corresponding element value e.g. 50")
+        selected_sysml_element_unit = StringVar(value=self.available_units[0]) # initial value
+        map_frame_sysml_unit_dropdown = ctk.CTkOptionMenu(map_frame, values=self.available_units,
+                                                          variable=selected_sysml_element_unit)
+        map_frame_sysml_unit_dropdown_label = ctk.CTkLabel(map_frame, text="SysML Element Unit (if possible):",
+                                                   font=("default", 12), text_color="black")
+        
         map_frame_domain_name_label = ctk.CTkLabel(map_frame, text="Domain Element Path:",
                                                    font=("default", 12), text_color="black")
         map_frame_domain_name_entry = ctk.CTkEntry(map_frame, placeholder_text="Enter a domain element path e.g. 'GeneralSpecs.Size.X'")
         map_frame_domain_value_label = ctk.CTkLabel(map_frame, text="Domain Element Value:",
                                                     font=("default", 12), text_color="black") 
         map_frame_domain_value_entry = ctk.CTkEntry(map_frame, placeholder_text="Enter corresponding element value e.g. '7.42'")
-        map_frame_domain_unit_entry = ctk.CTkEntry(map_frame, placeholder_text="Enter corresponding unit e.g. 'mm'")
-        map_frame_domain_unit_label = ctk.CTkLabel(map_frame, text="Domain Element Unit:",
+        selected_domain_element_unit = StringVar(value=self.available_units[0]) # initial value as default 
+        map_frame_domain_unit_dropdown = ctk.CTkOptionMenu(map_frame, values=self.available_units,
+                                                              variable=selected_domain_element_unit)
+        map_frame_domain_unit_dropdown_label = ctk.CTkLabel(map_frame, text="Domain Element Unit (if possible):",
                                                    font=("default", 12), text_color="black")
 
         btn_map_elements = ctk.CTkButton(map_frame, text="Map elements", width=100, 
                                          command=lambda: self.map_elements(options_frame_sysml_path_entry,
                                                                    map_frame_sysml_name_entry,
                                                                    map_frame_sysml_value_entry,
+                                                                   selected_sysml_element_unit,
                                                                    selected_domain_format,
                                                                    options_frame_domain_path_entry, 
                                                                    map_frame_domain_name_entry, 
-                                                                   map_frame_domain_value_entry))
+                                                                   map_frame_domain_value_entry,
+                                                                   selected_domain_element_unit))
 
         ########## LAYOUT ##########
 
@@ -388,14 +401,15 @@ class GUI:
         map_frame_sysml_name_entry.grid(row=2, column=0, columnspan=2, padx=(10,5), pady=(2,0), sticky="ew")
         map_frame_sysml_value_label.grid(row=3, column=0, columnspan=2, padx=(10,5), pady=(5,0), sticky="w")
         map_frame_sysml_value_entry.grid(row=4, column=0, columnspan=2, padx=(10,5), pady=(2,5), sticky="ew")
-        
+        map_frame_sysml_unit_dropdown_label.grid(row=5, column=0, columnspan=2, padx=(10,5), pady=(5,0), sticky="w")
+        map_frame_sysml_unit_dropdown.grid(row=6, column=0, columnspan=2, padx=(10,5), pady=(2,5), sticky="ew")
 
         map_frame_domain_name_label.grid(row=1, column=2, columnspan=2, padx=(5,10), pady=(5,0), sticky="w")
         map_frame_domain_name_entry.grid(row=2, column=2, columnspan=2, padx=(5,10), pady=(2,5), sticky="ew")
         map_frame_domain_value_label.grid(row=3, column=2, columnspan=2, padx=(5,10), pady=(5,0), sticky="w")
         map_frame_domain_value_entry.grid(row=4, column=2, columnspan=2, padx=(5,10), pady=(2,5), sticky="ew")
-        map_frame_domain_unit_label.grid(row=5, column=2, columnspan=2, padx=(5,10), pady=(5,0), sticky="w")
-        map_frame_domain_unit_entry.grid(row=6, column=2, columnspan=2, padx=(5,10), pady=(2,5), sticky="ew")
+        map_frame_domain_unit_dropdown_label.grid(row=5, column=2, columnspan=2, padx=(5,10), pady=(5,0), sticky="w")
+        map_frame_domain_unit_dropdown.grid(row=6, column=2, columnspan=2, padx=(5,10), pady=(2,5), sticky="ew")
 
         btn_map_elements.grid(row=7, column=1, columnspan=2, padx=(5,5), pady=(10,10), sticky="ew")
         
@@ -413,7 +427,7 @@ class GUI:
             text_widget.delete("1.0", tk.END)  # Clear previous text 
             text_widget.insert(tk.END, f"Error loading file: {e}")  
 
-    def map_elements(self, sysml_path, sysml_element_path, sysml_element_value, domain_file_format, domain_path, domain_element_path, domain_element_value): 
+    def map_elements(self, sysml_path, sysml_element_path, sysml_element_value, sysml_element_unit, domain_file_format, domain_path, domain_element_path, domain_element_value, domain_element_unit): 
         # TODO: Use and reference functions from class METADATA MANAGER! 
         """
         - metadata_manager has to parse file via file_parser functions to get specific user given path to the element in order to generate UUID and map correctly 
@@ -424,10 +438,12 @@ class GUI:
         #self.logger.debug(f"User provided sysml path inside entry: {sysml_path}")
         sysml_element_path = sysml_element_path.get()
         sysml_element_value = sysml_element_value.get()
+        sysml_element_unit = sysml_element_unit.get()
         domain_file_format = domain_file_format.get() 
         domain_path = domain_path.get()
         domain_element_path = domain_element_path.get()
         domain_element_value = domain_element_value.get()
+        domain_element_unit = domain_element_unit.get()
         #Initialize SysmlParser analog to 'popup_edit_sysml_model'
         self.sysml_model = SysmlParser(sysml_path=sysml_path) 
         self.logger.debug(f"Created SysML Parser instance: {self.sysml_model}")
@@ -437,7 +453,7 @@ class GUI:
             messagebox.showinfo("INFO", "Provided SysML element path is invalid.")
 
         else:
-            if self.mm.map_metadata(sysml_path, sysml_element_path, sysml_element_value, domain_file_format, domain_path, domain_element_path, domain_element_value):
+            if self.mm.map_metadata(sysml_path, sysml_element_path, sysml_element_value, sysml_element_unit, domain_file_format, domain_path, domain_element_path, domain_element_value, domain_element_unit):
                 # Notify the user about the successful mapping
                 messagebox.showinfo("INFO", "Successfully mapped elements together!")
                 # Show the mapped elements in a new popup

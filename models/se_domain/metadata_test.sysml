@@ -19,20 +19,19 @@ package metadata_test{
         partB;
     
     part def partA{
-        private import SI::mm; 
-        attribute id : String;
+        attribute id = "Hades_project";
         attribute mass = 50.1; // 50.1 
     }
     part def partB{
-        attribute id = "Pcbnew";
-        attribute len = 7.43[mm];
+        attribute id = "KiCad";
+        attribute len : Real;
     }   
     part def partC{
         attribute id : String;
         attribute len : Real; 
-        attribute lenA = 10.12[mm];  
+        attribute lenA : Real;  
     }   
     part def partD{
-        attribute id = "Hades_project";
+        attribute id = "48616465-735f-4707-926f-6a6563742e6b";
     }
 }

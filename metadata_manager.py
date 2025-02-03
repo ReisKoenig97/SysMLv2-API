@@ -2,6 +2,7 @@ import logging
 import os 
 import uuid 
 import re # Regex 
+from tkinter import messagebox
 
 from utils.json_utils import save_json, load_json
 from datetime import datetime
@@ -52,19 +53,20 @@ class MetadataManager:
         template = load_json(file_path=self.mapping_template_file_path) 
         save_json(file_path=self.mapping_file_path, data=template)
 
-    def map_metadata(self, sysml_path, sysml_element_path, sysml_element_value, domain_file_format, domain_path, domain_element_path, domain_element_value): 
+    def map_metadata(self, sysml_path, sysml_element_path, sysml_element_value, sysml_element_unit, domain_file_format, domain_path, domain_element_path, domain_element_value, domain_element_unit): 
         """
         Links/Maos metadata from domain models with SysMLv2 data that the user selected inside the GUI 
         Creates UUIDs for the mapped elements, validates paths, and updates the mapping.json.
 
         Parameters: 
-            sysml_path : object entry widget. File path to the directory that contains the sysmlv2 file 
-            sysml_element_path : object entry widget. Specific path to the element. e.g. package.partA.len
-            sysml_element_value : object entry widget. Value of the sysml element
-            domain_file_foramt : object entry widget. File Format of specific domain e.g. GerberJobFile or STEP 
-            domain_path : object entry widget File path to the directory that contains the sysmlv2 file 
-            domain_element_path : object entry widget. Specific path to the element e.g. "GeneralSpecs.Size.X"
-            domain_element_value : object entry widget. Value of domain element 
+            sysml_path : String. File path to the directory that contains the sysmlv2 file 
+            sysml_element_path : String. Specific path to the element. e.g. package.partA.len
+            sysml_element_value : String. Value of the sysml element
+            sysml_element_unit : String. Unit of the sysml element value (if provided)
+            domain_file_foramt : String. File Format of specific domain e.g. GerberJobFile or STEP 
+            domain_path : String. File path to the directory that contains the sysmlv2 file 
+            domain_element_path : String. Specific path to the element e.g. "GeneralSpecs.Size.X"
+            domain_element_value : String. Value of domain element 
         """
         self.logger.debug(f"Mapping Metadata: SysMLv2: {sysml_element_path} <---> Domain: {domain_element_path}")
 
@@ -86,12 +88,36 @@ class MetadataManager:
         # Create timestamp
         timestamp = datetime.now().strftime("%d.%m.%Y")
 
+        # Try to get datatype from sysml element value and unit 
+        def get_datatype(value): 
+            try: 
+                value = float(value)
+                return "Real"
+            except ValueError: 
+                return "String"
+            
+        sysml_element_datatype = get_datatype(sysml_element_value)
+        domain_element_datatype = get_datatype(domain_element_value)
+
+        # Check if both elements have units and ensure they match
+        if sysml_element_unit and domain_element_unit:
+            if sysml_element_unit != domain_element_unit:
+                self.logger.error(f"Unit mismatch: SysMLv2: {sysml_element_unit}, Domain: {domain_element_unit}")
+                messagebox.showerror("Unit Mismatch", f"Unit mismatch: SysMLv2: {sysml_element_unit}, Domain: {domain_element_unit}")
+                raise ValueError(f"Unit mismatch: SysMLv2: {sysml_element_unit}, Domain: {domain_element_unit}")
+        # Check if only one element has a unit, which is inconsistent
+        elif sysml_element_unit or domain_element_unit:
+            self.logger.error(f"Unit mismatch: SysMLv2: {sysml_element_unit}, Domain: {domain_element_unit}")
+            messagebox.showerror("Unit Mismatch", f"Unit mismatch: SysMLv2: {sysml_element_unit}, Domain: {domain_element_unit}")
+            raise ValueError(f"Unit mismatch: SysMLv2: {sysml_element_unit}, Domain: {domain_element_unit}")
+        # If neither element has a unit, no validation is needed
+
         sysml_element = {
             "uuid" : uuid_sysml_element,
             "name" : sysml_element_path.split(".")[-1], #last element from element path 
             "value" : sysml_element_value,
-            "unit" : "", 
-            "dataType" : "",
+            "unit" : sysml_element_unit, 
+            "dataType" : sysml_element_datatype,
             "elementPath" : sysml_element_path,
             "filePath" : sysml_path, 
             "created" : timestamp,
@@ -102,8 +128,8 @@ class MetadataManager:
             "uuid" : uuid_domain_element,
             "name" : domain_element_path.split(".")[-1], #last element from element path 
             "value" : domain_element_value,
-            "unit" : "", 
-            "dataType" : "",
+            "unit" : domain_element_unit, 
+            "dataType" : domain_element_datatype,
             "elementPath" : domain_element_path,
             "filePath" : domain_path, 
             "created" : timestamp,
@@ -125,8 +151,6 @@ class MetadataManager:
             self.logger.info(f"{domain_file_format} section not found in mapping.json. Creating new section.")
             mapping[domain_file_format] = []
 
-        # TODO: Check DataTypes 
-
         # Append elements to sysmlv2
         mapping["SysMLv2"].append(sysml_element)
         mapping[f"{domain_file_format}"].append(domain_element)
@@ -134,7 +158,11 @@ class MetadataManager:
 
         # Save updated mapping.json
         if save_json(file_path=self.mapping_file_path, data=mapping):
+            
             self.logger.debug(f"Mapping successfully saved at: {self.mapping_file_path}")
+            # TODO: uncomment for automated sysml file update when button pressed 
+            # updates sysml model (writing values to sysml file) when button pressed 
+            #self.update_sysml_model()
             return True
         else: 
             return False 
@@ -239,7 +267,7 @@ class MetadataManager:
                         depth = (len(element_path_splitted)-1)  # we are at the last element of given path 
                         attribute_name = match.group(1)
                         operator = "=" if match.group(2) == ":" else match.group(2)
-                        unit_target_value = f"[{unit}]" if is_number and len(unit)>0 else "" 
+                        unit_target_value = f"[{unit}]" if is_number else "" 
                         #current_value = match.group(3)
                         semicolon = match.group(4) or ""    
 

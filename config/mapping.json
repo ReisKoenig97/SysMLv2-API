@@ -1,89 +1,35 @@
 {
     "SysMLv2": [
         {
-            "uuid": "5dbe8142-736b-40a5-a581-933a7375355d",
+            "uuid": "eae095cc-c6fa-4332-b9cd-79378929ef73",
             "name": "id",
             "value": "String",
             "unit": "",
-            "dataType": "",
-            "elementPath": "metadata_test.partD.id",
-            "filePath": "models/se_domain/metadata_test.sysml",
-            "created": "27.01.2025",
-            "lastModified": "27.01.2025"
-        },
-        {
-            "uuid": "f6d91e5b-bba1-4fa7-a8a3-d80f1bb01266",
-            "name": "len",
-            "value": "Real",
-            "unit": "",
-            "dataType": "",
-            "elementPath": "metadata_test.partA.len",
-            "filePath": "models/se_domain/metadata_test.sysml",
-            "created": "27.01.2025",
-            "lastModified": "27.01.2025"
-        },
-        {
-            "uuid": "73dd4757-829b-4326-b1d3-f92d2fdb5948",
-            "name": "id",
-            "value": "String",
-            "unit": "",
-            "dataType": "",
+            "dataType": "String",
             "elementPath": "metadata_test.partB.id",
             "filePath": "models/se_domain/metadata_test.sysml",
-            "created": "28.01.2025",
-            "lastModified": "28.01.2025"
+            "created": "03.02.2025",
+            "lastModified": "03.02.2025"
         }
     ],
     "Mappings": [
         {
-            "sourceUUID": "220c1941-b035-4ad0-bbbf-bfb5fe378b29",
-            "targetUUID": "5dbe8142-736b-40a5-a581-933a7375355d",
-            "created": "27.01.2025"
-        },
-        {
-            "sourceUUID": "9f7626d7-da83-49c1-8f90-5d911940b7e8",
-            "targetUUID": "f6d91e5b-bba1-4fa7-a8a3-d80f1bb01266",
-            "created": "27.01.2025"
-        },
-        {
-            "sourceUUID": "9e3c1d8f-8f74-4223-acdf-1631ee328898",
-            "targetUUID": "73dd4757-829b-4326-b1d3-f92d2fdb5948",
-            "created": "28.01.2025"
+            "sourceUUID": "a1f0d27b-99b8-484b-bd2c-0aa1f6a78f16",
+            "targetUUID": "eae095cc-c6fa-4332-b9cd-79378929ef73",
+            "created": "03.02.2025"
         }
     ],
     "GerberJobFile": [
         {
-            "uuid": "220c1941-b035-4ad0-bbbf-bfb5fe378b29",
-            "name": "Name",
-            "value": "Hades_project",
+            "uuid": "a1f0d27b-99b8-484b-bd2c-0aa1f6a78f16",
+            "name": "Vendor",
+            "value": "KiCad",
             "unit": "",
-            "dataType": "",
-            "elementPath": "GeneralSpecs.ProjectId.Name",
+            "dataType": "String",
+            "elementPath": "Header.GenerationSoftware.Vendor",
             "filePath": "models/ee_domain/Hades_project-job.gbrjob",
-            "created": "27.01.2025",
-            "lastModified": "27.01.2025"
-        },
-        {
-            "uuid": "9f7626d7-da83-49c1-8f90-5d911940b7e8",
-            "name": "X",
-            "value": "7.43",
-            "unit": "mm",
-            "dataType": "",
-            "elementPath": "GeneralSpecs.Size.X",
-            "filePath": "models/ee_domain/Hades_project-job.gbrjob",
-            "created": "27.01.2025",
-            "lastModified": "27.01.2025"
-        },
-        {
-            "uuid": "9e3c1d8f-8f74-4223-acdf-1631ee328898",
-            "name": "Application",
-            "value": "Pcbnew",
-            "unit": "",
-            "dataType": "",
-            "elementPath": "Header.GenerationSoftware.Application",
-            "filePath": "models/ee_domain/Hades_project-job.gbrjob",
-            "created": "28.01.2025",
-            "lastModified": "28.01.2025"
+            "created": "03.02.2025",
+            "lastModified": "03.02.2025"
         }
     ]
 }
