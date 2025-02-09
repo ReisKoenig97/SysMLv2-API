@@ -80,6 +80,10 @@ class MetadataManager:
             self.logger.error(f"Domain file does not exist: {domain_path}")
             raise FileNotFoundError(f"Domain file does not exist: {domain_path}")
         
+        self.logger.debug(f"Loading mapping.json and add new mapping")
+        # Load existing mapping.json to extend with data 
+        mapping = load_json(file_path=self.mapping_file_path)
+
         # Generate UUIDs for each element
         uuid_sysml_element = str(uuid.uuid4())
         uuid_domain_element = str(uuid.uuid4())
@@ -142,9 +146,24 @@ class MetadataManager:
             "created" : timestamp
         }
         
-        self.logger.debug(f"Loading mapping.json and add new mapping")
-        # Load existing mapping.json to extend with data 
-        mapping = load_json(file_path=self.mapping_file_path)
+        # Check if mapping already exists (same elements already connected)
+        for existing_mapping in mapping.get("Mappings", []):
+        # Finde die entsprechenden Elemente in SysMLv2 und im Domain-Modell
+            existing_sysml_element = next((e for e in mapping["SysMLv2"] if e["uuid"] == existing_mapping["targetUUID"]), None)
+            existing_domain_element = next((e for e in mapping.get(domain_file_format, []) if e["uuid"] == existing_mapping["sourceUUID"]), None)
+
+            if existing_sysml_element and existing_domain_element:
+                # Vergleiche filePath und elementPath beider Elemente
+                if (existing_sysml_element["filePath"] == sysml_path and
+                    existing_sysml_element["elementPath"] == sysml_element_path and
+                    existing_domain_element["filePath"] == domain_path and
+                    existing_domain_element["elementPath"] == domain_element_path):
+
+                    self.logger.warning("Mapping already exists, skipping...")
+                    messagebox.showinfo("Mapping Exists", "This mapping already exists in mapping.json.")
+                    return False  # Skip adding duplicate mapping
+        
+             
 
         # Ensure the domain file format exists in the mapping
         if domain_file_format not in mapping:
