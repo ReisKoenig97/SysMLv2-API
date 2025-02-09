@@ -60,7 +60,7 @@ class VersionControl:
         for file_path in files_to_commit:
             full_path = os.path.join(self.repo_path, file_path)
             if os.path.exists(full_path):
-                self.repo.git.add(full_path)
+                self.repo.index.add([full_path])  # Staging with repo.index.add
                 print(f"Staged file: {full_path}")
             else:
                 print(f"File not found, skipping: {full_path}")
@@ -72,7 +72,11 @@ class VersionControl:
         Args:
             commit_message (str): The commit message for the changes.
         """
+        self.logger.debug(f"Commit and push specific files")
         try:
+            # Pull the latest changes from remote before pushing
+            self.repo.git.pull("origin", "main")  # fetch the latest from the remote branch
+
             # Stage relevant files
             self.stage_files()
 

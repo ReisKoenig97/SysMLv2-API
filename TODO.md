@@ -50,7 +50,7 @@
     - [ ] wenn mapping erstellt wird -> sysml datei (target element) check ob target element unit hat -> daraus automatisch datatype ableiten
     - [ ] 
     - [ ] 
-- [ ] bakcup 
+- [ ] PROBLEM bei automatisiertes git psuh -> danach kann man nicht mehr pushen! 
 - [ ] 
 - [ ] 
 - [ ] 
