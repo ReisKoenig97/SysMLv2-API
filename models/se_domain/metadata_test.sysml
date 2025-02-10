@@ -24,10 +24,10 @@ package metadata_test{
     }
     part def partB{
         attribute id = "KiCad";
-        attribute len : Real;
+        attribute len = 12.5[m];
     }   
     part def partC{
-        attribute id : String;
+        attribute id = "KiCad";
         attribute len : Real; 
         attribute lenA : Real;  
     }   
