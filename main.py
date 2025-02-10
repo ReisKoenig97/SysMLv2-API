@@ -69,10 +69,11 @@ class GUI:
         # Create GUI elements
         self.setup_widgets()
         self.setup_layout()
+        self.logger.info(f"GUI initialized")
 
     def setup_widgets(self):
         """Initial creation of widgets inside the GUI."""
-        self.logger.debug(f"Creating Widgets for GUI")
+        self.logger.info(f"setup_widgets")
 
         # Buttons
         self.btn_edit_sysml_model = ctk.CTkButton(self.main_frame, text="View/Edit SysML Model", command=self.popup_edit_sysml_model)
@@ -81,7 +82,7 @@ class GUI:
         
     def setup_layout(self):
         """Sets up the layout of the GUI elements."""
-        self.logger.debug(f"Setting up layout for GUI")
+        self.logger.info(f"setup_layout")
         self.main_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
         self.root.grid_rowconfigure(0, weight=1)  
         self.root.grid_columnconfigure(0, weight=1) 
@@ -105,7 +106,7 @@ class GUI:
             - Show only tagged elements by selected metadata tag 
         """
 
-        self.logger.debug(f"Opening popup to 'popup_edit_sysml_model'")
+        self.logger.info(f"popup_edit_sysml_model")
         popup = tk.Toplevel(self.main_frame)
         popup.title("Edit SysML Model")
         popup.geometry("1200x800")
@@ -172,29 +173,30 @@ class GUI:
                                     
         Returns: Adjusted ctk.Text Widget with highlighted elements 
         """
+        self.logger.info(f"highlight_tagged_elements_by_metadata")
         # Get the current user given sysml path 
         self.sysml_model_standard_path = entry_widget.get()
         # Check if sysml model full path is not None:
         if self.sysml_model_standard_path: 
-            self.logger.debug(f"Found valid sysml model path: {self.sysml_model_standard_path}")
+            #self.logger.debug(f"Found valid sysml model path: {self.sysml_model_standard_path}")
 
             try: 
                 # Create sysml_parser class to get class functions 
                 self.sysml_model = SysmlParser(sysml_path=self.sysml_model_standard_path)
-                self.logger.debug(f"Successfully created sysml_parser class instance")
+                #self.logger.debug(f"Successfully created sysml_parser class instance")
                 # Check if sysml model has a certain metadata structure 
                 found_metadata = self.sysml_model.check_metadata_exist()
 
                 # Check if found_metadata (list) is not empty
                 if found_metadata: 
-                    self.logger.debug(f"Found Metadata: {found_metadata}")
+                    #self.logger.debug(f"Found Metadata: {found_metadata}")
                     sysml_file_content = self.load_file_content(file_path=entry_widget.get(), text_widget=text_widget)
 
                     # Loop through every metadata def name
                     for metadata in found_metadata:
                         metadata_about_tags = self.sysml_model.get_metadata_about_elements(metadata_name=metadata)
                         if sysml_file_content:
-                            self.logger.debug(f"SysML file content loaded.")
+                            #self.logger.debug(f"SysML file content loaded.")
                             lines = sysml_file_content.splitlines()
 
                             inside_nested_block = False  # Tracks whether we're inside a nested block
@@ -203,12 +205,12 @@ class GUI:
                             for line_num, line in enumerate(lines, start=1): 
                                 for about_tag in metadata_about_tags:  
                                     if about_tag in line:
-                                        self.logger.debug(f"Found {about_tag} in line: {line}")
+                                        #self.logger.debug(f"Found {about_tag} in line: {line}")
                                         start_index = f"{line_num}.0"
                                         end_index = f"{line_num}.end"
                                         text_widget.tag_add("highlight", start_index, end_index)
                                         text_widget.tag_config("highlight", background="yellow", foreground="black")
-                                        self.logger.debug(f"Highlighted keyword: {about_tag} on line {line_num}")
+                                        #self.logger.debug(f"Highlighted keyword: {about_tag} on line {line_num}")
                                         
                                         # Start nested block tracking
                                         if highlight_nested_element and "{" in line:
@@ -223,7 +225,7 @@ class GUI:
                                     nested_start_index = f"{line_num}.0"
                                     nested_end_index = f"{line_num}.end"
                                     text_widget.tag_add("highlight", nested_start_index, nested_end_index)
-                                    self.logger.debug(f"Highlighted nested content on line {line_num}")
+                                    #self.logger.debug(f"Highlighted nested content on line {line_num}")
 
                                     # End nested block when encountering closing brace
                                     if "}" in line:
@@ -239,13 +241,13 @@ class GUI:
             model_type : String. Indicates which domain should be loaded. ("sysml" or "domain")
 
         """
-        self.logger.debug(f"Loading Model with type: {model_type}")
+        self.logger.info(f"load_model_path_preference")
         user_path = entry_widget.get().strip()
         #self.logger.debug(f"Selected user path: {user_path}")
 
         # If user provides a path, prioritize it; otherwise, use default from config
         if user_path and os.path.exists(user_path):
-            self.logger.info(f"Using user-provided path: '{user_path}'")
+            self.logger.debug(f"Using user-provided path: '{user_path}'")
             if model_type == "sysml":
                 #self.logger.debug(f"Found type: sysml")
                 self.sysml_model_standard_path = user_path
@@ -261,7 +263,7 @@ class GUI:
     def popup_map_data(self):
         """Opens a popup to map the data.
         """
-        self.logger.debug(f"Opening popup to map data")
+        self.logger.info(f"popup_map_data")
         popup = tk.Toplevel(self.main_frame)
         popup.title("Map Data")
         popup.geometry("1500x1000")
@@ -415,7 +417,7 @@ class GUI:
         
     def load_file_content(self, file_path, text_widget):
         """Loads file content into the given text widget."""
-        self.logger.debug(f"Loading file content from file path: {file_path}")
+        self.logger.info(f"load_file_content")
         try:
             with open(file_path, 'r') as file:
                 content = file.read()
@@ -433,7 +435,7 @@ class GUI:
         - metadata_manager has to parse file via file_parser functions to get specific user given path to the element in order to generate UUID and map correctly 
         
         """
-        self.logger.debug(f"Mapping selected elements")
+        self.logger.info(f"map_elements")
         sysml_path = sysml_path.get()
         #self.logger.debug(f"User provided sysml path inside entry: {sysml_path}")
         sysml_element_path = sysml_element_path.get()
@@ -446,10 +448,10 @@ class GUI:
         domain_element_unit = domain_element_unit.get()
         #Initialize SysmlParser analog to 'popup_edit_sysml_model'
         self.sysml_model = SysmlParser(sysml_path=sysml_path) 
-        self.logger.debug(f"Created SysML Parser instance: {self.sysml_model}")
+        #self.logger.debug(f"Created SysML Parser instance: {self.sysml_model}")
         # Validate user given element path (function from file parser)
         if not self.sysml_model.validate_element_path(element_path=sysml_element_path): 
-            self.logger.info(f"User provided an invalid sysml element pathing: {sysml_element_path}")
+            self.logger.warning(f"User provided an invalid sysml element pathing: {sysml_element_path}")
             messagebox.showinfo("INFO", "Provided SysML element path is invalid.")
 
         else:
@@ -478,7 +480,7 @@ class GUI:
 
             else:
                 # Notify the user about the failure of mapping
-                messagebox.showerror
+                messagebox.showerror(f"ERROR", "Cannot map metadata. Issue inside map_metadata")
 
     def popup_version_control(self): 
         """Opens a popup where the user can select different commits and versions of a selected file 
@@ -490,7 +492,7 @@ class GUI:
             3) after selection and Button press
             4) Display git diff 
         """
-        self.logger.debug(f"Opening popup to see version changes")
+        self.logger.info(f"popup_version_control")
         popup = tk.Toplevel(self.main_frame)
         popup.title("Versioncontrol")
         popup.geometry("1200x800")
@@ -587,6 +589,7 @@ class GUI:
         Returns: 
             Updated (tk) Text widget with content (string format)
         """
+        self.logger.info(f"show_version_diff")
         # Clear current text widget 
         text_widget.delete("1.0", tk.END)
 
@@ -636,8 +639,7 @@ class GUI:
         """Displays the commit history for user selection (used for popup_version_control)
             inside the treeview widget
         """
-        self.logger.debug(f"Showing Version History")
-        self.logger.debug(f"User provided file path: {file_path}")
+        self.logger.info(f"show_version_history")
 
         # Empty treeview before adding elements 
         for row in treeview_widget.get_children():

@@ -17,9 +17,6 @@ class MetadataManager:
     Responsible for versioning, commits and traceability 
     """
     def __init__(self, config, versioncontrol=None, fileparser=None):
-        """
-        Initializes the metadata manager
-        """
         self.logger = logging.getLogger(__name__)
         #self.logger.info(f"Initialized MetadataManager")
         
@@ -40,11 +37,11 @@ class MetadataManager:
 
         #Create mapping_template automatically, if not already existing 
         self.create_mapping_file_from_template()
-        self.logger.debug("MetadataManager initialized")
+        self.logger.info("MetadataManager initialized")
 
     def create_mapping_file_from_template(self):
         """Creates empty mapping.json template"""
-        self.logger.info(f"MetadataManager - create_mapping_file_from_template") 
+        self.logger.info(f"create_mapping_file_from_template") 
         #Check if 'mapping.json' exist 
         if not os.path.exists(self.mapping_file_path): 
             # Load Template and save 'mapping.json' from template 
@@ -69,7 +66,7 @@ class MetadataManager:
             domain_element_path : String. Specific path to the element e.g. "GeneralSpecs.Size.X"
             domain_element_value : String. Value of domain element 
         """
-        self.logger.info(f"MetadataManager - map_metadata")
+        self.logger.info(f"map_metadata")
 
         # Validate file existence
         if not os.path.exists(sysml_path):
@@ -79,14 +76,14 @@ class MetadataManager:
             self.logger.error(f"Domain file does not exist: {domain_path}")
             raise FileNotFoundError(f"Domain file does not exist: {domain_path}")
         
-        self.logger.debug(f"Loading mapping.json and add new mapping")
+        #self.logger.debug(f"Loading mapping.json and add new mapping")
         # Load existing mapping.json to extend with data 
         mapping = load_json(file_path=self.mapping_file_path)
 
         # Generate UUIDs for each element
         uuid_sysml_element = str(uuid.uuid4())
         uuid_domain_element = str(uuid.uuid4())
-        self.logger.debug(f"Generated UUIDs: SysMLv2: {uuid_sysml_element}, Domain: {uuid_domain_element}")
+        #self.logger.debug(f"Generated UUIDs: SysMLv2: {uuid_sysml_element}, Domain: {uuid_domain_element}")
 
         # Create timestamp
         timestamp = datetime.now().strftime("%d.%m.%Y")
@@ -162,11 +159,10 @@ class MetadataManager:
                     messagebox.showinfo("Mapping Exists", "This mapping already exists in mapping.json.")
                     return False  # Skip adding duplicate mapping
         
-             
 
         # Ensure the domain file format exists in the mapping
         if domain_file_format not in mapping:
-            self.logger.info(f"{domain_file_format} section not found in mapping.json. Creating new section.")
+            #self.logger.debug(f"{domain_file_format} section not found in mapping.json. Creating new section.")
             mapping[domain_file_format] = []
 
         # Append elements to sysmlv2
@@ -190,7 +186,7 @@ class MetadataManager:
         Updates/changes sysml model with domain metadata that has been mapped via mapping.json 
         Overwrites mapped element values (also checks if new values are set from domain files)
         """
-        self.logger.info(f"MetadataManager - update_sysml_model")
+        self.logger.info(f"update_sysml_model")
         # 1) Load mapping.json 
         mapping = load_json(file_path=self.mapping_file_path)
 
@@ -202,7 +198,7 @@ class MetadataManager:
 
         # Correct iteration
         for model_name, model in domain_models.items():
-            self.logger.debug(f"Current domain file model: {model_name}")
+            #self.logger.debug(f"Current domain file model: {model_name}")
 
             # Ensure model is a list
             if not isinstance(model, list):
@@ -210,7 +206,7 @@ class MetadataManager:
                 continue
             
             for domain_element in model:  # model is now a list, so iterate directly
-                self.logger.debug(f"Current domain element: {domain_element}")
+                #self.logger.debug(f"Current domain element: {domain_element}")
 
                 # Ensure domain_element is a dictionary
                 if not isinstance(domain_element, dict):
@@ -236,6 +232,9 @@ class MetadataManager:
                     # Update mapping if value has changed
                     if current_domain_element_value != domain_element_value:
                         domain_element["value"] = current_domain_element_value
+                        # Update lastModified with current timestamp 
+                        timestamp = datetime.now().strftime("%d.%m.%Y")
+                        domain_element["lastModified"] = timestamp 
                         updated = True
                         self.logger.debug(f"Updated sysml element in mapping to: {current_domain_element_value}")
 
@@ -245,8 +244,7 @@ class MetadataManager:
         # Save changes if any updates were made
         if updated:
             save_json(file_path=self.mapping_file_path, data=mapping)
-            self.logger.debug(f"Checking if there are new values in domain files... Done")
-
+            #self.logger.debug(f"Successfully saved changes from domain file to mapping and sysmlv2 model")
 
         # 3) Loop through all mappings and update SysMLv2 model with domain metadata
         # Overwrite values of mapped elements in "SysMLv2" with values from "GerberJobFile" etc."
@@ -280,12 +278,6 @@ class MetadataManager:
             # Write updated content back to file
             with open(target_file_path, "w") as file:
                 file.writelines(updated_content)
-
-            # Update target element value with source element value
-            # target_element["value"] = source_element["value"]
-            # # Add timestamp for last modified
-            # target_element["lastModified"] = datetime.now().strftime("%d.%m.%Y")
-
         #self.logger.debug(f"Sucecssfully updated SysMLv2 model with domain metadata") 
         
     def update_value_in_sysml_model(self, content, element_path, source_value, unit=""): 
@@ -298,7 +290,7 @@ class MetadataManager:
             element_path : str. Path to the target element in the SysMLv2 file
             source_value : str. Value of the source element from the domain model file 
         """
-        self.logger.info(f"MetadataManager - update_value_in_sysml_model")
+        self.logger.info(f"update_value_in_sysml_model")
         element_path_splitted = element_path.split(".")
         #self.logger.debug(f"Element path splitted: {element_path_splitted} with length: {len(element_path_splitted)}")
         depth = 0

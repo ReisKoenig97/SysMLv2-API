@@ -208,7 +208,7 @@ class GerberParser:
     """
     def __init__(self, file_path="models/ee_domain/Hades_project-job.gbrjob"): # check string path with and without "." 
         self.logger = logging.getLogger(__name__)
-        self.logger.debug(f"Initial gerber_parser")
+
         # Contains extracted informations of parsed gerber file 
         #self.data = {}
         # Path to gerber file to be parsed

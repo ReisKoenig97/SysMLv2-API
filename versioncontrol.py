@@ -34,7 +34,7 @@ class VersionControl:
         self.mapping_path = mapping_path 
         self.repo = git.Repo(repo_path)
 
-        self.logger.debug("VersionControl initialized.")
+        self.logger.info("VersionControl initialized")
 
 
     def load_commit_history_from_file_path(self, file_path, treeview_widget):
@@ -48,14 +48,14 @@ class VersionControl:
         Returns: 
             treeview_widget updated/filled with git commits 
         """ 
-        self.logger.debug(f"Loading commits from file path: {file_path}")
+        self.logger.info(f"VersionControl - load_commit_history_from_file_path")
         # Calling git commands to get the commit history of the specific file (user given file path)
         
         try: 
             repo = Repo(self.repo_path) 
-            self.logger.debug(f"repo: {repo}") 
+            #self.logger.debug(f"repo: {repo}") 
             relative_path = os.path.relpath(file_path, self.repo_path) 
-            self.logger.debug(f"relative path: {relative_path}") 
+            #self.logger.debug(f"relative path: {relative_path}") 
              # Letzter Commit-Hash (HEAD) 
             latest_commit_hash = repo.head.commit.hexsha 
             
@@ -82,6 +82,7 @@ class VersionControl:
         Returns:
             str: Git diff output as a string.
         """
+        self.logger.info(f"VersionControl - get_diff_with_specific_commit") 
         try:
             repo = Repo(self.repo_path)
             relative_path = os.path.relpath(file_path, self.repo_path)
@@ -101,7 +102,7 @@ class VersionControl:
         Returns: 
             BOOL. True if mapping.json has changed, False if not
         """
-        self.logger.debug(f"Checking if mapping.json has changed since last git commit")    
+        self.logger.info(f"VersionControl - get_diff_with_latest")    
         try: 
             relative_path = os.path.relpath(file_path, self.repo_path)
             #repo = Repo(self.repo_path)

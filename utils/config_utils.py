@@ -69,7 +69,7 @@ def load_config(config_file_path="config/default_config.json"):
     try:
         config_data = load_json(config_file_path)
         if config_data is not None:
-            logger.info(f"Config file '{config_file_path}' loaded successfully.")
+            #logger.info(f"Config file '{config_file_path}' loaded successfully.")
             return config_data
         else:
             logger.error(f"Error loading config file '{config_file_path}' in {__name__}.load_config()")
