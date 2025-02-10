@@ -1,5 +1,6 @@
  json_utils: load_json - DEBUG - Successfully read file: <_io.TextIOWrapper name='config/default_config.json' mode='r' encoding='cp1252'>. (utils.json_utils_load_json)
  config_utils: load_config - INFO - Config file 'config/default_config.json' loaded successfully.
+ versioncontrol - INFO - Successfully loaded Git repository: C:\Users\tommy\Nextcloud\MASTER ARBEIT\Code\SysMLv2 API Code
  versioncontrol - DEBUG - VersionControl initialized.
  metadata_manager - INFO - Initialized MetadataManager
  metadata_manager - DEBUG - Creating mapping.json from template
@@ -14,3 +15,41 @@
  __main__ - DEBUG - Initializing MetadataManager and VersionControl (in class GUI)
  __main__ - DEBUG - Creating Widgets for GUI
  __main__ - DEBUG - Setting up layout for GUI
+ __main__ - DEBUG - Opening popup to map data
+ __main__ - DEBUG - Loading Model with type: sysml
+ __main__ - INFO - Using user-provided path: 'models/se_domain/metadata_test.sysml'
+ __main__ - DEBUG - Loading file content from file path: models/se_domain/metadata_test.sysml
+ __main__ - DEBUG - Loading Model with type: domain
+ __main__ - INFO - Using user-provided path: 'models/ee_domain/Hades_project-job.gbrjob'
+ __main__ - DEBUG - Loading file content from file path: models/ee_domain/Hades_project-job.gbrjob
+ __main__ - DEBUG - Mapping selected elements
+ json_utils: load_json - DEBUG - Successfully read file: <_io.TextIOWrapper name='config/default_config.json' mode='r' encoding='cp1252'>. (utils.json_utils_load_json)
+ config_utils: load_config - INFO - Config file 'config/default_config.json' loaded successfully.
+ file_parser - DEBUG - SysmlParser initialized
+ __main__ - DEBUG - Created SysML Parser instance: <file_parser.SysmlParser object at 0x0000025E703674A0>
+ file_parser - DEBUG - Validating element path: metadata_test.partB.len
+ file_parser - WARNING - SysML model is None! Attempting to load model.
+ file_parser - DEBUG - Successfully loaded sysml model
+ file_parser - DEBUG - Derived path: ['metadata_test', 'partB', 'len']
+ file_parser - DEBUG - Final element 'len' is valid.
+ metadata_manager - DEBUG - Mapping Metadata: SysMLv2: metadata_test.partB.len <---> Domain: GeneralSpecs.Size.Y
+ metadata_manager - DEBUG - Loading mapping.json and add new mapping
+ json_utils: load_json - DEBUG - Successfully read file: <_io.TextIOWrapper name='./config/mapping.json' mode='r' encoding='cp1252'>. (utils.json_utils_load_json)
+ metadata_manager - DEBUG - Generated UUIDs: SysMLv2: ea6c201d-f995-46ef-9a1f-c3b0a652bfa9, Domain: 8c67e4c2-9fe5-46ed-ab62-1af6454c3d74
+ metadata_manager - ERROR - Unit mismatch: SysMLv2: m, Domain: F
+ __main__ - DEBUG - Mapping selected elements
+ json_utils: load_json - DEBUG - Successfully read file: <_io.TextIOWrapper name='config/default_config.json' mode='r' encoding='cp1252'>. (utils.json_utils_load_json)
+ config_utils: load_config - INFO - Config file 'config/default_config.json' loaded successfully.
+ file_parser - DEBUG - SysmlParser initialized
+ __main__ - DEBUG - Created SysML Parser instance: <file_parser.SysmlParser object at 0x0000025E70367770>
+ file_parser - DEBUG - Validating element path: metadata_test.partB.len
+ file_parser - WARNING - SysML model is None! Attempting to load model.
+ file_parser - DEBUG - Successfully loaded sysml model
+ file_parser - DEBUG - Derived path: ['metadata_test', 'partB', 'len']
+ file_parser - DEBUG - Final element 'len' is valid.
+ metadata_manager - DEBUG - Mapping Metadata: SysMLv2: metadata_test.partB.len <---> Domain: GeneralSpecs.Size.Y
+ metadata_manager - DEBUG - Loading mapping.json and add new mapping
+ json_utils: load_json - DEBUG - Successfully read file: <_io.TextIOWrapper name='./config/mapping.json' mode='r' encoding='cp1252'>. (utils.json_utils_load_json)
+ metadata_manager - DEBUG - Generated UUIDs: SysMLv2: 073f7a66-ae35-4451-9063-037735ab34d7, Domain: ae10925b-7a14-40cf-a8e8-b56a322bea5e
+ json_utils: save_json - DEBUG - Successfully saved file: <_io.TextIOWrapper name='./config/mapping.json' mode='w' encoding='cp1252'>. (utils.json_utils_save_json)
+ metadata_manager - DEBUG - Mapping successfully saved at: ./config/mapping.json

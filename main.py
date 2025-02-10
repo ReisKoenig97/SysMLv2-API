@@ -472,28 +472,10 @@ class GUI:
                     # close_button = ctk.CTkButton(popup, text="OK", fg="blue", cursor="hand2")
                     # close_button.pack(pady=10)
                     # close_button.bind("<Button-1>", lambda e: popup.destroy())
-                
-                # def show_versioncontrol_updated_popup(): 
-                    popup = tk.Toplevel()
-                    popup.title("Version Control")
-
-                    label = ctk.CTkLabel(popup, text="Sucessfully saved changes for versioncontrol  (git)", font=("Arial", 14, "bold"), text_color="black")
-                    label.pack(pady=10, padx=10)
-
+            
                 # Call the mapping popup function
                 show_mapping_popup()
 
-                # file paths to git commit and push
-                mapping_path = "./config/mapping.json"
-                sysml_path = "./" + sysml_path
-                domain_path = "./" + domain_path
-                
-                file_paths = [mapping_path, sysml_path, domain_path]
-                self.logger.debug(f"file paths: {file_paths}")
-                # TODO: fix commit and push 
-                if self.vc.commit_and_push_files(file_paths=file_paths, commit_message=f"Mapped elements: {sysml_element_value} and {sysml_element_value}"):
-                    self.logger.debug(f"Successfully committed and pushed changes to git. {sysml_element_value} and {domain_element_value}")
-                    self.show_versioncontrol_updated_popup()
             else:
                 # Notify the user about the failure of mapping
                 messagebox.showerror

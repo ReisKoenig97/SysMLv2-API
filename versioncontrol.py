@@ -39,99 +39,11 @@ class VersionControl:
         try:
             self.repo = git.Repo(self.repo_path)
             self.logger.info(f"Successfully loaded Git repository: {self.repo_path}")
-            self.ensure_branch()
         except Exception as e:
             self.logger.error(f"Error loading the repository: {e}")
             raise
 
         self.logger.debug("VersionControl initialized.")
-
-    def get_files_from_mapping(self):
-        """
-        Reads the mapping.json file to extract the list of files to be versioned.
-
-        Returns:
-            list: A list of file paths specified in the mapping.json.
-        """
-        
-        mapping_data = load_json(self.mapping_path)
-
-        files = set()
-        for category in mapping_data.values():
-            for item in category:
-                files.add(item["filePath"])
-        return list(files)
-
-    def stage_files(self):
-        """
-        Stages files listed in the mapping.json for committing.
-        """
-        files_to_commit = self.get_files_from_mapping()
-        for file_path in files_to_commit:
-            full_path = os.path.join(self.repo_path, file_path)
-            if os.path.exists(full_path):
-                self.repo.index.add([full_path])  # Staging with repo.index.add
-                print(f"Staged file: {full_path}")
-            else:
-                print(f"File not found, skipping: {full_path}")
-
-    def ensure_branch(self):
-        """Ensures that the specified branch exists and switches to it."""
-        try:
-            if self.branch_name in [head.name for head in self.repo.heads]:
-                self.repo.git.checkout(self.branch_name)  # Switch to branch
-                self.logger.info(f"Branch '{self.branch_name}' already exists. Switched to it.")
-            else:
-                self.repo.git.checkout("-b", self.branch_name)  # Create new branch
-                self.logger.info(f"New branch '{self.branch_name}' has been created.")
-            
-            # Push the branch (only if it's newly created)
-            origin = self.repo.remote(name="origin")
-            origin.push(refspec=f"{self.branch_name}:{self.branch_name}")
-        except Exception as e:
-            self.logger.error(f"Error while switching/creating branch '{self.branch_name}': {e}")
-            raise
-
-    def commit_and_push(self, file_paths, commit_message="Automated Commit"):
-        """
-        Commits and pushes the staged changes to the remote repository.
-
-        Args:
-            commit_message (str): The commit message for the changes.
-        """
-        self.logger.debug(f"Commit and push specific files")
-        try:
-            # Ensure we are on the correct branch
-            self.ensure_branch()
-
-            # Stage specified files
-            for file_path in file_paths:
-                full_path = os.path.join(self.repo_path, file_path)
-                if os.path.exists(full_path):
-                    self.repo.index.add([full_path])  # Stage file
-                    self.logger.info(f"Staged file: {full_path}")
-                else:
-                    self.logger.warning(f"File not found, skipping: {full_path}")
-
-            # Check if there are staged changes
-            if not self.repo.index.diff("HEAD") and not self.repo.untracked_files:
-                self.logger.info("No changes to commit.")
-                return False
-
-            # Commit changes
-            self.repo.index.commit(commit_message)
-            self.logger.info(f"Committed changes with message: '{commit_message}'")
-
-            # Push to remote repository
-            origin = self.repo.remote(name="origin")
-            origin.push(self.branch_name)
-            self.logger.info(f"Pushed changes to branch '{self.branch_name}'")
-
-            return True
-
-        except Exception as e:
-            self.logger.error(f"Error during commit and push: {e}")
-            return False
         
 
     def load_commit_history_from_file_path(self, file_path, treeview_widget):
