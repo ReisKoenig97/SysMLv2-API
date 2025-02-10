@@ -10,46 +10,92 @@
  metadata_manager - INFO - Startig update_sysml_model
  json_utils: load_json - DEBUG - Successfully read file: <_io.TextIOWrapper name='./config/mapping.json' mode='r' encoding='cp1252'>. (utils.json_utils_load_json)
  metadata_manager - DEBUG - Updating value in SysMLv2 model: metadata_test.partB.id with value: KiCad
- metadata_manager - DEBUG - Updated content: ['package metadata_test{\n', '    \n', '    public import SI::*; \n', '    public import ScalarValues::*; \n', '\n', '    metadata def PCB{\n', '        doc /* This metadata def is mainly used to tag\n', '            * certain elements of the model for better\n', '            * grouping. \n', '            */\n', '    }    \n', '\n', '    metadata def UUID{\n', '        uuid : String;\n', '    }\n', '\n', '    @PCB about\n', '        partA,\n', '        partB;\n', '    \n', '    part def partA{\n', '        attribute id = "Hades_project";\n', '        attribute mass = 50.1; // 50.1 \n', '    }\n', '    part def partB{\n', '        attribute id = "KiCad";\n', '        attribute len : Real;\n', '    }   \n', '    part def partC{\n', '        attribute id : String;\n', '        attribute len : Real; \n', '        attribute lenA : Real;  \n', '    }   \n', '    part def partD{\n', '        attribute id = "48616465-735f-4707-926f-6a6563742e6b";\n', '    }\n', '}\n']
+ metadata_manager - DEBUG - Updated content: ['package metadata_test{\n', '    \n', '    public import SI::*; \n', '    public import ScalarValues::*; \n', '\n', '    metadata def PCB{\n', '        doc /* This metadata def is mainly used to tag\n', '            * certain elements of the model for better\n', '            * grouping. \n', '            */\n', '    }    \n', '\n', '    metadata def UUID{\n', '        uuid : String;\n', '    }\n', '\n', '    @PCB about\n', '        partA,\n', '        partB;\n', '    \n', '    part def partA{\n', '        attribute id = "Hades_project";\n', '        attribute mass = 50.1; // 50.1 \n', '    }\n', '    part def partB{\n', '        attribute id = "KiCad";\n', '        attribute len = 12.5[m];\n', '    }   \n', '    part def partC{\n', '        attribute id = "KiCad";\n', '        attribute len : Real; \n', '        attribute lenA : Real;  \n', '    }   \n', '    part def partD{\n', '        attribute id = "48616465-735f-4707-926f-6a6563742e6b";\n', '    }\n', '}\n']
+ metadata_manager - DEBUG - Updating value in SysMLv2 model: metadata_test.partB.len with value: 12.5
+ metadata_manager - DEBUG - Updated content: ['package metadata_test{\n', '    \n', '    public import SI::*; \n', '    public import ScalarValues::*; \n', '\n', '    metadata def PCB{\n', '        doc /* This metadata def is mainly used to tag\n', '            * certain elements of the model for better\n', '            * grouping. \n', '            */\n', '    }    \n', '\n', '    metadata def UUID{\n', '        uuid : String;\n', '    }\n', '\n', '    @PCB about\n', '        partA,\n', '        partB;\n', '    \n', '    part def partA{\n', '        attribute id = "Hades_project";\n', '        attribute mass = 50.1; // 50.1 \n', '    }\n', '    part def partB{\n', '        attribute id = "KiCad";\n', '        attribute len = 12.5[m];\n', '    }   \n', '    part def partC{\n', '        attribute id = "KiCad";\n', '        attribute len : Real; \n', '        attribute lenA : Real;  \n', '    }   \n', '    part def partD{\n', '        attribute id = "48616465-735f-4707-926f-6a6563742e6b";\n', '    }\n', '}\n']
+ metadata_manager - DEBUG - Updating value in SysMLv2 model: metadata_test.partC.id with value: KiCad
+ metadata_manager - DEBUG - Updated content: ['package metadata_test{\n', '    \n', '    public import SI::*; \n', '    public import ScalarValues::*; \n', '\n', '    metadata def PCB{\n', '        doc /* This metadata def is mainly used to tag\n', '            * certain elements of the model for better\n', '            * grouping. \n', '            */\n', '    }    \n', '\n', '    metadata def UUID{\n', '        uuid : String;\n', '    }\n', '\n', '    @PCB about\n', '        partA,\n', '        partB;\n', '    \n', '    part def partA{\n', '        attribute id = "Hades_project";\n', '        attribute mass = 50.1; // 50.1 \n', '    }\n', '    part def partB{\n', '        attribute id = "KiCad";\n', '        attribute len = 12.5[m];\n', '    }   \n', '    part def partC{\n', '        attribute id = "KiCad";\n', '        attribute len : Real; \n', '        attribute lenA : Real;  \n', '    }   \n', '    part def partD{\n', '        attribute id = "48616465-735f-4707-926f-6a6563742e6b";\n', '    }\n', '}\n']
  __main__ - DEBUG - Initializing GUI
  __main__ - DEBUG - Initializing MetadataManager and VersionControl (in class GUI)
  __main__ - DEBUG - Creating Widgets for GUI
  __main__ - DEBUG - Setting up layout for GUI
  __main__ - DEBUG - Opening popup to map data
+ __main__ - DEBUG - Opening popup to 'popup_edit_sysml_model'
  __main__ - DEBUG - Loading Model with type: sysml
  __main__ - INFO - Using user-provided path: 'models/se_domain/metadata_test.sysml'
  __main__ - DEBUG - Loading file content from file path: models/se_domain/metadata_test.sysml
- __main__ - DEBUG - Loading Model with type: domain
- __main__ - INFO - Using user-provided path: 'models/ee_domain/Hades_project-job.gbrjob'
- __main__ - DEBUG - Loading file content from file path: models/ee_domain/Hades_project-job.gbrjob
- __main__ - DEBUG - Mapping selected elements
+ __main__ - DEBUG - Loading Model with type: sysml
+ __main__ - INFO - Using user-provided path: 'models/se_domain/example_drone.sysml'
+ __main__ - DEBUG - Loading file content from file path: models/se_domain/example_drone.sysml
+ __main__ - DEBUG - Found valid sysml model path: models/se_domain/example_drone.sysml
  json_utils: load_json - DEBUG - Successfully read file: <_io.TextIOWrapper name='config/default_config.json' mode='r' encoding='cp1252'>. (utils.json_utils_load_json)
  config_utils: load_config - INFO - Config file 'config/default_config.json' loaded successfully.
  file_parser - DEBUG - SysmlParser initialized
- __main__ - DEBUG - Created SysML Parser instance: <file_parser.SysmlParser object at 0x0000025E703674A0>
- file_parser - DEBUG - Validating element path: metadata_test.partB.len
- file_parser - WARNING - SysML model is None! Attempting to load model.
+ __main__ - DEBUG - Successfully created sysml_parser class instance
+ file_parser - DEBUG - Checking for certain metadata structure inside sysml model
  file_parser - DEBUG - Successfully loaded sysml model
- file_parser - DEBUG - Derived path: ['metadata_test', 'partB', 'len']
- file_parser - DEBUG - Final element 'len' is valid.
- metadata_manager - DEBUG - Mapping Metadata: SysMLv2: metadata_test.partB.len <---> Domain: GeneralSpecs.Size.Y
- metadata_manager - DEBUG - Loading mapping.json and add new mapping
- json_utils: load_json - DEBUG - Successfully read file: <_io.TextIOWrapper name='./config/mapping.json' mode='r' encoding='cp1252'>. (utils.json_utils_load_json)
- metadata_manager - DEBUG - Generated UUIDs: SysMLv2: ea6c201d-f995-46ef-9a1f-c3b0a652bfa9, Domain: 8c67e4c2-9fe5-46ed-ab62-1af6454c3d74
- metadata_manager - ERROR - Unit mismatch: SysMLv2: m, Domain: F
- __main__ - DEBUG - Mapping selected elements
- json_utils: load_json - DEBUG - Successfully read file: <_io.TextIOWrapper name='config/default_config.json' mode='r' encoding='cp1252'>. (utils.json_utils_load_json)
- config_utils: load_config - INFO - Config file 'config/default_config.json' loaded successfully.
- file_parser - DEBUG - SysmlParser initialized
- __main__ - DEBUG - Created SysML Parser instance: <file_parser.SysmlParser object at 0x0000025E70367770>
- file_parser - DEBUG - Validating element path: metadata_test.partB.len
- file_parser - WARNING - SysML model is None! Attempting to load model.
- file_parser - DEBUG - Successfully loaded sysml model
- file_parser - DEBUG - Derived path: ['metadata_test', 'partB', 'len']
- file_parser - DEBUG - Final element 'len' is valid.
- metadata_manager - DEBUG - Mapping Metadata: SysMLv2: metadata_test.partB.len <---> Domain: GeneralSpecs.Size.Y
- metadata_manager - DEBUG - Loading mapping.json and add new mapping
- json_utils: load_json - DEBUG - Successfully read file: <_io.TextIOWrapper name='./config/mapping.json' mode='r' encoding='cp1252'>. (utils.json_utils_load_json)
- metadata_manager - DEBUG - Generated UUIDs: SysMLv2: 073f7a66-ae35-4451-9063-037735ab34d7, Domain: ae10925b-7a14-40cf-a8e8-b56a322bea5e
- json_utils: save_json - DEBUG - Successfully saved file: <_io.TextIOWrapper name='./config/mapping.json' mode='w' encoding='cp1252'>. (utils.json_utils_save_json)
- metadata_manager - DEBUG - Mapping successfully saved at: ./config/mapping.json
+ file_parser - DEBUG - Given SysML model: package DroneExample {
+
+    public import SI::*; 
+    public import RequirementsDefinitions::*; 
+    public import PartDefinitions::*; 
+    public import PartDefinitions::Drone::*; // for concerns 
+    public import Views::*; // for views and viewpoints
+    public import ModelingMetadata::*; // includes the Metadata SysML Library (comes with SysMLv2)
+    public import ScalarValues::*; // Real, ... includes the ScalarValues SysML Library (comes with SysMLv2)
+    
+    item def Person;
+    item def Commands;
+
+    // PACKAGE APPROACH using metadata to tag certain elements 
+    metadata def PCBDesign{
+ file_parser - DEBUG - metadata def matches: ['PCBDesign', 'PCB']
+ file_parser - DEBUG - 'Metadata def' names: ['PCBDesign', 'PCB']
+ __main__ - DEBUG - Found Metadata: ['PCBDesign', 'PCB']
+ __main__ - DEBUG - Loading file content from file path: models/se_domain/example_drone.sysml
+ __main__ - DEBUG - SysML file content loaded.
+ __main__ - DEBUG - Found FlightController in line:         DroneExample::PartDefinitions::Drone::FlightController,
+ __main__ - DEBUG - Highlighted keyword: FlightController on line 21
+ __main__ - DEBUG - Found FlightController in line:         DroneExample::PartDefinitions::Drone::FlightController,
+ __main__ - DEBUG - Highlighted keyword: FlightController on line 21
+ __main__ - DEBUG - Found FlightController in line:         DroneExample::PartDefinitions::Drone::FlightController; 
+ __main__ - DEBUG - Highlighted keyword: FlightController on line 22
+ __main__ - DEBUG - Found FlightController in line:         DroneExample::PartDefinitions::Drone::FlightController; 
+ __main__ - DEBUG - Highlighted keyword: FlightController on line 22
+ __main__ - DEBUG - Found FlightController in line:             part fc : FlightController;
+ __main__ - DEBUG - Highlighted keyword: FlightController on line 34
+ __main__ - DEBUG - Found FlightController in line:             part fc : FlightController;
+ __main__ - DEBUG - Highlighted keyword: FlightController on line 34
+ __main__ - DEBUG - Found FlightController in line:             part def FlightController{
+ __main__ - DEBUG - Highlighted keyword: FlightController on line 72
+ __main__ - DEBUG - Found FlightController in line:             part def FlightController{
+ __main__ - DEBUG - Highlighted keyword: FlightController on line 72
+ __main__ - DEBUG - Highlighted nested content on line 73
+ __main__ - DEBUG - Highlighted nested content on line 74
+ __main__ - DEBUG - Highlighted nested content on line 75
+ __main__ - DEBUG - Highlighted nested content on line 76
+ __main__ - DEBUG - Highlighted nested content on line 77
+ __main__ - DEBUG - Highlighted nested content on line 78
+ __main__ - DEBUG - Highlighted nested content on line 79
+ __main__ - DEBUG - Highlighted nested content on line 80
+ __main__ - DEBUG - Highlighted nested content on line 81
+ __main__ - DEBUG - Highlighted nested content on line 82
+ __main__ - DEBUG - Highlighted nested content on line 83
+ __main__ - DEBUG - Highlighted nested content on line 84
+ __main__ - DEBUG - Highlighted nested content on line 85
+ __main__ - DEBUG - Highlighted nested content on line 86
+ __main__ - DEBUG - SysML file content loaded.
+ __main__ - DEBUG - Found ElectronicSpeedController in line:         DroneExample::PartDefinitions::Drone::ElectronicSpeedController; 
+ __main__ - DEBUG - Highlighted keyword: ElectronicSpeedController on line 25
+ __main__ - DEBUG - Found ElectronicSpeedController in line:             part esc : ElectronicSpeedController; 
+ __main__ - DEBUG - Highlighted keyword: ElectronicSpeedController on line 42
+ __main__ - DEBUG - Found ElectronicSpeedController in line:             part def ElectronicSpeedController{
+ __main__ - DEBUG - Highlighted keyword: ElectronicSpeedController on line 162
+ __main__ - DEBUG - Highlighted nested content on line 163
+ __main__ - DEBUG - Highlighted nested content on line 164
+ __main__ - DEBUG - Highlighted nested content on line 165
+ __main__ - DEBUG - Highlighted nested content on line 166
+ __main__ - DEBUG - Highlighted nested content on line 167
+ __main__ - DEBUG - Highlighted nested content on line 168
+ __main__ - DEBUG - Highlighted nested content on line 169
+ __main__ - DEBUG - Highlighted nested content on line 170

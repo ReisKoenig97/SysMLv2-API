@@ -142,7 +142,7 @@ class GUI:
                                        command=lambda: self.load_model_path_preference(entry_widget=model_path_entry, text_widget=sysml_file_text_widget, model_type="sysml")) 
         
         # Button to parse and highlight elements that are tagged with a specific structure (here: '@<name> about')
-        btn_highlight_tagged_elements_by_metadata = ctk.CTkButton(options_frame, text="Highlight", width=100,
+        btn_highlight_tagged_elements_by_metadata = ctk.CTkButton(options_frame, text="Highlight elements by metadata", width=100,
                                                                   command=lambda: self.highlight_tagged_elements_by_metadata(text_widget=sysml_file_text_widget, entry_widget=model_path_entry)) 
         
         ###### LAYOUT ######
