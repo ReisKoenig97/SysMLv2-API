@@ -34,6 +34,16 @@ class VersionControl:
         self.mapping_path = mapping_path 
         self.repo = git.Repo(repo_path)
 
+        self.branch_name = "automated-commits"
+
+        try:
+            self.repo = git.Repo(self.repo_path)
+            self.logger.info(f"Successfully loaded Git repository: {self.repo_path}")
+            self.ensure_branch()
+        except Exception as e:
+            self.logger.error(f"Error loading the repository: {e}")
+            raise
+
         self.logger.debug("VersionControl initialized.")
 
     def get_files_from_mapping(self):
@@ -65,7 +75,24 @@ class VersionControl:
             else:
                 print(f"File not found, skipping: {full_path}")
 
-    def commit_and_push(self, commit_message="Automated Commit"):
+    def ensure_branch(self):
+        """Ensures that the specified branch exists and switches to it."""
+        try:
+            if self.branch_name in [head.name for head in self.repo.heads]:
+                self.repo.git.checkout(self.branch_name)  # Switch to branch
+                self.logger.info(f"Branch '{self.branch_name}' already exists. Switched to it.")
+            else:
+                self.repo.git.checkout("-b", self.branch_name)  # Create new branch
+                self.logger.info(f"New branch '{self.branch_name}' has been created.")
+            
+            # Push the branch (only if it's newly created)
+            origin = self.repo.remote(name="origin")
+            origin.push(refspec=f"{self.branch_name}:{self.branch_name}")
+        except Exception as e:
+            self.logger.error(f"Error while switching/creating branch '{self.branch_name}': {e}")
+            raise
+
+    def commit_and_push(self, file_paths, commit_message="Automated Commit"):
         """
         Commits and pushes the staged changes to the remote repository.
 
@@ -74,26 +101,38 @@ class VersionControl:
         """
         self.logger.debug(f"Commit and push specific files")
         try:
-            # Pull the latest changes from remote before pushing
-            self.repo.git.pull("origin", "main")  # fetch the latest from the remote branch
+            # Ensure we are on the correct branch
+            self.ensure_branch()
 
-            # Stage relevant files
-            self.stage_files()
+            # Stage specified files
+            for file_path in file_paths:
+                full_path = os.path.join(self.repo_path, file_path)
+                if os.path.exists(full_path):
+                    self.repo.index.add([full_path])  # Stage file
+                    self.logger.info(f"Staged file: {full_path}")
+                else:
+                    self.logger.warning(f"File not found, skipping: {full_path}")
 
-            # Check if there are changes to commit
-            if self.repo.index.diff("HEAD"):
-                # Commit changes
-                self.repo.index.commit(commit_message)
-                print(f"Commit successful: {commit_message}")
+            # Check if there are staged changes
+            if not self.repo.index.diff("HEAD") and not self.repo.untracked_files:
+                self.logger.info("No changes to commit.")
+                return False
 
-                # Push to remote
-                origin = self.repo.remote(name="origin")
-                origin.push()
-                print("Changes pushed to remote repository.")
-            else:
-                print("No changes to commit.")
+            # Commit changes
+            self.repo.index.commit(commit_message)
+            self.logger.info(f"Committed changes with message: '{commit_message}'")
+
+            # Push to remote repository
+            origin = self.repo.remote(name="origin")
+            origin.push(self.branch_name)
+            self.logger.info(f"Pushed changes to branch '{self.branch_name}'")
+
+            return True
+
         except Exception as e:
-            print(f"Error during commit and push: {e}")
+            self.logger.error(f"Error during commit and push: {e}")
+            return False
+        
 
     def load_commit_history_from_file_path(self, file_path, treeview_widget):
         """Loads git commits from file path of the treeview widget and displays it inside given treeview_widget
