@@ -32,8 +32,15 @@ class VersionControl:
         self.config = config
         self.repo_path = self.config["repo_path"] #r"C:\Users\tommy\Nextcloud\MASTER ARBEIT\Code\SysMLv2 API Code" #absolute path to the git folder 
         self.mapping_path = mapping_path 
-        self.repo = git.Repo(repo_path)
+        self.branch_name = "automated-commits"
 
+        try: 
+            self.repo = git.Repo(self.repo_path)
+            self.logger.info(f"Successfully initialized Git Repository")
+            self.ensure_branch() 
+        except Exception as e: 
+            self.logger.error(f"Error during loading Repo: {e}")
+            raise
         self.logger.debug("VersionControl initialized.")
 
     def get_files_from_mapping(self):
@@ -52,20 +59,27 @@ class VersionControl:
                 files.add(item["filePath"])
         return list(files)
 
-    def stage_files(self):
+    def ensure_branch(self): 
         """
-        Stages files listed in the mapping.json for committing.
+        Ensures that specific branch for automated commits exists and changes to branch 
         """
-        files_to_commit = self.get_files_from_mapping()
-        for file_path in files_to_commit:
-            full_path = os.path.join(self.repo_path, file_path)
-            if os.path.exists(full_path):
-                self.repo.index.add([full_path])  # Staging with repo.index.add
-                print(f"Staged file: {full_path}")
+        self.logger.debug(f"Ensuring branch existence and switching if branch is available")
+        try: 
+            if self.branch_name in self.repo.heads:
+                self.repo.git.checkout(self.branch_name)
+                self.logger.info(f"Branch: {self.branch_name} exists. Switching")
             else:
-                print(f"File not found, skipping: {full_path}")
+                self.repo.git.checkout("-b", self.branch_name)
+                self.logger.info(f"Branch does not exist. Creating: {self.branch_name}")
 
-    def commit_and_push(self, commit_message="Automated Commit"):
+            # origin = self.repo.remote(name="origin")
+            # origin.push(refspec=f"{self.branch_name}:{self.branch_name}")
+
+        except Exception as e: 
+            self.logger.error(f"Error during switching/creating branch: {self.branch_name}")
+            raise 
+
+    def commit_and_push(self, file_paths, commit_message="Automated Commit"):
         """
         Commits and pushes the staged changes to the remote repository.
 
@@ -73,27 +87,31 @@ class VersionControl:
             commit_message (str): The commit message for the changes.
         """
         self.logger.debug(f"Commit and push specific files")
-        try:
-            # Pull the latest changes from remote before pushing
-            self.repo.git.pull("origin", "main")  # fetch the latest from the remote branch
+        try: 
+            if not file_paths: 
+                self.logger.warning(f"No File paths for commit provided")
+                return False
+            
+            origin = self.repo.remote(name="origin")
 
-            # Stage relevant files
-            self.stage_files()
-
-            # Check if there are changes to commit
-            if self.repo.index.diff("HEAD"):
-                # Commit changes
-                self.repo.index.commit(commit_message)
-                print(f"Commit successful: {commit_message}")
-
-                # Push to remote
-                origin = self.repo.remote(name="origin")
-                origin.push()
-                print("Changes pushed to remote repository.")
-            else:
-                print("No changes to commit.")
-        except Exception as e:
-            print(f"Error during commit and push: {e}")
+            for file_path in file_paths: 
+                # make file path explicit 
+                file_path = os.path.join(self.repo_path, file_path)
+                if not os.path.exists(file_path): 
+                    self.logger.warning(f"File not found: {file_path}")
+                    continue
+            
+                try: 
+                    self.repo.git.add(file_path)
+                    self.repo.index.commit(f"{commit_message} - {file_path}")
+                    origin.push(refspec=f"{self.branch_name}:{self.branch_name}")
+                    self.logger.info(f"Successfully pushed: {file_path} -> {self.branch_name}")
+                except Exception as e:
+                    self.logger.error(f"Error during file push {file_path}: {e}")
+            return True 
+        except Exception as e: 
+            self.logger.error(f"General error during commit and push: {e}")
+            return False 
 
     def load_commit_history_from_file_path(self, file_path, treeview_widget):
         """Loads git commits from file path of the treeview widget and displays it inside given treeview_widget

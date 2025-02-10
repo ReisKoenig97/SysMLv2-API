@@ -491,9 +491,10 @@ class GUI:
                 file_paths = [mapping_path, sysml_path, domain_path]
                 self.logger.debug(f"file paths: {file_paths}")
                 # TODO: fix commit and push 
-                if self.vc.commit_and_push_files(file_paths=file_paths, commit_message=f"Mapped elements: {sysml_element_value} and {sysml_element_value}"):
-                    self.logger.debug(f"Successfully committed and pushed changes to git. {sysml_element_value} and {domain_element_value}")
-                    self.show_versioncontrol_updated_popup()
+                # FIXME: 
+                # if self.vc.commit_and_push_files(file_paths=file_paths, commit_message=f"Mapped elements: {sysml_element_value} and {sysml_element_value}"):
+                #     self.logger.debug(f"Successfully committed and pushed changes to git. {sysml_element_value} and {domain_element_value}")
+                #     self.show_versioncontrol_updated_popup()
             else:
                 # Notify the user about the failure of mapping
                 messagebox.showerror
