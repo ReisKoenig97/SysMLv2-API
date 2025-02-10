@@ -14,7 +14,7 @@ def load_json(file_path):
     logger = logging.getLogger("json_utils: load_json")
     try:
         with open(file_path, 'r') as file:
-            logger.debug(f"Successfully read file: {file}. ({__name__}_load_json)")
+            #logger.debug(f"Successfully read file: {file}. ({__name__}_load_json)")
             return json.load(file)
     except IOError as e:
         logger.error(f"Error loading JSON from {file_path} in {__name__}: {e}")
@@ -38,7 +38,7 @@ def save_json(file_path, data):
     try:
         with open(file_path, 'w') as file:
             json.dump(data, file, indent=4)
-            logger.debug(f"Successfully saved file: {file}. ({__name__}_save_json)")
+            #logger.debug(f"Successfully saved file: {file}. ({__name__}_save_json)")
         return True
     except IOError as e:
         logger.error(f"Error saving JSON to {file_path} in {__name__}: {e}")

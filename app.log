@@ -1,29 +1,21 @@
- json_utils: load_json - DEBUG - Successfully read file: <_io.TextIOWrapper name='config/default_config.json' mode='r' encoding='cp1252'>. (utils.json_utils_load_json)
  config_utils: load_config - INFO - Config file 'config/default_config.json' loaded successfully.
+ file_parser - DEBUG - Initial gerber_parser
+ file_parser - INFO - GerberParser initialized
  versioncontrol - DEBUG - VersionControl initialized.
- metadata_manager - INFO - Initialized MetadataManager
- metadata_manager - DEBUG - Creating mapping.json from template
- metadata_manager - INFO - Mapping file already exists at ./config/mapping.json
+ metadata_manager - INFO - MetadataManager - create_mapping_file_from_template
  metadata_manager - DEBUG - MetadataManager initialized
  __main__ - DEBUG - Updating SysML model with metadata
- metadata_manager - INFO - Startig update_sysml_model
- json_utils: load_json - DEBUG - Successfully read file: <_io.TextIOWrapper name='./config/mapping.json' mode='r' encoding='cp1252'>. (utils.json_utils_load_json)
- metadata_manager - DEBUG - Updating value in SysMLv2 model: metadata_test.partB.id with value: KiCad
- metadata_manager - DEBUG - Updated content: ['package metadata_test{\n', '    \n', '    public import SI::*; \n', '    public import ScalarValues::*; \n', '\n', '    metadata def PCB{\n', '        doc /* This metadata def is mainly used to tag\n', '            * certain elements of the model for better\n', '            * grouping. \n', '            */\n', '    }    \n', '\n', '    metadata def UUID{\n', '        uuid : String;\n', '    }\n', '\n', '    @PCB about\n', '        partA,\n', '        partB;\n', '    \n', '    part def partA{\n', '        attribute id = "Hades_project";\n', '        attribute mass = 50.1; // 50.1 \n', '    }\n', '    part def partB{\n', '        attribute id = "KiCad";\n', '        attribute len = 12.5[m];\n', '    }   \n', '    part def partC{\n', '        attribute id = "KiCad";\n', '        attribute len : Real; \n', '        attribute lenA : Real;  \n', '    }   \n', '    part def partD{\n', '        attribute id = "48616465-735f-4707-926f-6a6563742e6b";\n', '    }\n', '}\n']
- metadata_manager - DEBUG - Updating value in SysMLv2 model: metadata_test.partB.len with value: 12.5
- metadata_manager - DEBUG - Updated content: ['package metadata_test{\n', '    \n', '    public import SI::*; \n', '    public import ScalarValues::*; \n', '\n', '    metadata def PCB{\n', '        doc /* This metadata def is mainly used to tag\n', '            * certain elements of the model for better\n', '            * grouping. \n', '            */\n', '    }    \n', '\n', '    metadata def UUID{\n', '        uuid : String;\n', '    }\n', '\n', '    @PCB about\n', '        partA,\n', '        partB;\n', '    \n', '    part def partA{\n', '        attribute id = "Hades_project";\n', '        attribute mass = 50.1; // 50.1 \n', '    }\n', '    part def partB{\n', '        attribute id = "KiCad";\n', '        attribute len = 12.5[m];\n', '    }   \n', '    part def partC{\n', '        attribute id = "KiCad";\n', '        attribute len : Real; \n', '        attribute lenA : Real;  \n', '    }   \n', '    part def partD{\n', '        attribute id = "48616465-735f-4707-926f-6a6563742e6b";\n', '    }\n', '}\n']
- metadata_manager - DEBUG - Updating value in SysMLv2 model: metadata_test.partC.id with value: KiCad
- metadata_manager - DEBUG - Updated content: ['package metadata_test{\n', '    \n', '    public import SI::*; \n', '    public import ScalarValues::*; \n', '\n', '    metadata def PCB{\n', '        doc /* This metadata def is mainly used to tag\n', '            * certain elements of the model for better\n', '            * grouping. \n', '            */\n', '    }    \n', '\n', '    metadata def UUID{\n', '        uuid : String;\n', '    }\n', '\n', '    @PCB about\n', '        partA,\n', '        partB;\n', '    \n', '    part def partA{\n', '        attribute id = "Hades_project";\n', '        attribute mass = 50.1; // 50.1 \n', '    }\n', '    part def partB{\n', '        attribute id = "KiCad";\n', '        attribute len = 12.5[m];\n', '    }   \n', '    part def partC{\n', '        attribute id = "KiCad";\n', '        attribute len : Real; \n', '        attribute lenA : Real;  \n', '    }   \n', '    part def partD{\n', '        attribute id = "48616465-735f-4707-926f-6a6563742e6b";\n', '    }\n', '}\n']
+ metadata_manager - INFO - MetadataManager - update_sysml_model
+ metadata_manager - DEBUG - Checking if there are new values in domain files...
+ metadata_manager - DEBUG - Current domain file model: GerberJobFile
+ metadata_manager - DEBUG - Current domain element: {'uuid': 'a1f0d27b-99b8-484b-bd2c-0aa1f6a78f16', 'name': 'Vendor', 'value': 'KiCad', 'unit': '', 'dataType': 'String', 'elementPath': 'Header.GenerationSoftware.Vendor', 'filePath': 'models/ee_domain/Hades_project-job.gbrjob', 'created': '03.02.2025', 'lastModified': '03.02.2025'}
+ file_parser - INFO - GerberParser - get_gerber_job_file_value
+ file_parser - INFO - Successfully retrieved value for 'Header.GenerationSoftware.Vendor': KiCad2
+ metadata_manager - DEBUG - Element Path is valid with element value: KiCad2
+ metadata_manager - DEBUG - Updated sysml element in mapping to: KiCad2
+ metadata_manager - DEBUG - Checking if there are new values in domain files... Done
+ metadata_manager - DEBUG - MetadataManager - update_value_in_sysml_model
  __main__ - DEBUG - Initializing GUI
  __main__ - DEBUG - Initializing MetadataManager and VersionControl (in class GUI)
  __main__ - DEBUG - Creating Widgets for GUI
  __main__ - DEBUG - Setting up layout for GUI
- __main__ - DEBUG - Opening popup to map data
- __main__ - DEBUG - Opening popup to 'popup_edit_sysml_model'
- __main__ - DEBUG - Opening popup to map data
- __main__ - DEBUG - Loading Model with type: sysml
- __main__ - INFO - Using user-provided path: 'models/se_domain/metadata_test.sysml'
- __main__ - DEBUG - Loading file content from file path: models/se_domain/metadata_test.sysml
- __main__ - DEBUG - Loading Model with type: domain
- __main__ - INFO - Using user-provided path: 'models/ee_domain/Hades_project-job.gbrjob'
- __main__ - DEBUG - Loading file content from file path: models/ee_domain/Hades_project-job.gbrjob

@@ -23,7 +23,7 @@ package metadata_test{
         attribute mass = 50.1; // 50.1 
     }
     part def partB{
-        attribute id = "KiCad";
+        attribute id = "KiCad2";
         attribute len = 12.5[m];
     }   
     part def partC{

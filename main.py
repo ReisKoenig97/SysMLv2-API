@@ -668,14 +668,14 @@ def main():
     #DEFAULT_GBRJOB_KEYWORDS = ["Name", "GUID", "Version", "Vendor", "Application", "CreationDate", "X", "Y", "LayerNumber", "BoardThickness"]
     #gbrjob_metadata = gerberjobfile.parse_gerber_job_file(sections= DEFAULT_GBRJOB_SECTIONS,keywords=DEFAULT_GBRJOB_KEYWORDS)
     #print(gbrjob_metadata)
-    fp = GerberParser()
+    fp_gerber = GerberParser()
     vc = VersionControl(config=DEFAULT_CONFIG)
-    mm = MetadataManager(config=DEFAULT_CONFIG, versioncontrol=vc, fileparser=fp) 
+    mm = MetadataManager(config=DEFAULT_CONFIG, versioncontrol=vc, fileparser=fp_gerber) 
     logger.debug(f"Updating SysML model with metadata")
     mm.update_sysml_model()
 
     # Start the Tkinter app
-    app = GUI(config=DEFAULT_CONFIG, metadatamanager=mm, versioncontrol=vc, fileparser=fp)
+    app = GUI(config=DEFAULT_CONFIG, metadatamanager=mm, versioncontrol=vc)
     app.root.mainloop() 
 
 if __name__ == "__main__":

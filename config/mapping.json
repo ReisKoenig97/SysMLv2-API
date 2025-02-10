@@ -23,7 +23,7 @@
         {
             "uuid": "a1f0d27b-99b8-484b-bd2c-0aa1f6a78f16",
             "name": "Vendor",
-            "value": "KiCad",
+            "value": "KiCad2",
             "unit": "",
             "dataType": "String",
             "elementPath": "Header.GenerationSoftware.Vendor",

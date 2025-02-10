@@ -1,6 +1,7 @@
 import logging 
 import re #regex for parsing 
 import os
+import json
 
 from utils.json_utils import load_json
 from utils.config_utils import load_config
@@ -36,13 +37,14 @@ class SysmlParser:
         
         self.sysml_path = sysml_path
         self.sysml_model = None #sysml_model will be extracted from sysml_path
-        self.logger.debug(f"SysmlParser initialized")
+        self.logger.info(f"SysmlParser initialized")
 
     def load_sysml_model(self): 
         """Parses and loads model from self.sysml_path.
         Returns:
             str: The content of the file as a string.
         """
+        self.logger.info(f"SysmlParser - load_sysml_model")
         if not self.sysml_path:
             self.logger.debug(f"No SysML model path provided. Using default path: {os.path.join(self.config['base_se_path'], self.config['base_se_model'])}") 
             self.sysml_path = os.path.join(self.config['base_se_path'], self.config['base_se_model'])
@@ -67,7 +69,7 @@ class SysmlParser:
         Returns:
             List of of the found metadata definitions names or empty list if not found that structure
         """
-        self.logger.debug(f"Checking for certain metadata structure inside sysml model")
+        self.logger.info(f"SysmlParser - check_metadata_exist")
         self.sysml_model = self.load_sysml_model() 
         # 1 Check if sysml model can be loaded from initialized class sysml model path 
         if not self.sysml_model:
@@ -107,6 +109,7 @@ class SysmlParser:
         Parameters: 
             medata_name : String. Name of the metadata def to search for inside sysml model  
         """
+        self.logger.info(f"SysmlParser - get_metadata_about_elements")
         if not self.sysml_model:
             self.logger.warning("No SysML model loaded.")
             return 
@@ -132,7 +135,7 @@ class SysmlParser:
         return []
     
     def validate_element_path(self, element_path):
-        self.logger.debug(f"Validating element path: {element_path}")
+        self.logger.info(f"SysmlParser - validate_element_path")
 
         if not self.sysml_model:
             self.logger.warning("SysML model is None! Attempting to load model.")
@@ -203,13 +206,14 @@ class GerberParser:
     2) Parse through and extract metadata 
     3) Save Metadata in JSON Formatted file 
     """
-    def __init__(self, file_path=".models/ee_domain/Hades_project-job.gbrjob"):
+    def __init__(self, file_path="models/ee_domain/Hades_project-job.gbrjob"): # check string path with and without "." 
         self.logger = logging.getLogger(__name__)
         self.logger.debug(f"Initial gerber_parser")
         # Contains extracted informations of parsed gerber file 
         #self.data = {}
         # Path to gerber file to be parsed
         self.file_path = file_path
+        self.logger.info(f"GerberParser initialized")
 
     # def parse_gerber_job_file(self, sections: list[str], keywords: list[str]):
     #     """
@@ -279,45 +283,21 @@ class GerberParser:
     #     self.logger.debug("Successfully parsed and extracted relevant Metadata")
     #     return extracted_data 
 
-    def check_gerber_job_file_element_path(self, elementPath): 
-        """
-        Checks if the given element path from mapping.json is valid 
-        """
-        # Load the Gerber job file using the load_json function
-        gbr_job_file = load_json(self.file_path)
-        if not gbr_job_file:
-            self.logger.error("Failed to load Gerber job file.")
-            return False
-
-        keys = elementPath.split(".")  # Split path into individual keys
-        current_data = gbr_job_file  # Start from the root of the loaded JSON
-
-        for key in keys:
-            # Check if the current key exists in the current level of the JSON data
-            if isinstance(current_data, dict) and key in current_data:
-                current_data = current_data[key]  # Navigate deeper into the JSON
-            else:
-                # If the key is not found at any level, return False
-                self.logger.warning(f"Element path '{elementPath}' is invalid: '{key}' not found.")
-                return False
-
-        # If all keys exist, return True
-        self.logger.info(f"Element path '{elementPath}' is valid.")
-        return True
-
-    
     def get_gerber_job_file_value(self, elementPath):
         """
         Parses GerberJobFile via given elementPath and returns value 
+        Checks if element path is valid 
         NOTE: Helper functions used in metadata manager 
         Returns:
             Value of element from given element path (mapping.json)
         """
+        self.logger.info(f"GerberParser - get_gerber_job_file_value")
         # Load the Gerber job file using the load_json function
-        gbr_job_file = load_json(self.file_path)
-        if not gbr_job_file:
-            self.logger.error("Failed to load Gerber job file.")
-            return None
+        try: 
+            with open(self.file_path, "r", encoding="utf-8") as f: 
+                gbr_job_file = json.load(f)
+        except Exception as e:
+            self.logger.error(f"Failed to load Gerber job file")
 
         keys = elementPath.split(".")  # Split path into individual keys
         current_data = gbr_job_file  # Start from the root of the loaded JSON
