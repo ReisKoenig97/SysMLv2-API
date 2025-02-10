@@ -50,7 +50,7 @@
     - [ ] wenn mapping erstellt wird -> sysml datei (target element) check ob target element unit hat -> daraus automatisch datatype ableiten
     - [ ] 
     - [ ] 
-- [ ] PROBLEM bei automatisiertes git psuh -> danach kann man nicht mehr pushen! 
+- [ ] PROBLEM bei automatisiertes git psuh -> danach kann man nicht mehr pushen! -> added new branch: automated-commits 
 - [ ] 
 - [ ] 
 - [ ] 
