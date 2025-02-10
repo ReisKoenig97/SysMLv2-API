@@ -16,7 +16,7 @@ class MetadataManager:
     Creates UUIDS for each mapped element
     Responsible for versioning, commits and traceability 
     """
-    def __init__(self, config, versioncontrol=None):
+    def __init__(self, config, versioncontrol=None, fileparser=None):
         """
         Initializes the metadata manager
         """
@@ -28,6 +28,8 @@ class MetadataManager:
         self.mapping_file_path = "./config/mapping.json"
         self.repo_path = self.config["repo_path"]
         self.vc = versioncontrol
+        self.fp_gerber = fileparser
+        
         # Parameters will be set later by functions  
         self.sysml_model = None
         self.domain_model = None
@@ -69,8 +71,6 @@ class MetadataManager:
             domain_element_value : String. Value of domain element 
         """
         self.logger.debug(f"Mapping Metadata: SysMLv2: {sysml_element_path} <---> Domain: {domain_element_path}")
-
-        
 
         # Validate file existence
         if not os.path.exists(sysml_path):
@@ -194,22 +194,55 @@ class MetadataManager:
         self.logger.info(f"Startig update_sysml_model")
         # 1) Load mapping.json 
         mapping = load_json(file_path=self.mapping_file_path)
+        
+        # 2) Check if current existing mappings are still valid (paths) and if values are newer than the current ones 
+        # for each entry open file (via filePath) and check with elementPath if value still the same 
+        domain_models = [{key: value} for key, value in mapping.items() if key not in ["SysMLv2", "Mappings"]] 
+        updated = False 
 
-        # 2) Loop through all mappings and update SysMLv2 model with domain metadata
+        for model in domain_models.items(): 
+            self.logger.debug(f"Current domain file model: {model}")
+            for domain_element in model.items(): 
+                self.logger.debug(f"Current domain element: {domain_element}")
+                domain_element_uuid = domain_element.get("uuid")
+                domain_element_value = domain_element.get("value")
+                domain_element_elementPath = domain_element.get("elementPath")
+                domain_element_filePath= domain_element.get("filePath")
+
+                # Check if file path is still valid 
+                if not os.path.exists(domain_element_filePath):
+                    self.logger.warning(f"File path does not exist: {domain_element_filePath}")
+                    continue
+                # Check if element path is valid for gerber file 
+                current_domain_element_value = self.fp.get_gerber_job_file_value(element_path = domain_element_elementPath)
+                if current_domain_element_value: 
+                    self.logger.debug(f"Element Path is valid with element value: {current_domain_element_value}")
+                    # Check if current value and already existing domain value (from mapping) are the same
+                    if current_domain_element_value != domain_element_value:
+                        # TODO:  
+                        # a) Change value in mapping.json 
+                        # b) Change value in SysMLv2 model 
+                        
+                        pass 
+                else: 
+                    self.logger.warning(f"Element Path is not valid")
+                
+
+
+
+
+
+        # 3) Loop through all mappings and update SysMLv2 model with domain metadata
         # Overwrite values of mapped elements in "SysMLv2" with values from "GerberJobFile" etc."
         for mapping_entry in mapping["Mappings"]:
             source_uuid = mapping_entry["sourceUUID"]
             target_uuid = mapping_entry["targetUUID"]
-            #self.logger.debug(f"Mapping: {source_uuid} --> {target_uuid}")
 
             # Find source and target elements
             source_element = next(
                 (elem for elem in mapping["GerberJobFile"] if elem["uuid"] == source_uuid), None)
             target_element = next(
                 (elem for elem in mapping["SysMLv2"] if elem["uuid"] == target_uuid), None)
-            #self.logger.debug(f"Source element: {source_element}")
-            #self.logger.debug(f"Target element: {target_element}")
-
             # Check if both elements were found
             if source_element is None or target_element is None:
                 self.logger.error(f"Source or target element not found in mapping.json: {source_uuid}, {target_uuid}")
@@ -306,3 +339,4 @@ class MetadataManager:
             else:
                 updated_content.append(line)
         return updated_content
+

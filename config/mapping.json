@@ -10,28 +10,6 @@
             "filePath": "models/se_domain/metadata_test.sysml",
             "created": "03.02.2025",
             "lastModified": "03.02.2025"
-        },
-        {
-            "uuid": "073f7a66-ae35-4451-9063-037735ab34d7",
-            "name": "len",
-            "value": "Real",
-            "unit": "m",
-            "dataType": "String",
-            "elementPath": "metadata_test.partB.len",
-            "filePath": "models/se_domain/metadata_test.sysml",
-            "created": "10.02.2025",
-            "lastModified": "10.02.2025"
-        },
-        {
-            "uuid": "5c8bdb3f-8b5c-42ac-b5f2-7e5574e09fe5",
-            "name": "id",
-            "value": "String",
-            "unit": "",
-            "dataType": "String",
-            "elementPath": "metadata_test.partC.id",
-            "filePath": "models/se_domain/metadata_test.sysml",
-            "created": "10.02.2025",
-            "lastModified": "10.02.2025"
         }
     ],
     "Mappings": [
@@ -39,16 +17,6 @@
             "sourceUUID": "a1f0d27b-99b8-484b-bd2c-0aa1f6a78f16",
             "targetUUID": "eae095cc-c6fa-4332-b9cd-79378929ef73",
             "created": "03.02.2025"
-        },
-        {
-            "sourceUUID": "ae10925b-7a14-40cf-a8e8-b56a322bea5e",
-            "targetUUID": "073f7a66-ae35-4451-9063-037735ab34d7",
-            "created": "10.02.2025"
-        },
-        {
-            "sourceUUID": "ffb32973-8a92-4b84-b14d-638175849529",
-            "targetUUID": "5c8bdb3f-8b5c-42ac-b5f2-7e5574e09fe5",
-            "created": "10.02.2025"
         }
     ],
     "GerberJobFile": [
@@ -62,28 +30,6 @@
             "filePath": "models/ee_domain/Hades_project-job.gbrjob",
             "created": "03.02.2025",
             "lastModified": "03.02.2025"
-        },
-        {
-            "uuid": "ae10925b-7a14-40cf-a8e8-b56a322bea5e",
-            "name": "Y",
-            "value": "12.5",
-            "unit": "m",
-            "dataType": "Real",
-            "elementPath": "GeneralSpecs.Size.Y",
-            "filePath": "models/ee_domain/Hades_project-job.gbrjob",
-            "created": "10.02.2025",
-            "lastModified": "10.02.2025"
-        },
-        {
-            "uuid": "ffb32973-8a92-4b84-b14d-638175849529",
-            "name": "Vendor",
-            "value": "KiCad",
-            "unit": "",
-            "dataType": "String",
-            "elementPath": "Header.GenerationSoftware.Vendor",
-            "filePath": "models/ee_domain/Hades_project-job.gbrjob",
-            "created": "10.02.2025",
-            "lastModified": "10.02.2025"
         }
     ]
 }

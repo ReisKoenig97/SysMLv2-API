@@ -203,82 +203,137 @@ class GerberParser:
     2) Parse through and extract metadata 
     3) Save Metadata in JSON Formatted file 
     """
-    def __init__(self, file_path):
+    def __init__(self, file_path=".models/ee_domain/Hades_project-job.gbrjob"):
         self.logger = logging.getLogger(__name__)
         self.logger.debug(f"Initial gerber_parser")
         # Contains extracted informations of parsed gerber file 
-        self.data = {}
+        #self.data = {}
         # Path to gerber file to be parsed
         self.file_path = file_path
 
-    def parse_gerber_job_file(self, sections: list[str], keywords: list[str]):
-        """
-        Reads, extracts and saves gerber file metadata
+    # def parse_gerber_job_file(self, sections: list[str], keywords: list[str]):
+    #     """
+    #     Reads, extracts and saves gerber file metadata
 
-        Args:
-        sections (list[str]): List of main objects to search in ('Header', 'GeneralSpecs', 'DesignRules', 'MaterialStackup', 'FilesAttributes').
-        keywords (list[str]): List of keywords to search for inside the specified sections.
+    #     Args:
+    #     sections (list[str]): List of main objects to search in ('Header', 'GeneralSpecs', 'DesignRules', 'MaterialStackup', 'FilesAttributes').
+    #     keywords (list[str]): List of keywords to search for inside the specified sections.
 
-        Returns: dict  when successful parsed, else empty dict
-        """ 
-        # Helper function 
-        def search_keywords(data , keywords, parent_key = ""): 
-            """
-            Recursively searches for specified keywords in a nested JSON structure
-            Args:
-                data (dict) : data to search inside
-                keywords (list[str]) : list of words to search for inside the file (JSON)
-                parent_key (str) : Current path of keys 
-            Returns: 
-                dict : Contains found key-value pairs matching the keywords
-            """
-            found_data = {}
-            # Case 1: Check if data is a dict (has nested properties)
-            if isinstance(data, dict): 
-                for key, value in data.items():
-                    # Set the current key and their parent (if it has a parent)   
-                    new_key = f"{parent_key}.{key}" if parent_key else key
-                    # Check if we found any keyword from the given keywords list inside for each keyword in the line 
-                    if any(keyword in key for keyword in keywords): 
-                        # Adding the value to the key
-                        found_data[new_key] = value 
-                    # After adding the key-value pair. Recursively check if that value has properties as well / has '{ ... }'
-                    found_data.update(search_keywords(data=value, keywords=keywords, parent_key=new_key))
-            # Case 2: Each item inside the list is a dict, therefore looping through each dict 
-            elif isinstance(data, list):
-                for index, item in enumerate(data): 
-                    found_data.update(search_keywords(data=item, keywords=keywords, parent_key=f"{parent_key}[{index}]"))
+    #     Returns: dict  when successful parsed, else empty dict
+    #     """ 
+    #     # Helper function 
+    #     def search_keywords(data , keywords, parent_key = ""): 
+    #         """
+    #         Recursively searches for specified keywords in a nested JSON structure
+    #         Args:
+    #             data (dict) : data to search inside
+    #             keywords (list[str]) : list of words to search for inside the file (JSON)
+    #             parent_key (str) : Current path of keys 
+    #         Returns: 
+    #             dict : Contains found key-value pairs matching the keywords
+    #         """
+    #         found_data = {}
+    #         # Case 1: Check if data is a dict (has nested properties)
+    #         if isinstance(data, dict): 
+    #             for key, value in data.items():
+    #                 # Set the current key and their parent (if it has a parent)   
+    #                 new_key = f"{parent_key}.{key}" if parent_key else key
+    #                 # Check if we found any keyword from the given keywords list inside for each keyword in the line 
+    #                 if any(keyword in key for keyword in keywords): 
+    #                     # Adding the value to the key
+    #                     found_data[new_key] = value 
+    #                 # After adding the key-value pair. Recursively check if that value has properties as well / has '{ ... }'
+    #                 found_data.update(search_keywords(data=value, keywords=keywords, parent_key=new_key))
+    #         # Case 2: Each item inside the list is a dict, therefore looping through each dict 
+    #         elif isinstance(data, list):
+    #             for index, item in enumerate(data): 
+    #                 found_data.update(search_keywords(data=item, keywords=keywords, parent_key=f"{parent_key}[{index}]"))
                 
-            return found_data
+    #         return found_data
         
-        # Load Gerber Job File 
-        self.logger.debug(f"Parsing Gerber Job File {self.file_path}")
-        # Open Gerber Job File (which is in JSON format)
+    #     # Load Gerber Job File 
+    #     self.logger.debug(f"Parsing Gerber Job File {self.file_path}")
+    #     # Open Gerber Job File (which is in JSON format)
+    #     gbr_job_file = load_json(self.file_path)
+
+    #     extracted_data = {}
+    #     # Search inside given sections
+    #     for section in sections:
+    #         if section not in gbr_job_file:
+    #             self.logger.warning(f"Section '{section} not found in the Gerber Job File {self.file_path}")
+    #             continue
+
+    #         self.logger.debug(f"Searching in section: {section}")
+    #         target_section = gbr_job_file[section]
+    #         section_data = search_keywords(data=target_section, keywords=keywords) 
+
+    #         extracted_data[section] = section_data
+
+
+    #     print("Extracted Metadata: ")
+    #     for section, data in extracted_data.items(): 
+    #         print(f"Section: {section}\n")
+    #         for key, value in data.items(): 
+    #             print(f"{key} : {value}")
+        
+    #     self.logger.debug("Successfully parsed and extracted relevant Metadata")
+    #     return extracted_data 
+
+    def check_gerber_job_file_element_path(self, elementPath): 
+        """
+        Checks if the given element path from mapping.json is valid 
+        """
+        # Load the Gerber job file using the load_json function
         gbr_job_file = load_json(self.file_path)
+        if not gbr_job_file:
+            self.logger.error("Failed to load Gerber job file.")
+            return False
 
-        extracted_data = {}
-        # Search inside given sections
-        for section in sections:
-            if section not in gbr_job_file:
-                self.logger.warning(f"Section '{section} not found in the Gerber Job File {self.file_path}")
-                continue
+        keys = elementPath.split(".")  # Split path into individual keys
+        current_data = gbr_job_file  # Start from the root of the loaded JSON
 
-            self.logger.debug(f"Searching in section: {section}")
-            target_section = gbr_job_file[section]
-            section_data = search_keywords(data=target_section, keywords=keywords) 
+        for key in keys:
+            # Check if the current key exists in the current level of the JSON data
+            if isinstance(current_data, dict) and key in current_data:
+                current_data = current_data[key]  # Navigate deeper into the JSON
+            else:
+                # If the key is not found at any level, return False
+                self.logger.warning(f"Element path '{elementPath}' is invalid: '{key}' not found.")
+                return False
 
-            extracted_data[section] = section_data
+        # If all keys exist, return True
+        self.logger.info(f"Element path '{elementPath}' is valid.")
+        return True
 
+    
+    def get_gerber_job_file_value(self, elementPath):
+        """
+        Parses GerberJobFile via given elementPath and returns value 
+        NOTE: Helper functions used in metadata manager 
+        Returns:
+            Value of element from given element path (mapping.json)
+        """
+        # Load the Gerber job file using the load_json function
+        gbr_job_file = load_json(self.file_path)
+        if not gbr_job_file:
+            self.logger.error("Failed to load Gerber job file.")
+            return None
 
-        print("Extracted Metadata: ")
-        for section, data in extracted_data.items(): 
-            print(f"Section: {section}\n")
-            for key, value in data.items(): 
-                print(f"{key} : {value}")
-        
-        self.logger.debug("Successfully parsed and extracted relevant Metadata")
-        return extracted_data 
+        keys = elementPath.split(".")  # Split path into individual keys
+        current_data = gbr_job_file  # Start from the root of the loaded JSON
 
+        for key in keys:
+            # Check if the current key exists in the current level of the JSON data
+            if isinstance(current_data, dict) and key in current_data:
+                current_data = current_data[key]  # Navigate deeper into the JSON
+            else:
+                # If the key is not found, log and return None (or raise an exception if needed)
+                self.logger.warning(f"Element path '{elementPath}' is invalid: '{key}' not found.")
+                return None
+
+        # Return the value if the entire path was found
+        self.logger.info(f"Successfully retrieved value for '{elementPath}': {current_data}")
+        return current_data
 
 class Code_parser: 
     # Parses specific files ()

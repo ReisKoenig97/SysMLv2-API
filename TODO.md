@@ -44,15 +44,19 @@
 - [x] ACHTUNG: wenn values in sysmlv2 model reingeschrieben werden, muss auf den DataType geachtet werden. zB attribute len : Real ---> wird überschrieben zu -> = 1.23[mm]
 - [ ] Datatypes und values check in mapping 
 - [x] Unit Check TODO: Add unit selection in GUI
-- [ ] Unit check in Sysmlv2 
-- [ ] Case: Was wenn nur attribute mass; und es noch nicht vom user definiert ist? 
-- [ ] Mapping datatype und unit check
-    - [ ] wenn mapping erstellt wird -> sysml datei (target element) check ob target element unit hat -> daraus automatisch datatype ableiten
+- [x] Unit check in Sysmlv2 
+- [x] Case: Was wenn nur attribute mass; und es noch nicht vom user definiert ist? 
+- [x] Mapping datatype und unit check
+    - [x] wenn mapping erstellt wird -> sysml datei (target element) check ob target element unit hat -> daraus automatisch datatype ableiten
+    - [ ] wenn unit checker sagt, dass es eine zahl ist ( ":" -> "=" kommt keine unit aka "[]" ) -> oder sagen, dass es richtig angewendet wird vom nutzer? 
+    - [ ] 
+- [x] PROBLEM bei automatisiertes git psuh -> danach kann man nicht mehr pushen! -> added new branch: automated-commits -> funktionen entfernt, workflow dass das Skript nicht behandeln sollte 
+- [ ] MAPPING: Check if domain files has changed? 
+    - [ ] Check jedes mapping in mapping.json wenn es neue Werte hat oder Pfad nicht mehr existiert -> muss das sysml modell überschreiben und "lastModified" aktualisieren     
+        - [ ] Skript benachrichtigt den User automatisch wenn durch die mapping.json die domain files neue Werte haben oder paths nicht mehr existieren  
+    - [ ] Button für popup wo man die aktuellen mappings sehen kann (in Map data popup)
     - [ ] 
     - [ ] 
-- [ ] PROBLEM bei automatisiertes git psuh -> danach kann man nicht mehr pushen! -> added new branch: automated-commits 
-- [ ] 
-- [ ] 
 - [ ] 
 
 
