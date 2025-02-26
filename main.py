@@ -53,7 +53,9 @@ class GUI:
         self.available_units = ["", "m", "kg", "s", "A", "K", "mol", "m^2", "m^3", "N", "Pa", "J", "W", "C", "V", "F"]
 
         self.sysml_model = None #initialized object from sysml parser of file_parser sysml_parser
-        self.sysml_model_standard_path = "" 
+        #self.sysml_model_standard_path = "" 
+        self.sysml_file_path = ""
+        self.domain_file_path = ""
 
         self.mm = metadatamanager
         self.vc = versioncontrol
@@ -235,32 +237,6 @@ class GUI:
 
             except Exception as e: 
                 self.logger.info(f"Error trying to create a sysml_parser class instance with error: {e}")
-    
-    def load_model_path_preference(self, entry_widget, text_widget, model_type):
-        """Loads the SysML model, using the provided Entry widget and Text widget.
-        
-        Parameters: 
-            model_type : String. Indicates which domain should be loaded. ("sysml" or "domain")
-
-        """
-        self.logger.info(f"load_model_path_preference")
-        user_path = entry_widget.get().strip()
-        #self.logger.debug(f"Selected user path: {user_path}")
-
-        # If user provides a path, prioritize it; otherwise, use default from config
-        if user_path and os.path.exists(user_path):
-            self.logger.debug(f"Using user-provided path: '{user_path}'")
-            if model_type == "sysml":
-                #self.logger.debug(f"Found type: sysml")
-                self.sysml_model_standard_path = user_path
-            if model_type == "domain": 
-                #self.logger.debug(f"Found type domain")
-                self.domain_model_standard_path = user_path
-        else:
-            self.logger.warning(f"User-provided path is invalid or empty.")
-
-        # Load the file into the text widget
-        self.load_file_content(file_path=user_path, text_widget=text_widget)
 
     def popup_map_data(self):
         """Opens a popup to map the data.
@@ -271,8 +247,8 @@ class GUI:
         popup.geometry("1500x1000")
         popup.grid_rowconfigure(0, weight=1)
         popup.grid_rowconfigure(1, weight=0)
-        popup.grid_columnconfigure(0, weight=0) #weight 0 means as much as it needs 
-        popup.grid_columnconfigure((1,2), weight=1)
+        popup.grid_columnconfigure(0, minsize=200) #weight 0 means as much as it needs 
+        popup.grid_columnconfigure((1,2), weight=1) #
 
         ########## FRAMES ##########
         # OPTIONS FRAME
@@ -280,7 +256,6 @@ class GUI:
         options_frame.rowconfigure(0, weight=0)
         options_frame.rowconfigure(1, weight=0)
         options_frame.columnconfigure(0, weight=0)
-        options_frame.columnconfigure(1, weight=0)
 
         # SYSML FRAME: LEFT
         sysml_frame = ctk.CTkFrame(popup, fg_color="lightgrey")
@@ -316,65 +291,43 @@ class GUI:
         ########## WIDGETS ########## 
 
         # OPTIONS FRAME SYSML FRAME:      Label, Entry, Text and Button for user input to load sysml model 
-        options_frame_sysml_path_entry_label = ctk.CTkLabel(options_frame, text="SysMLv2 Model Path:",
-                                                             font=("default",12),text_color="black")
-        options_frame_sysml_path_entry = ctk.CTkEntry(options_frame, width=150, 
-                                                      placeholder_text="Enter SysML model path here...")
-        self.sysml_model_standard_path = os.path.join(self.config["base_se_path"], self.config["base_se_model"])
-        options_frame_sysml_path_entry.insert(0, self.sysml_model_standard_path)
-        sysml_frame_model_text_widget = tk.Text(sysml_frame, wrap=tk.WORD)
-        # btn_load_model_sysml = ctk.CTkButton(options_frame, text="Load SysML Model", width=50,
-        #                                      command=lambda: self.load_model_path_preference(entry_widget=options_frame_sysml_path_entry, text_widget=sysml_frame_model_text_widget, model_type="sysml"))
-        btn_load_model_sysml = ctk.CTkButton(options_frame, text="Load SysML Model", width=50,
-                                     command=lambda: self.select_sysml_file(entry_widget=options_frame_sysml_path_entry))
+        sysml_frame_text_widget = tk.Text(sysml_frame, wrap=tk.WORD)
+        btn_load_model_sysml = ctk.CTkButton(options_frame, text="Load SysML Model", 
+                                             command=lambda: self.select_file(model_type="sysml", text_widget=sysml_frame_text_widget))
 
         # OPTIONS FRAME DOMAIN FRAME:     Label, Entry, Text and Button for user input to load domain model 
-        options_frame_domain_file_format_entry_label = ctk.CTkLabel(options_frame, text="Domain File Format",
-                                                        font=("default", 12), text_color="black")
+        options_frame_domain_file_format_entry_label = ctk.CTkLabel(options_frame, text="Domain File Format", font=("default", 12), text_color="black")
         selected_domain_format = StringVar(value=self.available_file_formats[0]) #[0] first element is the default value
         options_frame_domain_file_format_dropdown = ctk.CTkOptionMenu(options_frame, values=self.available_file_formats,
                                                               variable=selected_domain_format)
-        options_frame_domain_path_entry_label = ctk.CTkLabel(options_frame, text="Domain Model Path:",
-                                                             font=("default",12),text_color="black")
-        options_frame_domain_path_entry = ctk.CTkEntry(options_frame, width=150, 
-                                                       placeholder_text="Enter Domain model path here...")
-        self.domain_model_standard_path = os.path.join(self.config["base_ee_path"],self.config["base_ee_model"])
-        options_frame_domain_path_entry.insert(0, self.domain_model_standard_path)
-        domain_frame_model_text_widget = tk.Text(domain_frame, wrap=tk.WORD)
-        btn_load_model_domain = ctk.CTkButton(options_frame, text="Load Domain Model", width=50,
-                                              command=lambda: self.load_model_path_preference(entry_widget=options_frame_domain_path_entry, text_widget=domain_frame_model_text_widget, model_type="domain"))
+        
+        domain_frame_text_widget = tk.Text(domain_frame, wrap=tk.WORD)
+        btn_load_model_domain = ctk.CTkButton(options_frame, text="Load Domain Model", 
+                                             command=lambda: self.select_file(model_type="domain", text_widget=domain_frame_text_widget))
         # MAP FRAME:        Labels, Entries and Button for user input to connect elements
-        map_frame_sysml_name_label = ctk.CTkLabel(map_frame, text="SysML Element Path:", 
-                                                  font=("default", 12), text_color="black")
+        map_frame_sysml_name_label = ctk.CTkLabel(map_frame, text="SysML Element Path:", font=("default", 12), text_color="black")
         map_frame_sysml_name_entry = ctk.CTkEntry(map_frame, placeholder_text="Enter a sysml element path e.g 'package.partA.len'")
-        map_frame_sysml_value_label = ctk.CTkLabel(map_frame, text="SysML Element Value:",
-                                                   font=("default", 12), text_color="black")
+        map_frame_sysml_value_label = ctk.CTkLabel(map_frame, text="SysML Element Value:",font=("default", 12), text_color="black")
         map_frame_sysml_value_entry = ctk.CTkEntry(map_frame, placeholder_text="Enter corresponding element value e.g. 50")
         selected_sysml_element_unit = StringVar(value=self.available_units[0]) # initial value
-        map_frame_sysml_unit_dropdown = ctk.CTkOptionMenu(map_frame, values=self.available_units,
-                                                          variable=selected_sysml_element_unit)
-        map_frame_sysml_unit_dropdown_label = ctk.CTkLabel(map_frame, text="SysML Element Unit (if possible):",
-                                                   font=("default", 12), text_color="black")
+        map_frame_sysml_unit_dropdown = ctk.CTkOptionMenu(map_frame, values=self.available_units,variable=selected_sysml_element_unit)
+        map_frame_sysml_unit_dropdown_label = ctk.CTkLabel(map_frame, text="SysML Element Unit (if possible):",font=("default", 12), text_color="black")
         
-        map_frame_domain_name_label = ctk.CTkLabel(map_frame, text="Domain Element Path:",
-                                                   font=("default", 12), text_color="black")
+        map_frame_domain_name_label = ctk.CTkLabel(map_frame, text="Domain Element Path:", font=("default", 12), text_color="black")
         map_frame_domain_name_entry = ctk.CTkEntry(map_frame, placeholder_text="Enter a domain element path e.g. 'GeneralSpecs.Size.X'")
-        map_frame_domain_value_label = ctk.CTkLabel(map_frame, text="Domain Element Value:",
-                                                    font=("default", 12), text_color="black") 
+        map_frame_domain_value_label = ctk.CTkLabel(map_frame, text="Domain Element Value:", font=("default", 12), text_color="black") 
         map_frame_domain_value_entry = ctk.CTkEntry(map_frame, placeholder_text="Enter corresponding element value e.g. '7.42'")
         selected_domain_element_unit = StringVar(value=self.available_units[0]) # initial value as default 
-        map_frame_domain_unit_dropdown = ctk.CTkOptionMenu(map_frame, values=self.available_units,
-                                                              variable=selected_domain_element_unit)
-        map_frame_domain_unit_dropdown_label = ctk.CTkLabel(map_frame, text="Domain Element Unit (if possible):",
-                                                   font=("default", 12), text_color="black")
+        map_frame_domain_unit_dropdown = ctk.CTkOptionMenu(map_frame, values=self.available_units, variable=selected_domain_element_unit)
+        map_frame_domain_unit_dropdown_label = ctk.CTkLabel(map_frame, text="Domain Element Unit (if possible):", font=("default", 12), text_color="black")
 
         btn_map_elements = ctk.CTkButton(map_frame, text="Map elements", width=100, 
-                                         command=lambda: self.map_elements(options_frame_sysml_path_entry,
+                                         command=lambda: self.map_elements(self.sysml_file_path,
                                                                    map_frame_sysml_name_entry,
                                                                    map_frame_sysml_value_entry,
                                                                    selected_sysml_element_unit,
                                                                    selected_domain_format,
-                                                                   options_frame_domain_path_entry, 
+                                                                   self.domain_file_path, 
                                                                    map_frame_domain_name_entry, 
                                                                    map_frame_domain_value_entry,
                                                                    selected_domain_element_unit))
@@ -383,24 +336,20 @@ class GUI:
 
         # OPTIONS FRAME LAYOUT 
         #   Load sysml model 
-        options_frame_label.grid(row=0, column=0, columnspan=2, pady=2, sticky="ew") 
-        options_frame_sysml_path_entry_label.grid(row=1, column=0, padx=5, pady=(2,0), sticky="w") 
-        options_frame_sysml_path_entry.grid(row=2, column=0, padx=5, pady=(5,0), sticky="ew")
-        btn_load_model_sysml.grid(row=2, column=1, padx=(5, 5), pady=(5, 0), sticky="ew") 
+        options_frame_label.grid(row=0, column=0, pady=2, sticky="ew") 
+        btn_load_model_sysml.grid(row=1, column=0, padx=(5, 5), pady=(5, 0), sticky="ew") 
         #   Load domain model 
         options_frame_domain_file_format_entry_label.grid(row=3, column=0, padx=5, pady=(5,0), sticky="w")
         options_frame_domain_file_format_dropdown.grid(row=4, column=0, padx=5, pady=(2,0), sticky="w") 
-        options_frame_domain_path_entry_label.grid(row=5, column=0, padx=5, pady=(5,0), sticky="w")
-        options_frame_domain_path_entry.grid(row=6, column=0, padx=5, pady=(2,0), sticky="ew")
-        btn_load_model_domain.grid(row=6, column=1, padx=(5, 5), pady=(5, 0), sticky="ew")
+        btn_load_model_domain.grid(row=6, column=0, padx=(5, 5), pady=(5, 0), sticky="ew")
 
         # SYSML FRAME LAYOUT 
         sysml_frame_label.grid(row=0, column=0, pady=2, sticky="ew") 
-        sysml_frame_model_text_widget.grid(row=1, column=0, padx=5, pady=5, sticky="nsew") 
+        sysml_frame_text_widget.grid(row=1, column=0, padx=5, pady=5, sticky="nsew") 
 
         # DOMAIN FRAME LAYOUT 
         domain_frame_label.grid(row=0, column=0, pady=2, sticky="ew")
-        domain_frame_model_text_widget.grid(row=1, column=0, padx=5, pady=5, sticky="nsew")
+        domain_frame_text_widget.grid(row=1, column=0, padx=5, pady=5, sticky="nsew")
 
         # MAP FRAME LAYOUT 
         map_frame_label.grid(row=0, column=0, columnspan=4, pady=2, sticky="ew")
@@ -419,7 +368,28 @@ class GUI:
         map_frame_domain_unit_dropdown.grid(row=6, column=2, columnspan=2, padx=(5,10), pady=(2,5), sticky="ew")
 
         btn_map_elements.grid(row=7, column=1, columnspan=2, padx=(5,5), pady=(10,10), sticky="ew")
+
+
+    def select_file(self, model_type, text_widget):
+        """
+        Opens a file dialog to select a SysML file inside the file explorer of the OS 
+        """
+        self.logger.info(f"select_file")
+        if model_type == "sysml":
+            filetypes = [("SysML files", "*.sysml")]
+        else:
+            filetypes = [("All files", "*.*")]
+        filepath = filedialog.askopenfilename(title=f"Select a {model_type.capitalize()} File", 
+                                              filetypes=filetypes) #,("SysML files", "*.sysml")
         
+        if filepath: 
+            if model_type == "sysml": 
+                self.sysml_file_path = filepath 
+            else:
+                self.domain_file_path = filepath
+            
+            self.load_file_content(file_path=filepath, text_widget=text_widget)
+            
     def load_file_content(self, file_path, text_widget):
         """Loads file content into the given text widget."""
         self.logger.info(f"load_file_content")
@@ -433,17 +403,6 @@ class GUI:
             self.logger.error(f"Failed to load file {file_path}: {e}")
             text_widget.delete("1.0", tk.END)  # Clear previous text 
             text_widget.insert(tk.END, f"Error loading file: {e}")  
-
-    def select_sysml_file(self, entry_widget):
-        """
-        Opens a file dialog to select a SysML file inside the file explorer of the OS 
-        """
-        filepath = filedialog.askopenfilename(title="Select a SysML file", 
-                                              filetypes=[("All files", "*.*"),("SysML files", "*.sysml")])
-        
-        if filepath: 
-            entry_widget.delete(0, tk.END)
-            entry_widget.insert(0, filepath)    
 
     def map_elements(self, sysml_path, sysml_element_path, sysml_element_value, sysml_element_unit, domain_file_format, domain_path, domain_element_path, domain_element_value, domain_element_unit): 
         # TODO: Use and reference functions from class METADATA MANAGER! 
@@ -569,6 +528,7 @@ class GUI:
         self.version_tree.configure(yscroll=scrollbar.set)
 
         # NOTE: default path is the latest sysml model 
+        # FIXME: deleted config file
         self.sysml_model_standard_path = os.path.join(self.config["base_se_path"], self.config["base_se_model"])
         default_path = self.sysml_model_standard_path
         file_path_entry.insert(0, default_path) # Insert into entry widget (user input) 
