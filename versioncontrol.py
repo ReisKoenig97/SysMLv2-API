@@ -48,7 +48,7 @@ class VersionControl:
         Returns: 
             treeview_widget updated/filled with git commits 
         """ 
-        self.logger.info(f"VersionControl - load_commit_history_from_file_path")
+        self.logger.info(f"load_commit_history_from_file_path")
         # Calling git commands to get the commit history of the specific file (user given file path)
         
         try: 
@@ -82,7 +82,7 @@ class VersionControl:
         Returns:
             str: Git diff output as a string.
         """
-        self.logger.info(f"VersionControl - get_diff_with_specific_commit") 
+        self.logger.info(f"get_diff_with_specific_commit") 
         try:
             repo = Repo(self.repo_path)
             relative_path = os.path.relpath(file_path, self.repo_path)
@@ -102,7 +102,7 @@ class VersionControl:
         Returns: 
             BOOL. True if mapping.json has changed, False if not
         """
-        self.logger.info(f"VersionControl - get_diff_with_latest")    
+        self.logger.info(f"get_diff_with_latest")    
         try: 
             relative_path = os.path.relpath(file_path, self.repo_path)
             #repo = Repo(self.repo_path)

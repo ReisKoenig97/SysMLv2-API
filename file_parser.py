@@ -6,6 +6,10 @@ import json
 from utils.json_utils import load_json
 from utils.config_utils import load_config
 
+from OCC.Core.STEPControl import STEPControl_Reader
+from OCC.Core.TopAbs import TopAbs_COMPOUND, TopAbs_COMPSOLID, TopAbs_SOLID, TopAbs_SHELL, TopAbs_FACE, TopAbs_WIRE, TopAbs_EDGE, TopAbs_VERTEX
+from OCC.Core.IFSelect import IFSelect_RetDone
+from OCC.Core.TopExp import TopExp_Explorer
 
 # Contains all standardized (for this masters thesis) file parser as a single class for each file format 
 # Each class should have methods to read, load, save, and extract metadata
@@ -134,14 +138,14 @@ class SysmlParser:
             return processed_elements
         return []
     
-    def validate_element_path(self, element_path):
-        self.logger.info(f"SysmlParser - validate_element_path")
+    def validate_elementPath(self, elementPath):
+        self.logger.info(f"SysmlParser - validate_elementPath")
 
         if not self.sysml_model:
             self.logger.warning("SysML model is None! Attempting to load model.")
             self.sysml_model = self.load_sysml_model()
 
-        path_splitted = element_path.split('.')
+        path_splitted = elementPath.split('.')
         self.logger.debug(f"Derived path: {path_splitted}")
         valid_keywords = ["part def", "part", "attribute", "package"]
 
@@ -194,9 +198,8 @@ class SysmlParser:
                 self.logger.warning(f"Invalid structure: No valid braces after '{partial_path}'.")
                 return False
 
-        self.logger.debug(f"Path '{element_path}' is valid in SysMLv2 model.")
+        self.logger.debug(f"Path '{elementPath}' is valid in SysMLv2 model.")
         return True
-
 
 class GerberParser:    
     # Parses specific files (Gerber X2/3) from the E/E Engineering Domain 
@@ -215,81 +218,13 @@ class GerberParser:
         self.file_path = file_path
         self.logger.info(f"GerberParser initialized")
 
-    # def parse_gerber_job_file(self, sections: list[str], keywords: list[str]):
-    #     """
-    #     Reads, extracts and saves gerber file metadata
-
-    #     Args:
-    #     sections (list[str]): List of main objects to search in ('Header', 'GeneralSpecs', 'DesignRules', 'MaterialStackup', 'FilesAttributes').
-    #     keywords (list[str]): List of keywords to search for inside the specified sections.
-
-    #     Returns: dict  when successful parsed, else empty dict
-    #     """ 
-    #     # Helper function 
-    #     def search_keywords(data , keywords, parent_key = ""): 
-    #         """
-    #         Recursively searches for specified keywords in a nested JSON structure
-    #         Args:
-    #             data (dict) : data to search inside
-    #             keywords (list[str]) : list of words to search for inside the file (JSON)
-    #             parent_key (str) : Current path of keys 
-    #         Returns: 
-    #             dict : Contains found key-value pairs matching the keywords
-    #         """
-    #         found_data = {}
-    #         # Case 1: Check if data is a dict (has nested properties)
-    #         if isinstance(data, dict): 
-    #             for key, value in data.items():
-    #                 # Set the current key and their parent (if it has a parent)   
-    #                 new_key = f"{parent_key}.{key}" if parent_key else key
-    #                 # Check if we found any keyword from the given keywords list inside for each keyword in the line 
-    #                 if any(keyword in key for keyword in keywords): 
-    #                     # Adding the value to the key
-    #                     found_data[new_key] = value 
-    #                 # After adding the key-value pair. Recursively check if that value has properties as well / has '{ ... }'
-    #                 found_data.update(search_keywords(data=value, keywords=keywords, parent_key=new_key))
-    #         # Case 2: Each item inside the list is a dict, therefore looping through each dict 
-    #         elif isinstance(data, list):
-    #             for index, item in enumerate(data): 
-    #                 found_data.update(search_keywords(data=item, keywords=keywords, parent_key=f"{parent_key}[{index}]"))
-                
-    #         return found_data
-        
-    #     # Load Gerber Job File 
-    #     self.logger.debug(f"Parsing Gerber Job File {self.file_path}")
-    #     # Open Gerber Job File (which is in JSON format)
-    #     gbr_job_file = load_json(self.file_path)
-
-    #     extracted_data = {}
-    #     # Search inside given sections
-    #     for section in sections:
-    #         if section not in gbr_job_file:
-    #             self.logger.warning(f"Section '{section} not found in the Gerber Job File {self.file_path}")
-    #             continue
-
-    #         self.logger.debug(f"Searching in section: {section}")
-    #         target_section = gbr_job_file[section]
-    #         section_data = search_keywords(data=target_section, keywords=keywords) 
-
-    #         extracted_data[section] = section_data
-
-
-    #     print("Extracted Metadata: ")
-    #     for section, data in extracted_data.items(): 
-    #         print(f"Section: {section}\n")
-    #         for key, value in data.items(): 
-    #             print(f"{key} : {value}")
-        
-    #     self.logger.debug("Successfully parsed and extracted relevant Metadata")
-    #     return extracted_data 
-
-    def get_gerber_job_file_value(self, elementPath):
+    def get_value(self, elementPath):
         """
         Parses GerberJobFile via given elementPath and returns value 
         Checks if element path is valid 
         NOTE: Helper functions used in metadata manager 
         Returns:
-            Value of element from given element path (mapping.json)
+            Value of element from given element path (mapping.json), None if key not found 
         """
         self.logger.info(f"GerberParser - get_gerber_job_file_value")
         # Load the Gerber job file using the load_json function
@@ -320,4 +255,163 @@ class Code_parser:
     def __init__(self):
         pass
 
+class StepParser: 
+    """ Parses specific STEP files (STEP AP242) from the Mechanical Engineering Domain """
+
+    def __init__(self, step_file_path = None):
+        self.logger = logging.getLogger(__name__)
+
+        self.step_file_path = step_file_path
+        self.step_file_content = self.load_step_file()
+        self.step_reader = STEPControl_Reader()
+        self.logger.info(f"StepParser initialized")
+        
+    def load_step_file(self):
+        """ 
+        Load Step file content
+        NOTE: 
+            - Step Files don't have a specific metadata structure like JSON or XML files
+            - Therefore, we need to extract metadata from the file content itself via read and regex search 
+        
+        Returns:
+            str: The content of the file as a string or empty ("") if file not found
+        """
+        self.logger.info(f"StepParser - load_step_file")
+        try: 
+            with open(self.step_file_path, 'r') as file: 
+                step_data = file.read()
+                self.logger.debug(f"Successfully loaded STEP file")
+                return step_data
+        except ExceptionGroup as e:                      
+            self.logger.error(f"Failed to load file {self.step_file_path}: {e}")
+            return ""
+        
+    def extract_metadata(self):
+        """ 
+        Extracts metadata from the STEP file
+        
+        Returns:
+            dict: Metadata extracted from the STEP file
+        """
+        self.logger.info(f"StepParser - extract_metadata")
+        # return metadata as a dictionary
+        metadata = {}
+
+        # Extract metadata from the STEP file via regex search
+        # Metadata: Product Name
+        product_name_match = re.search(r'PRODUCT\(\s*\'(.*?)\'', self.step_file_content)
+        metadata["product_name"] = product_name_match.group(1) if product_name_match else "None"
+
+        return metadata
     
+    def extract_shapes(self):
+        """
+        Load and analyze the STEP file to detect shapes.
+        Returns:
+            List of tuples containing the shape type and the shape itself.
+        """
+        self.logger.info(f"StepParser - extract_shapes")
+        status = self.step_reader.ReadFile(self.step_file_path)
+        if status != IFSelect_RetDone:
+            self.logger.error("Error: File can not be loaded!")
+            return []
+        
+        self.step_reader.TransferRoots()
+        shape = self.step_reader.OneShape()
+        return self.get_shapes(shape)
+    
+    def get_shapes(self, shape):
+        """Returns a list with all shapes in the given object (step)"""
+        shape_types = [TopAbs_COMPOUND, TopAbs_COMPSOLID, TopAbs_SOLID, TopAbs_SHELL, TopAbs_FACE, TopAbs_WIRE, TopAbs_EDGE, TopAbs_VERTEX]
+        #shape_names = ["COMPOUND", "COMPSOLID", "SOLID", "SHELL", "FACE", "WIRE", "EDGE", "VERTEX"]
+        shape_names = ["COMPOUND", "COMPSOLID", "SOLID"]
+        
+        detected_shapes = []
+        
+        for shape_type, name in zip(shape_types, shape_names):
+            explorer = TopExp_Explorer(shape, shape_type)
+            while explorer.More():
+                detected_shapes.append((name, explorer.Current()))
+                explorer.Next()
+        
+        return detected_shapes
+    
+    def get_value(self, elementPath):
+        """
+        Extracts a specific value from a STEP file based on the given element path.
+
+        The function searches for the specified section (e.g., FILE_NAME, FILE_DESCRIPTION) 
+        and retrieves the requested attribute value. Attribute positions are mapped using 
+        a predefined index table.
+
+        Parameters:
+            elementPath (str): The path to the desired element in the format "SECTION.ATTRIBUTE".
+                                Example: "FILE_NAME.name" or "FILE_DESCRIPTION.description".
+
+        Returns:
+            str | None: The extracted value as a string, or None if the element is not found.
+        """
+        self.logger.info("StepParser - get_value")
+
+        # Read the STEP file
+        try:
+            with open(self.step_file_path, "r", encoding="utf-8") as f:
+                step_file_content = f.read()
+        except Exception as e:
+            self.logger.error(f"Failed to load STEP file: {e}")
+            return None
+
+        # Validate the format of elementPath
+        keys = elementPath.split(".")
+        if len(keys) != 2:
+            self.logger.error("Invalid elementPath format. Expected: 'SECTION.ATTRIBUTE'")
+            return None
+
+        section_name, attribute = keys
+
+        # Search for the section in the STEP file (e.g., FILE_NAME(...);)
+        section_pattern = rf"{section_name}\((.*?)\);"
+        section_match = re.search(section_pattern, step_file_content, re.DOTALL)  # DOTALL allows multiline matches
+
+        if not section_match:
+            self.logger.warning(f"Section '{section_name}' not found in the STEP file.")
+            return None
+
+        section_content = section_match.group(1)
+        values = [value.strip() for value in section_content.split(",")]
+
+        # Define attribute position mappings for known sections
+        metadata = {
+            "FILE_NAME": {
+                "name": 0,
+                "time_stamp": 1,
+                "author": 2,
+                "organization": 3,
+                "preprocessor_version": 4,
+                "originating_system": 5,
+                "authorization": 6
+            },
+            "FILE_DESCRIPTION": {
+                "description": 0,
+                "implementation_level": 1
+            }
+        }
+
+        # Retrieve the value based on the attribute position
+        if section_name in metadata and attribute in metadata[section_name]:
+            index = metadata[section_name][attribute]
+
+            if index < len(values):  # Ensure index is within range
+                raw_value = values[index]  # Example: /* name */ 'Agri_UAV2'
+
+                # Extract value enclosed in single or double quotes
+                match = re.search(r"'(.*?)'|\"(.*?)\"", raw_value)
+                clean_value = match.group(1) if match else raw_value
+
+                return clean_value
+            else:
+                self.logger.warning(f"Index {index} out of range for section '{section_name}'.")
+                return None
+        else:
+            self.logger.warning(f"Attribute '{attribute}' not found in section '{section_name}'.")
+            return None

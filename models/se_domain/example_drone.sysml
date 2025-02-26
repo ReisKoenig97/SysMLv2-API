@@ -59,8 +59,8 @@ package DroneExample {
 
             connect fc to cs;
             connect enc to cs;  
-            connect motor[4] to cs;
-            connect prop[4] to motor[4]; 
+            connect motor to cs;
+            connect prop to motor; 
             connect cam to cs; 
             connect batt to cs; 
             connect pdb to cs; 

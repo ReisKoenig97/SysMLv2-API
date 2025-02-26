@@ -16,7 +16,7 @@ class MetadataManager:
     Creates UUIDS for each mapped element
     Responsible for versioning, commits and traceability 
     """
-    def __init__(self, config, versioncontrol=None, fileparser=None):
+    def __init__(self, config, versioncontrol=None, gerberparser=None, stepparser=None):
         self.logger = logging.getLogger(__name__)
         #self.logger.info(f"Initialized MetadataManager")
         
@@ -25,7 +25,8 @@ class MetadataManager:
         self.mapping_file_path = "./config/mapping.json"
         self.repo_path = self.config["repo_path"]
         self.vc = versioncontrol
-        self.fp_gerber = fileparser
+        self.fp_gerber = gerberparser
+        self.fp_step = stepparser 
         
         # Parameters will be set later by functions  
         self.sysml_model = None
@@ -99,6 +100,11 @@ class MetadataManager:
         sysml_element_datatype = get_datatype(sysml_element_value)
         domain_element_datatype = get_datatype(domain_element_value)
 
+        # Special Case: Both units are None (not provided or "") but values are of different datatypes
+        # if sysml_element_unit == "" and domain_element_unit == "":
+        #     if sysml_element_datatype != domain_element_datatype: 
+        #         sysml_element_datatype = "String"
+        #         domain_element_datatype = "String"
         # Check if both elements have units and ensure they match
         if sysml_element_unit and domain_element_unit:
             if sysml_element_unit != domain_element_unit:
@@ -111,6 +117,8 @@ class MetadataManager:
             messagebox.showerror("Unit Mismatch", f"Unit mismatch: SysMLv2: {sysml_element_unit}, Domain: {domain_element_unit}")
             raise ValueError(f"Unit mismatch: SysMLv2: {sysml_element_unit}, Domain: {domain_element_unit}")
         # If neither element has a unit, no validation is needed
+    
+
 
         sysml_element = {
             "uuid" : uuid_sysml_element,
@@ -170,13 +178,12 @@ class MetadataManager:
         mapping[f"{domain_file_format}"].append(domain_element)
         mapping["Mappings"].append(new_mapping)
 
+    
         # Save updated mapping.json
         if save_json(file_path=self.mapping_file_path, data=mapping):
-            
             self.logger.debug(f"Mapping successfully saved at: {self.mapping_file_path}")
-            # TODO: uncomment for automated sysml file update when button pressed 
-            # updates sysml model (writing values to sysml file) when button pressed 
-            #self.update_sysml_model()
+            # Update Sysml model (First save mapping.json)
+            self.update_sysml_model()
             return True
         else: 
             return False 
@@ -192,17 +199,15 @@ class MetadataManager:
 
         # 2) Extract relevant domain models (excluding SysMLv2 and Mappings)
         domain_models = {key: value for key, value in mapping.items() if key not in ["SysMLv2", "Mappings"]}
-
         updated = False
-        self.logger.debug("Checking if there are new values in domain files...")
-
-        # Correct iteration
-        for model_name, model in domain_models.items():
-            #self.logger.debug(f"Current domain file model: {model_name}")
+        #self.logger.debug("Checking if there are new values in domain files...")
+    
+        for domain_name, model in domain_models.items():
+            #self.logger.debug(f"Current domain file model: {domain_name}")
 
             # Ensure model is a list
             if not isinstance(model, list):
-                self.logger.warning(f"Skipping {model_name}, expected a list but found {type(model)}")
+                self.logger.warning(f"Skipping {domain_name}, expected a list but found {type(model)}")
                 continue
             
             for domain_element in model:  # model is now a list, so iterate directly
@@ -222,21 +227,30 @@ class MetadataManager:
                 if not domain_element_filePath or not os.path.exists(domain_element_filePath):
                     self.logger.warning(f"File path does not exist: {domain_element_filePath}")
                     continue
-                
+
+                # FIXME: select right file parser based on domain file format,  instead of static file parser, select right file parser based on domain file format
                 # Retrieve current domain element value
-                current_domain_element_value = self.fp_gerber.get_gerber_job_file_value(elementPath=domain_elementPath)
+                if domain_name == "GerberJobFile":
+                    #self.fp_gerber.load_gerber_job_file(domain_element_filePath)
+                    current_domain_element_value = self.fp_gerber.get_value(elementPath=domain_elementPath)
+                elif domain_name == "STEP":
+                    #self.fp_step.load_step_file(domain_element_filePath)
+                    current_domain_element_value = self.fp_step.get_value(elementPath=domain_elementPath)
+                else:
+                    self.logger.warning(f"Unsupported domain model: {domain_name}. Please add a file parser for this domain model.")
+                    continue
                 
                 if current_domain_element_value:
-                    self.logger.debug(f"Element Path is valid with element value: {current_domain_element_value}")
+                    #self.logger.debug(f"Element Path is valid with element value: {current_domain_element_value}")
 
                     # Update mapping if value has changed
                     if current_domain_element_value != domain_element_value:
-                        domain_element["value"] = current_domain_element_value
-                        # Update lastModified with current timestamp 
+                        domain_element["value"] = current_domain_element_value 
+                        # Update lastModified with current timestamp
                         timestamp = datetime.now().strftime("%d.%m.%Y")
-                        domain_element["lastModified"] = timestamp 
+                        domain_element["lastModified"] = timestamp
                         updated = True
-                        self.logger.debug(f"Updated sysml element in mapping to: {current_domain_element_value}")
+                        #self.logger.debug(f"Updated sysml element in mapping to: {current_domain_element_value}")
 
                 else: 
                     self.logger.warning("Element Path is not valid")
@@ -254,9 +268,10 @@ class MetadataManager:
 
             # Find source and target elements
             source_element = next(
-                (elem for elem in mapping["GerberJobFile"] if elem["uuid"] == source_uuid), None)
+                (elem for domain in domain_models.values() for elem in domain if elem["uuid"] == source_uuid), None) 
             target_element = next(
                 (elem for elem in mapping["SysMLv2"] if elem["uuid"] == target_uuid), None)
+            
             # Check if both elements were found
             if source_element is None or target_element is None:
                 self.logger.error(f"Source or target element not found in mapping.json: {source_uuid}, {target_uuid}")
@@ -322,19 +337,25 @@ class MetadataManager:
                 if in_target_block: 
                     #self.logger.debug(f"Inside Targetblock")
                     #match = re.match(r"^\s*attribute\s+(\w+)\s*(:|=)\s*(\w+)\s*(;|\s+)", stripped_line)
-                    match = re.search(r"^\s*attribute\s+(\w+)\s*(:|=)\s*(\w+|\S+)\s*(;|\s+)", stripped_line)
+                    #match = re.search(r"^\s*attribute\s+(\w+)\s*(:|=)\s*(\w+|\S+)\s*(;|\s+)", stripped_line)
+                    #match = re.search(r"^\s*attribute\s+(\w+)\s*(:|=)\s*(\w+|\S+)(?:\s*(;)?\s*(.*))?$", stripped_line)
+                    match = re.search(r"^\s*attribute\s+(\w+)\s*(:|=)\s*([^;]+)(?:\s*(;))?(?:(.*))?$", stripped_line) #[^;] .. everything except optional ; 
+
                     if match:
                         depth = (len(element_path_splitted)-1)  # we are at the last element of given path 
                         attribute_name = match.group(1)
                         operator = "=" if match.group(2) == ":" else match.group(2)
-                        unit_target_value = f"[{unit}]" if is_number else "" 
+                        attribute_value = match.group(3)
+                        unit_target_value = f"[{unit}]" if is_number and unit else ""
+                        # unit_target_value = f"[{unit}]" if is_number else "" 
                         #current_value = match.group(3)
-                        semicolon = match.group(4) or ""    
-
+                        semicolon = match.group(4) #or ";"   
+                        rest_of_line = match.group(5) 
+                        
                         if attribute_name == element_path_splitted[-1]:
                             indentation = " " * (depth * 4)
                             # Replace value of the target element with source value (mapped domain model value)
-                            updated_line = f"{indentation}attribute {attribute_name} {operator} {source_value}{unit_target_value}{semicolon}\n"
+                            updated_line = f"{indentation}attribute {attribute_name} {operator} {source_value}{unit_target_value}{semicolon}{rest_of_line}\n"
                             #self.logger.debug(f"Updating line to: {updated_line.strip()}")
                             updated_content.append(updated_line)
                             in_target_block = False  # Exit target block after updating value

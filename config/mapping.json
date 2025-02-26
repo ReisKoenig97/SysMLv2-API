@@ -10,6 +10,17 @@
             "filePath": "models/se_domain/metadata_test.sysml",
             "created": "03.02.2025",
             "lastModified": "03.02.2025"
+        },
+        {
+            "uuid": "c290009d-15d2-4e13-81ed-c64de8cfec72",
+            "name": "len",
+            "value": "Real",
+            "unit": "",
+            "dataType": "String",
+            "elementPath": "metadata_test.partC.len",
+            "filePath": "models/se_domain/metadata_test.sysml",
+            "created": "24.02.2025",
+            "lastModified": "24.02.2025"
         }
     ],
     "Mappings": [
@@ -17,19 +28,37 @@
             "sourceUUID": "a1f0d27b-99b8-484b-bd2c-0aa1f6a78f16",
             "targetUUID": "eae095cc-c6fa-4332-b9cd-79378929ef73",
             "created": "03.02.2025"
+        },
+        {
+            "sourceUUID": "a6aee5e0-71b3-43af-b5da-bc582b50253c",
+            "targetUUID": "c290009d-15d2-4e13-81ed-c64de8cfec72",
+            "created": "24.02.2025"
         }
     ],
     "GerberJobFile": [
         {
             "uuid": "a1f0d27b-99b8-484b-bd2c-0aa1f6a78f16",
             "name": "Vendor",
-            "value": "KiCad2",
+            "value": "KiCad2025_1234",
             "unit": "",
             "dataType": "String",
             "elementPath": "Header.GenerationSoftware.Vendor",
             "filePath": "models/ee_domain/Hades_project-job.gbrjob",
             "created": "03.02.2025",
-            "lastModified": "03.02.2025"
+            "lastModified": "20.02.2025"
+        }
+    ],
+    "STEP": [
+        {
+            "uuid": "a6aee5e0-71b3-43af-b5da-bc582b50253c",
+            "name": "name",
+            "value": "STEP_AgriUAV2025",
+            "unit": "",
+            "dataType": "String",
+            "elementPath": "FILE_NAME.name",
+            "filePath": "models/me_domain/STEP_AgriUAV.stp",
+            "created": "24.02.2025",
+            "lastModified": "25.02.2025"
         }
     ]
 }

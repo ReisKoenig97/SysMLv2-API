@@ -1,12 +1,15 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 from tkinter import StringVar # used for Dropdown menus 
+from tkinter import filedialog # used for loading files via file explorer of the OS 
 import os
 import logging
 
 # Utils and module references
 from file_parser import GerberParser
 from file_parser import SysmlParser
+from file_parser import StepParser
+
 from sysmlv2_api_client import SysMLv2APIClient
 from utils.config_utils import save_config, load_config
 from utils.json_utils import save_json, load_json
@@ -41,10 +44,10 @@ class GUI:
     """
     def __init__(self, config, metadatamanager=None, versioncontrol=None): 
         self.logger = logging.getLogger(__name__)
-        self.logger.debug(f"Initializing GUI") 
+       
         self.config = config
         # List acts as the accepted file formats (used inside the map popup)
-        self.available_file_formats = ["GerberJobFile"]
+        self.available_file_formats = ["GerberJobFile", "STEP"]
         # List for available datatypes and si units
         self.available_datatypes = ["int", "float", "string", "bool"]
         self.available_units = ["", "m", "kg", "s", "A", "K", "mol", "m^2", "m^3", "N", "Pa", "J", "W", "C", "V", "F"]
@@ -52,7 +55,6 @@ class GUI:
         self.sysml_model = None #initialized object from sysml parser of file_parser sysml_parser
         self.sysml_model_standard_path = "" 
 
-        self.logger.debug(f"Initializing MetadataManager and VersionControl (in class GUI)")
         self.mm = metadatamanager
         self.vc = versioncontrol
 
@@ -321,8 +323,11 @@ class GUI:
         self.sysml_model_standard_path = os.path.join(self.config["base_se_path"], self.config["base_se_model"])
         options_frame_sysml_path_entry.insert(0, self.sysml_model_standard_path)
         sysml_frame_model_text_widget = tk.Text(sysml_frame, wrap=tk.WORD)
+        # btn_load_model_sysml = ctk.CTkButton(options_frame, text="Load SysML Model", width=50,
+        #                                      command=lambda: self.load_model_path_preference(entry_widget=options_frame_sysml_path_entry, text_widget=sysml_frame_model_text_widget, model_type="sysml"))
         btn_load_model_sysml = ctk.CTkButton(options_frame, text="Load SysML Model", width=50,
-                                             command=lambda: self.load_model_path_preference(entry_widget=options_frame_sysml_path_entry, text_widget=sysml_frame_model_text_widget, model_type="sysml"))
+                                     command=lambda: self.select_sysml_file(entry_widget=options_frame_sysml_path_entry))
+
         # OPTIONS FRAME DOMAIN FRAME:     Label, Entry, Text and Button for user input to load domain model 
         options_frame_domain_file_format_entry_label = ctk.CTkLabel(options_frame, text="Domain File Format",
                                                         font=("default", 12), text_color="black")
@@ -428,6 +433,17 @@ class GUI:
             self.logger.error(f"Failed to load file {file_path}: {e}")
             text_widget.delete("1.0", tk.END)  # Clear previous text 
             text_widget.insert(tk.END, f"Error loading file: {e}")  
+
+    def select_sysml_file(self, entry_widget):
+        """
+        Opens a file dialog to select a SysML file inside the file explorer of the OS 
+        """
+        filepath = filedialog.askopenfilename(title="Select a SysML file", 
+                                              filetypes=[("All files", "*.*"),("SysML files", "*.sysml")])
+        
+        if filepath: 
+            entry_widget.delete(0, tk.END)
+            entry_widget.insert(0, filepath)    
 
     def map_elements(self, sysml_path, sysml_element_path, sysml_element_value, sysml_element_unit, domain_file_format, domain_path, domain_element_path, domain_element_value, domain_element_unit): 
         # TODO: Use and reference functions from class METADATA MANAGER! 
@@ -671,10 +687,16 @@ def main():
     #gbrjob_metadata = gerberjobfile.parse_gerber_job_file(sections= DEFAULT_GBRJOB_SECTIONS,keywords=DEFAULT_GBRJOB_KEYWORDS)
     #print(gbrjob_metadata)
     fp_gerber = GerberParser()
+    fp_step = StepParser(step_file_path="models/me_domain/STEP_AgriUAV.stp")
+    # step_metadata = sp.extract_metadata()
+    # step_shapes = sp.extract_shapes()
+    # print("STEP Metadata: ",step_metadata)
+    # print("STEP Shapes: ",step_shapes)
     vc = VersionControl(config=DEFAULT_CONFIG)
-    mm = MetadataManager(config=DEFAULT_CONFIG, versioncontrol=vc, fileparser=fp_gerber) 
+    mm = MetadataManager(config=DEFAULT_CONFIG, versioncontrol=vc, gerberparser=fp_gerber, stepparser=fp_step) 
     logger.debug(f"Updating SysML model with metadata")
     mm.update_sysml_model()
+
 
     # Start the Tkinter app
     app = GUI(config=DEFAULT_CONFIG, metadatamanager=mm, versioncontrol=vc)

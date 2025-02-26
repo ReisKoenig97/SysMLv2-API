@@ -19,17 +19,17 @@ package metadata_test{
         partB;
     
     part def partA{
-        attribute id = "Hades_project";
+        attribute id = "8.0.6";
         attribute mass = 50.1; // 50.1 
     }
     part def partB{
-        attribute id = "KiCad2";
+        attribute id = "KiCad2025_1234"; //{@UUID{uuid="001";}}
         attribute len = 12.5[m];
     }   
     part def partC{
         attribute id = "KiCad";
-        attribute len : Real; 
-        attribute lenA : Real;  
+        attribute len = "STEP_AgriUAV2025";
+        attribute lenA = 7.43[m];
     }   
     part def partD{
         attribute id = "48616465-735f-4707-926f-6a6563742e6b";

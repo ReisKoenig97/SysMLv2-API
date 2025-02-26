@@ -1,21 +1,18 @@
- config_utils: load_config - INFO - Config file 'config/default_config.json' loaded successfully.
- file_parser - DEBUG - Initial gerber_parser
  file_parser - INFO - GerberParser initialized
- versioncontrol - DEBUG - VersionControl initialized.
- metadata_manager - INFO - MetadataManager - create_mapping_file_from_template
- metadata_manager - DEBUG - MetadataManager initialized
+ file_parser - INFO - StepParser - load_step_file
+ file_parser - DEBUG - Successfully loaded STEP file
+ file_parser - INFO - StepParser initialized
+ versioncontrol - INFO - VersionControl initialized
+ metadata_manager - INFO - create_mapping_file_from_template
+ metadata_manager - INFO - MetadataManager initialized
  __main__ - DEBUG - Updating SysML model with metadata
- metadata_manager - INFO - MetadataManager - update_sysml_model
- metadata_manager - DEBUG - Checking if there are new values in domain files...
- metadata_manager - DEBUG - Current domain file model: GerberJobFile
- metadata_manager - DEBUG - Current domain element: {'uuid': 'a1f0d27b-99b8-484b-bd2c-0aa1f6a78f16', 'name': 'Vendor', 'value': 'KiCad', 'unit': '', 'dataType': 'String', 'elementPath': 'Header.GenerationSoftware.Vendor', 'filePath': 'models/ee_domain/Hades_project-job.gbrjob', 'created': '03.02.2025', 'lastModified': '03.02.2025'}
+ metadata_manager - INFO - update_sysml_model
  file_parser - INFO - GerberParser - get_gerber_job_file_value
- file_parser - INFO - Successfully retrieved value for 'Header.GenerationSoftware.Vendor': KiCad2
- metadata_manager - DEBUG - Element Path is valid with element value: KiCad2
- metadata_manager - DEBUG - Updated sysml element in mapping to: KiCad2
- metadata_manager - DEBUG - Checking if there are new values in domain files... Done
- metadata_manager - DEBUG - MetadataManager - update_value_in_sysml_model
- __main__ - DEBUG - Initializing GUI
- __main__ - DEBUG - Initializing MetadataManager and VersionControl (in class GUI)
- __main__ - DEBUG - Creating Widgets for GUI
- __main__ - DEBUG - Setting up layout for GUI
+ file_parser - INFO - Successfully retrieved value for 'Header.GenerationSoftware.Vendor': KiCad2025_1234
+ file_parser - INFO - StepParser - get_value
+ metadata_manager - INFO - update_value_in_sysml_model
+ metadata_manager - INFO - update_value_in_sysml_model
+ __main__ - INFO - setup_widgets
+ __main__ - INFO - setup_layout
+ __main__ - INFO - GUI initialized
+ __main__ - INFO - popup_map_data

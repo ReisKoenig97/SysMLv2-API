@@ -52,11 +52,16 @@
     - [ ] 
 - [x] PROBLEM bei automatisiertes git psuh -> danach kann man nicht mehr pushen! -> added new branch: automated-commits -> funktionen entfernt, workflow dass das Skript nicht behandeln sollte 
 - [ ] MAPPING: Check if domain files has changed? 
-    - [ ] Check jedes mapping in mapping.json wenn es neue Werte hat oder Pfad nicht mehr existiert -> muss das sysml modell überschreiben und "lastModified" aktualisieren     
+    - [x] Check jedes mapping in mapping.json wenn es neue Werte hat oder Pfad nicht mehr existiert -> muss das sysml modell überschreiben und "lastModified" aktualisieren     
         - [ ] Skript benachrichtigt den User automatisch wenn durch die mapping.json die domain files neue Werte haben oder paths nicht mehr existieren  
     - [ ] Button für popup wo man die aktuellen mappings sehen kann (in Map data popup)
     - [ ] 
     - [ ] 
+- [ ] miro Weg zurück zb als gerber file generated?? 
+- [ ] 
+- [ ] step ap 242
+- [ ] 
+- [ ] 
 - [ ] 
 
 
