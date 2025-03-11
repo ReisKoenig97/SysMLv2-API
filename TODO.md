@@ -57,9 +57,15 @@
     - [ ] Button für popup wo man die aktuellen mappings sehen kann (in Map data popup)
     - [ ] 
     - [ ] 
-- [ ] miro Weg zurück zb als gerber file generated?? 
+- [x] miro Weg zurück zb als gerber file generated?? -> NEIN 
 - [ ] 
-- [ ] step ap 242
+- [ ] step ap 242 in NX öffnen? -> aktuell: fehlendes Package? 
+- [x] automatically get the domain file format upon user selected file 
+- [x] Warn the user if the selected elements already has ONE mapping (implemented until now: only mappings when both elements are already connected) -> TODO: Check if one element already has a mapping/ connected element 
+- [ ] Option to delete mapping via matrix/frame
+- [x] Versioncontrol
+- [ ] Add save functionality to "view/edit sysml model" 
+- [ ] check if provided domain file: element path is valid 
 - [ ] 
 - [ ] 
 - [ ] 

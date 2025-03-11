@@ -1,27 +1,26 @@
+ file_parser - INFO - SysmlParser - load_sysml_model
+ file_parser - DEBUG - Successfully loaded sysml model
+ file_parser - INFO - SysmlParser initialized
+ file_parser - INFO - CodeParser initialized
  file_parser - INFO - GerberParser initialized
- file_parser - INFO - StepParser - load_step_file
- file_parser - DEBUG - Successfully loaded STEP file
+ file_parser - INFO - Loading STEP file
+ file_parser - DEBUG - STEP file loaded successfully
  file_parser - INFO - StepParser initialized
  versioncontrol - INFO - VersionControl initialized
  metadata_manager - INFO - create_mapping_file_from_template
  metadata_manager - INFO - MetadataManager initialized
- __main__ - DEBUG - Updating SysML model with metadata
  metadata_manager - INFO - update_sysml_model
- file_parser - INFO - GerberParser - get_gerber_job_file_value
- file_parser - INFO - Successfully retrieved value for 'Header.GenerationSoftware.Vendor': KiCad2025_1234
- file_parser - INFO - StepParser - get_value
+ file_parser - INFO - Loading STEP file
+ file_parser - WARNING - No file path provided
+ file_parser - INFO - StepParser - get_value for DATA.#10=CONTEXT_DEPENDENT_SHAPE_REPRESENTATION
+ metadata_manager - WARNING - Element Path is not valid
+ metadata_manager - DEBUG - Found Source Code. Checking mapped element
+ file_parser - INFO - get_value
+ file_parser - DEBUG - [CodeParser - get_value] Found value: 123a
+ metadata_manager - DEBUG - Element Path is valid with element value: 123a
+ metadata_manager - DEBUG - Updated sysml element in mapping to: 123a
  metadata_manager - INFO - update_value_in_sysml_model
  metadata_manager - INFO - update_value_in_sysml_model
  __main__ - INFO - setup_widgets
  __main__ - INFO - setup_layout
  __main__ - INFO - GUI initialized
- __main__ - INFO - popup_map_data
- __main__ - INFO - select_file
- __main__ - INFO - load_file_content
- __main__ - INFO - select_file
- __main__ - INFO - select_file
- __main__ - INFO - select_file
- __main__ - INFO - load_file_content
- __main__ - INFO - select_file
- __main__ - INFO - load_file_content
- __main__ - INFO - select_file

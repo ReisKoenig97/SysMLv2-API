@@ -1,64 +1,67 @@
 {
     "SysMLv2": [
         {
-            "uuid": "eae095cc-c6fa-4332-b9cd-79378929ef73",
-            "name": "id",
-            "value": "String",
+            "uuid": "fd1bd27e-9ca4-48b7-b291-5cba4d53c92e",
+            "name": "mass",
+            "value": "50.1",
             "unit": "",
-            "dataType": "String",
-            "elementPath": "metadata_test.partB.id",
-            "filePath": "models/se_domain/metadata_test.sysml",
-            "created": "03.02.2025",
-            "lastModified": "03.02.2025"
+            "dataType": "Real",
+            "elementPath": "metadata_test.partA.mass",
+            "filePath": "C:/Users/tommy/Nextcloud/MASTER ARBEIT/Code/SysMLv2 API Code/models/se_domain/metadata_test.sysml",
+            "created": "05.03.2025",
+            "lastModified": "05.03.2025"
         },
         {
-            "uuid": "c290009d-15d2-4e13-81ed-c64de8cfec72",
-            "name": "len",
-            "value": "Real",
+            "uuid": "d5f9e512-1b70-46e9-afc7-ffe73b093dc9",
+            "name": "id",
+            "value": "abc123",
             "unit": "",
             "dataType": "String",
-            "elementPath": "metadata_test.partC.len",
-            "filePath": "models/se_domain/metadata_test.sysml",
-            "created": "24.02.2025",
-            "lastModified": "24.02.2025"
+            "elementPath": "DroneExample.PartDefinitions.Drone.FlightController.id",
+            "filePath": "C:/Users/tommy/Nextcloud/MASTER ARBEIT/Code/SysMLv2 API Code/models/se_domain/example_drone_origin.sysml",
+            "created": "11.03.2025",
+            "lastModified": "11.03.2025"
         }
     ],
     "Mappings": [
         {
-            "sourceUUID": "a1f0d27b-99b8-484b-bd2c-0aa1f6a78f16",
-            "targetUUID": "eae095cc-c6fa-4332-b9cd-79378929ef73",
-            "created": "03.02.2025"
+            "sourceUUID": "b369ee30-903a-4bfd-bc20-ca467b46ac44",
+            "targetUUID": "fd1bd27e-9ca4-48b7-b291-5cba4d53c92e",
+            "created": "05.03.2025"
         },
         {
-            "sourceUUID": "a6aee5e0-71b3-43af-b5da-bc582b50253c",
-            "targetUUID": "c290009d-15d2-4e13-81ed-c64de8cfec72",
-            "created": "24.02.2025"
+            "sourceUUID": "b66d554f-1c23-4c60-9895-ff5fd94a180a",
+            "targetUUID": "d5f9e512-1b70-46e9-afc7-ffe73b093dc9",
+            "created": "11.03.2025"
         }
     ],
-    "GerberJobFile": [
-        {
-            "uuid": "a1f0d27b-99b8-484b-bd2c-0aa1f6a78f16",
-            "name": "Vendor",
-            "value": "KiCad2025_1234",
-            "unit": "",
-            "dataType": "String",
-            "elementPath": "Header.GenerationSoftware.Vendor",
-            "filePath": "models/ee_domain/Hades_project-job.gbrjob",
-            "created": "03.02.2025",
-            "lastModified": "20.02.2025"
-        }
-    ],
+    "GerberJobFile": [],
     "STEP": [
         {
-            "uuid": "a6aee5e0-71b3-43af-b5da-bc582b50253c",
-            "name": "name",
-            "value": "STEP_AgriUAV2025",
+            "uuid": "b369ee30-903a-4bfd-bc20-ca467b46ac44",
+            "name": "DATA",
+            "value": "#56",
             "unit": "",
+            "index": "0",
             "dataType": "String",
-            "elementPath": "FILE_NAME.name",
-            "filePath": "models/me_domain/STEP_AgriUAV.stp",
-            "created": "24.02.2025",
-            "lastModified": "25.02.2025"
+            "elementPath": "DATA.#10=CONTEXT_DEPENDENT_SHAPE_REPRESENTATION",
+            "filePath": "C:/Users/tommy/Nextcloud/MASTER ARBEIT/Code/SysMLv2 API Code/models/me_domain/TViPro1_WS2425_HA2_Aufgabe4_Gruppe311_1.stp",
+            "created": "05.03.2025",
+            "lastModified": "05.03.2025"
+        }
+    ],
+    "Source Code": [
+        {
+            "uuid": "b66d554f-1c23-4c60-9895-ff5fd94a180a",
+            "name": "id",
+            "value": "123a",
+            "unit": "",
+            "index": "",
+            "dataType": "String",
+            "elementPath": "FlightController.id",
+            "filePath": "C:/Users/tommy/Nextcloud/MASTER ARBEIT/Code/SysMLv2 API Code/models/sw_domain/generated_code.py",
+            "created": "11.03.2025",
+            "lastModified": "11.03.2025"
         }
     ]
 }

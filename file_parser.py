@@ -3,13 +3,17 @@ import re #regex for parsing
 import os
 import json
 
-from utils.json_utils import load_json
+from utils.json_utils import load_json, save_json
 from utils.config_utils import load_config
 
+# Libraries StepParser
 from OCC.Core.STEPControl import STEPControl_Reader
 from OCC.Core.TopAbs import TopAbs_COMPOUND, TopAbs_COMPSOLID, TopAbs_SOLID, TopAbs_SHELL, TopAbs_FACE, TopAbs_WIRE, TopAbs_EDGE, TopAbs_VERTEX
 from OCC.Core.IFSelect import IFSelect_RetDone
 from OCC.Core.TopExp import TopExp_Explorer
+# Libraries CodeParser
+from jinja2 import Template
+import jinja2
 
 # Contains all standardized (for this masters thesis) file parser as a single class for each file format 
 # Each class should have methods to read, load, save, and extract metadata
@@ -41,6 +45,7 @@ class SysmlParser:
         
         self.sysml_path = sysml_path
         self.sysml_model = None #sysml_model will be extracted from sysml_path
+        self.sysml_model = self.load_sysml_model()
         self.logger.info(f"SysmlParser initialized")
 
     def load_sysml_model(self): 
@@ -106,37 +111,113 @@ class SysmlParser:
         # OPTIONAL: Include about matches for the content 
         return metadata_names
     
-    def get_metadata_about_elements(self, metadata_name):
+    def get_metadata_about_elements(self, metadata_name = None):
         """ Helper function 
-        Extracts all elements with metadata tag '@<name> about' or 'metadata <name>
+        Extracts all elements with metadata tag '@<metadata_name> about' or 'metadata <metadata_name>
 
         Parameters: 
-            medata_name : String. Name of the metadata def to search for inside sysml model  
+            metadata_name : String. Name of the metadata def to search for inside sysml model, if None is provided automatically searches for metadata def 
         """
         self.logger.info(f"SysmlParser - get_metadata_about_elements")
+
         if not self.sysml_model:
-            self.logger.warning("No SysML model loaded.")
-            return 
+            self.logger.warning("No SysML model loaded. Trying to load model content")
+            self.sysml_model = self.load_sysml_model() 
 
-        # Flexible regex to handle multi-line and complex formats e.g. packageA::partDefs::partA, ... 
-        #metadata_about_pattern = r'@' + re.escape(metadata_name) + r'\s+about\s+([\w\:\-\.]+(?:\s*,\s*[\w\:\-\.]+)*\s*);'
-        metadata_about_pattern = (
-        r"@['\"]?" + re.escape(metadata_name) + r"['\"]?\s+about\s+"
-        r"([\w\:\-\.]+(?:\s*,\s*[\w\:\-\.]+)*\s*);"
-        )
+        # NOTE: Currently assumes that we tag whole parts
+        # NOTE: later add attribute tags e.g. partA::id
+        # 2) Find attributes for each tagged part
+        result = {}
 
-        matches = re.findall(metadata_about_pattern, self.sysml_model, re.DOTALL)
+        if metadata_name is None: 
+            # Find metadata def { ... }
+            metadata_def_list = re.findall(r"\bmetadata\s+def\s+(\w+)\s*(?:\{[^}]*\}|;)", self.sysml_model) #\bmetadata\s+def\s+(\w+)\s*\{
+            self.logger.debug(f"No specific metadata_name provided. Automatic search for 'metdata def' found: {metadata_def_list}")
+        else:
+            metadata_def_list = [metadata_name]
 
-        # If matches were found, split them and return as a list
-        if matches:
-            elements = matches[0].split(',')  # Split elements separated by commas
-            # return [e.strip() for e in elements]  # Remove unnecessary spaces
-            # OPTIONAL
-            # For each element, split by ':' and take the last part
-            # e.g. 'packageA::partDefinitions::partB' -> extracts 'partB'  
-            processed_elements = [e.strip().split(':')[-1] for e in elements]
-            return processed_elements
-        return []
+        if not metadata_def_list: 
+            # automatic search did not found metadata def structure in sysml model 
+            self.logger.warning(f"No metadata definitions found in SysML model.")
+            return {}
+
+        all_elements = []
+        # Loop through all metadata defs 
+        for meta in metadata_def_list:
+            if not meta:
+                continue  # Falls meta None or empty continue 
+
+            # Search for `@<meta> about partA, partB; patterns 
+            metadata_about_pattern = (
+                r"@['\"]?" + re.escape(meta) + r"['\"]?\s+about\s*([\w\s,:;\-\.]+?)\s*;"
+            )
+            matches = re.findall(metadata_about_pattern, self.sysml_model, re.DOTALL)
+
+            elements = []
+            if matches:
+                elements_raw = matches[0]
+                elements = [e.strip().rstrip(';') for e in elements_raw.split(',') if e.strip()]
+                elements = [e.split('::')[-1] for e in elements]  # only last element of metadata tag
+
+            if not elements:
+                self.logger.debug(f"No matches found for metadata: {meta}")
+                continue
+
+            
+            #self.logger.debug(f"Found elements for '{meta}': {elements}")
+            all_elements.extend(elements)
+            self.logger.debug(f"All elements: {all_elements}")
+            
+
+            # Search for attributes for each part inside tagged metadata 
+            for path in all_elements:
+                self.logger.debug(f"Current metadata tag: {path}")
+                part_pattern = (
+                    r"part\s+def\s+" + re.escape(path) + r"\s*\{([^}]*)\}"
+                )
+                part_match = re.search(part_pattern, self.sysml_model, re.DOTALL)
+
+                attributes = []
+                if part_match:
+                    attributes_block = part_match.group(1)
+
+                    # Search for  `attribute name = value; 
+                    attr_pattern = r"attribute\s+(\w+)\s*=\s*([^;]+);"
+                    attr_matches = re.findall(attr_pattern, attributes_block)
+
+                    for attr_name, attr_value in attr_matches:
+                        unit = ""
+                        if "[" in attr_value and "]" in attr_value: # Unit detection 
+                            unit = attr_value[attr_value.index("[") + 1:attr_value.index("]")]
+                            attr_value = attr_value[:attr_value.index("[")].strip()
+
+                        # DataType
+                        attr_value = attr_value.strip().strip('"')
+                        if attr_value.startswith('"') or attr_value.isalpha():
+                            data_type = "string"
+                        elif "." in attr_value:
+                            data_type = "float"
+                        else:
+                            data_type = "int" if attr_value.isdigit() else "string"
+
+                        attributes.append({
+                            "name": attr_name,
+                            "value": attr_value,
+                            "unit": unit,
+                            "dataType": data_type,
+                            "metadata_path": path
+                        })
+                    
+                    
+                # Add 'metadata tag' to know from which each tagged element is coming from 
+                # result[element] = attributes
+                if path not in result:
+                    result[meta] = attributes
+                else:
+                    result[meta].append(attributes)
+
+        #self.logger.debug(f"Extracted metadata: {result}")
+        return result
     
     def validate_elementPath(self, elementPath):
         self.logger.info(f"SysmlParser - validate_elementPath")
@@ -209,13 +290,13 @@ class GerberParser:
     2) Parse through and extract metadata 
     3) Save Metadata in JSON Formatted file 
     """
-    def __init__(self, file_path="models/ee_domain/Hades_project-job.gbrjob"): # check string path with and without "." 
+    def __init__(self, gerber_file_path=None): # check string path with and without "." 
         self.logger = logging.getLogger(__name__)
 
         # Contains extracted informations of parsed gerber file 
         #self.data = {}
         # Path to gerber file to be parsed
-        self.file_path = file_path
+        self.file_path = gerber_file_path
         self.logger.info(f"GerberParser initialized")
 
     def get_value(self, elementPath):
@@ -228,11 +309,12 @@ class GerberParser:
         """
         self.logger.info(f"GerberParser - get_gerber_job_file_value")
         # Load the Gerber job file using the load_json function
-        try: 
-            with open(self.file_path, "r", encoding="utf-8") as f: 
-                gbr_job_file = json.load(f)
-        except Exception as e:
-            self.logger.error(f"Failed to load Gerber job file")
+        # try: 
+        #     with open(self.file_path, "r", encoding="utf-8") as f: 
+        #         gbr_job_file = json.load(f)
+        # except Exception as e:
+        #     self.logger.error(f"Failed to load Gerber job file")
+        gbr_job_file = load_json(self.file_path)
 
         keys = elementPath.split(".")  # Split path into individual keys
         current_data = gbr_job_file  # Start from the root of the loaded JSON
@@ -250,168 +332,314 @@ class GerberParser:
         self.logger.info(f"Successfully retrieved value for '{elementPath}': {current_data}")
         return current_data
 
-class Code_parser: 
-    # Parses specific files ()
-    def __init__(self):
-        pass
-
-class StepParser: 
-    """ Parses specific STEP files (STEP AP242) from the Mechanical Engineering Domain """
-
-    def __init__(self, step_file_path = None):
+class CodeParser: 
+    """Parses source code that is enriched/annotated with metadata with a specific structure
+    Also generates python code with tagged metadata from the sysmlv2 model and mapped elements """
+    def __init__(self, code_file_path = None):
         self.logger = logging.getLogger(__name__)
+        self.mapping_data = load_json("./config/mapping.json")
+        self.code_file_path = code_file_path
+        #self.sp = SysmlParser # Object to generate python code with annotated metadata from sysmlv2 model 
 
-        self.step_file_path = step_file_path
-        self.step_file_content = self.load_step_file()
-        self.step_reader = STEPControl_Reader()
-        self.logger.info(f"StepParser initialized")
-        
-    def load_step_file(self):
-        """ 
-        Load Step file content
-        NOTE: 
-            - Step Files don't have a specific metadata structure like JSON or XML files
-            - Therefore, we need to extract metadata from the file content itself via read and regex search 
-        
-        Returns:
-            str: The content of the file as a string or empty ("") if file not found
-        """
-        self.logger.info(f"StepParser - load_step_file")
-        try: 
-            with open(self.step_file_path, 'r') as file: 
-                step_data = file.read()
-                self.logger.debug(f"Successfully loaded STEP file")
-                return step_data
-        except ExceptionGroup as e:                      
-            self.logger.error(f"Failed to load file {self.step_file_path}: {e}")
-            return ""
-        
-    def extract_metadata(self):
-        """ 
-        Extracts metadata from the STEP file
-        
-        Returns:
-            dict: Metadata extracted from the STEP file
-        """
-        self.logger.info(f"StepParser - extract_metadata")
-        # return metadata as a dictionary
-        metadata = {}
+        self.logger.info(f"CodeParser initialized")
 
-        # Extract metadata from the STEP file via regex search
-        # Metadata: Product Name
-        product_name_match = re.search(r'PRODUCT\(\s*\'(.*?)\'', self.step_file_content)
-        metadata["product_name"] = product_name_match.group(1) if product_name_match else "None"
+    def save_code(self, code, filename="generated_code.py"):
+        """ Saves generated code to a file """
+        self.logger.info("save_code")
+        
+        output_folder = "models/sw_domain"
+        filepath = os.path.join(output_folder, filename)
 
-        return metadata
-    
-    def extract_shapes(self):
-        """
-        Load and analyze the STEP file to detect shapes.
-        Returns:
-            List of tuples containing the shape type and the shape itself.
-        """
-        self.logger.info(f"StepParser - extract_shapes")
-        status = self.step_reader.ReadFile(self.step_file_path)
-        if status != IFSelect_RetDone:
-            self.logger.error("Error: File can not be loaded!")
-            return []
-        
-        self.step_reader.TransferRoots()
-        shape = self.step_reader.OneShape()
-        return self.get_shapes(shape)
-    
-    def get_shapes(self, shape):
-        """Returns a list with all shapes in the given object (step)"""
-        shape_types = [TopAbs_COMPOUND, TopAbs_COMPSOLID, TopAbs_SOLID, TopAbs_SHELL, TopAbs_FACE, TopAbs_WIRE, TopAbs_EDGE, TopAbs_VERTEX]
-        #shape_names = ["COMPOUND", "COMPSOLID", "SOLID", "SHELL", "FACE", "WIRE", "EDGE", "VERTEX"]
-        shape_names = ["COMPOUND", "COMPSOLID", "SOLID"]
-        
-        detected_shapes = []
-        
-        for shape_type, name in zip(shape_types, shape_names):
-            explorer = TopExp_Explorer(shape, shape_type)
-            while explorer.More():
-                detected_shapes.append((name, explorer.Current()))
-                explorer.Next()
-        
-        return detected_shapes
-    
+        with open(filepath, "w") as file:
+            file.write(code)
+
+        self.logger.info(f"Generated code saved to: {filepath}")
+
     def get_value(self, elementPath):
-        """
-        Extracts a specific value from a STEP file based on the given element path.
-
-        The function searches for the specified section (e.g., FILE_NAME, FILE_DESCRIPTION) 
-        and retrieves the requested attribute value. Attribute positions are mapped using 
-        a predefined index table.
+        """ 
+        Parses code and extracts single value that has been mapped via elementPath in mapping.json
+        Checks if element path is valid
 
         Parameters:
-            elementPath (str): The path to the desired element in the format "SECTION.ATTRIBUTE".
-                                Example: "FILE_NAME.name" or "FILE_DESCRIPTION.description".
+            elementPath (str): The path to the element in the code (e.g., "FlightController.id")
+            NOTE: elementPath is generated by software and has to be used by python decorator structure @metadata(..., "elementPath") 
+
+        Returns the value of the elementPath from the mapping.json inside the code and searches for element"""
+        self.logger.info("get_value")
+        # 1) Load file 
+        # Check if code file path is set
+        if not self.code_file_path: 
+            self.logger.warning(f"Code file is not provided.")
+            return None
+        # Check if code file path exist
+        if not os.path.exists(self.code_file_path):
+            self.logger.error(f"Error: File {self.code_file_path} does not exist")
+            raise FileNotFoundError(f"File {self.code_file_path} not found")
+        
+        # 2) Read and parse file 
+        try:
+            with open(self.code_file_path, "r") as file:
+                code_content = file.readlines() 
+        except Exception as e: 
+            self.logger.error(f"Error parsing file: {e}")
+
+        # 3) Search for "@metadata(...)"
+        # @metadata("max_width", "70", "mm", "int", "PCBDesign", "FlightController.max_width")
+        metadata_pattern = re.compile(
+            r'@metadata\("([^"]*)",\s*"([^"]*)",\s*"([^"]*)",\s*"([^"]*)",\s*"([^"]*)",\s*"([^"]*)"\)'
+        )
+        
+        # Looping through source code content
+        for line in code_content: 
+            line = line.strip()
+            metadata_match = metadata_pattern.search(line)
+            if metadata_match: 
+                name, value, unit, dataType, metadata_tag, path = metadata_match.groups()
+                if path == elementPath: 
+                    self.logger.debug(f"[CodeParser - get_value] Found value: {value}")
+                    return value
+            
+        # 4) Error if we looped through and found nothing
+        self.logger.error(f"No value found for given elementPath: {elementPath}")
+        raise ValueError(f"No Metadata value found for: {elementPath}")
+
+    def generate_code_from_sysml(self, sysml_file_path: str = None, output_file: str = "generated_code.py"): 
+        """ 
+        Generates Python code structure from SysMLv2 model using extracted metadata 
+        and saves it as a .py source file.
+
+        Parameters:
+            sysml_file_path (str): Path to the SysMLv2 model file.
+            output_file (str): Name of the output Python file (default: generated_code.py).
+        """ 
+        self.logger.debug("generate_code_from_sysml")
+
+        self.sp = SysmlParser(sysml_path=sysml_file_path)
+        
+        # Extract sysmlv2 metadata
+        sysml_metadata = self.sp.get_metadata_about_elements()
+        # {  'PCBDesign': [{'name': 'id', 'value': 'abc123', 'unit': '', 'dataType': 'string', 'metadata_path': 'FlightController'}, 
+        # {'name': 'name', 'value': 'fc-123', 'unit': '', 'dataType': 'string', 'metadata_path': 'FlightController'}, 
+        # ...
+        # 'PCB': [{'name': 'id', 'value': 'esc-001', 'unit': '', 'dataType': 'string', 'metadata_path': 'ElectronicSpeedController'}, 
+        # {'name': 'name', 'value': 'ESC 30A', 'unit': '', 'dataType': 'string', 'metadata_path': 'ElectronicSpeedController'}, ...}
+ 
+
+        # Jinja2 Template
+        template = jinja2.Template("""
+# Generated from SysMLv2 model
+from typing import Any
+
+def metadata(name: str, value: Any, unit: str, dataType: str, metadataTag: str = None, elementPath: str = None):
+    def wrapper(cls):
+        if not hasattr(cls, 'metadata'):
+            cls.metadata = []
+        cls.metadata.append({
+            "name": name,
+            "value": value,
+            "unit": unit,
+            "dataType": dataType,
+            "metadata_tag": metadataTag,
+            "elementPath": elementPath or f"{cls.__name__}.{name}",
+        })
+        return cls
+    return wrapper
+
+{% for metadata_path, attribute_list in sysml_metadata.items() %}
+{% set class_name = attribute_list[0].metadata_path %}
+{% for attributes in attribute_list -%}
+@metadata("{{ attributes.name }}", "{{ attributes.value }}", "{{ attributes.unit }}", "{{ attributes.dataType }}", "{{ metadata_path }}", "{{ attributes.metadata_path }}.{{ attributes.name }}")
+{% endfor %}
+class {{ class_name }}:
+    def __init__(self, **kwargs):
+        {% for attributes in attribute_list -%}
+        self.{{ attributes.name }} = "{{ attributes.value }}"
+        {% endfor %}
+{% endfor %}
+""")
+
+        # Generate Python-Code from template 
+        generated_code = template.render(sysml_metadata=sysml_metadata)
+
+        # Save generated code 
+        output_dir = "models/sw_domain"
+        os.makedirs(output_dir, exist_ok=True)  # In case folder does not exist -> create folder 
+        output_path = os.path.join(output_dir, output_file)
+
+        with open(output_path, "w", encoding="utf-8") as f:
+            f.write(generated_code)
+
+        #self.logger.info(f"Python source code generated and saved to: {output_path}")
+        return generated_code
+        
+
+class StepParser:
+    """A parser for STEP files (STEP AP242) used in Mechanical Engineering."""
+
+    def __init__(self, step_file_path=None):
+        """
+        Initialize the StepParser with a file path.
+
+        Parameters:
+            step_file_path (str, optional): Path to the STEP file. Defaults to None.
+        """
+        self.logger = logging.getLogger(__name__)
+        self.step_file_path = step_file_path
+        self.step_file_content = self.load_step_file(filepath=self.step_file_path)
+        self.logger.info("StepParser initialized")
+
+    def load_step_file(self, filepath=None):
+        """
+        Load the content of a STEP file.
+
+        Note:
+            - STEP files lack a predefined metadata structure (unlike JSON or XML).
+            - Metadata must be extracted from the raw content using reading and regex if needed.
+
+        Parameters:
+            filepath (str, optional): Path to the STEP file. Defaults to None.
 
         Returns:
-            str | None: The extracted value as a string, or None if the element is not found.
+            str: File content as a string, or an empty string ("") if loading fails.
         """
-        self.logger.info("StepParser - get_value")
+        self.logger.info("Loading STEP file")
+        if not filepath:
+            self.logger.warning("No file path provided")
+            return ""
 
-        # Read the STEP file
         try:
-            with open(self.step_file_path, "r", encoding="utf-8") as f:
-                step_file_content = f.read()
+            with open(filepath, 'r') as file:
+                content = file.read()
+                self.logger.debug("STEP file loaded successfully")
+                return content
         except Exception as e:
-            self.logger.error(f"Failed to load STEP file: {e}")
-            return None
+            self.logger.error(f"Failed to load STEP file '{filepath}': {e}")
+            return ""
+   
+    def get_value(self, elementPath):
+        """
+        Extracts a value from the STEP file based on the given elementPath.
+        It also keeps track of the index position for later updates.
+        Writes "index" parameter inside mapping.json 
+        
+        Parameters:
+            elementPath (str): The STEP path to search for (e.g., "DATA.#11458=CARTESIAN_POINT" or "FILE_NAME").
+            
+        Returns:
+            str | None: The extracted value, or None if not found.
+        """
+        self.logger.info(f"get_value")
 
-        # Validate the format of elementPath
-        keys = elementPath.split(".")
-        if len(keys) != 2:
-            self.logger.error("Invalid elementPath format. Expected: 'SECTION.ATTRIBUTE'")
-            return None
-
-        section_name, attribute = keys
-
-        # Search for the section in the STEP file (e.g., FILE_NAME(...);)
-        section_pattern = rf"{section_name}\((.*?)\);"
-        section_match = re.search(section_pattern, step_file_content, re.DOTALL)  # DOTALL allows multiline matches
-
-        if not section_match:
-            self.logger.warning(f"Section '{section_name}' not found in the STEP file.")
-            return None
-
-        section_content = section_match.group(1)
-        values = [value.strip() for value in section_content.split(",")]
-
-        # Define attribute position mappings for known sections
-        metadata = {
-            "FILE_NAME": {
-                "name": 0,
-                "time_stamp": 1,
-                "author": 2,
-                "organization": 3,
-                "preprocessor_version": 4,
-                "originating_system": 5,
-                "authorization": 6
-            },
-            "FILE_DESCRIPTION": {
-                "description": 0,
-                "implementation_level": 1
-            }
-        }
-
-        # Retrieve the value based on the attribute position
-        if section_name in metadata and attribute in metadata[section_name]:
-            index = metadata[section_name][attribute]
-
-            if index < len(values):  # Ensure index is within range
-                raw_value = values[index]  # Example: /* name */ 'Agri_UAV2'
-
-                # Extract value enclosed in single or double quotes
-                match = re.search(r"'(.*?)'|\"(.*?)\"", raw_value)
-                clean_value = match.group(1) if match else raw_value
-
-                return clean_value
-            else:
-                self.logger.warning(f"Index {index} out of range for section '{section_name}'.")
+        # Ensure STEP file content is loaded
+        if not self.step_file_content:
+            self.logger.warning("STEP file content is empty. Attempting to reload...")
+            self.step_file_content = self.load_step_file(filepath=self.step_file_path)
+            if not self.step_file_content:
+                self.logger.error("STEP file content could not be loaded")
                 return None
+
+        # Differentiate between HEADER data and DATA section
+        if elementPath.startswith("DATA."):
+            # Extract the numeric index from the elementPath (e.g., #11458)
+            match = re.search(r"#(\d+)", elementPath)
+            if not match:
+                self.logger.error(f"Invalid elementPath format: {elementPath}")
+                return None
+
+            element_id = match.group(0)  # Example: "#11458"
+
+            # Search for the line in the STEP file containing the element
+            pattern = rf"{element_id}\s*=\s*([\w_]+)\((.*?)\);"
+            match = re.search(pattern, self.step_file_content, re.DOTALL) # DOTALL allows multiline matches
+            #self.logger.debug(f"Match for '{element_id}': {match}")
+
+            if not match:
+                self.logger.warning(f"Element '{element_id}' not found in the STEP file.")
+                return None
+
+            element_type = match.group(1) # e.g. "NEXT_ASSEMBLY_USAGE_OCCURRENCE"
+            element_data = match.group(2) # value inside the brackets. e.g. (#58,#116) -> "#58,#116"
+            
+            # Split each element inside the element_data / brackets (e.g., #58,#116)
+            # re.sub Removes single or double quotes from the values
+            values = [re.sub(r"^['\"]|['\"]$", "", i.strip()) for i in element_data.split(",")]
+            #self.logger.debug(f"Extracted values: {values}")
+
+            # Load mapping.json to update the index for the current element
+            mapping = load_json("config/mapping.json")
+            index = 0 
+
+            for element in mapping["STEP"]:
+                if element.get("index") != "":
+                    index = int(element["index"])
+                    element["value"] = values[index]  # Update value from STEP file
+                    break
+                else:
+                    for idx, value in enumerate(values):
+                        if value == element["value"]:
+                            element["index"] = str(idx)
+                            save_json("config/mapping.json", mapping)
+                            index = idx
+                            break
+                    else:
+                        continue
+                    break
+            return values[index] 
+        
+        # Handle HEADER section (e.g., "FILE_NAME.name")
         else:
-            self.logger.warning(f"Attribute '{attribute}' not found in section '{section_name}'.")
-            return None
+            # Validate element_path format (e.g., "SECTION.ATTRIBUTE")
+            keys = elementPath.split(".")
+            if len(keys) != 2:
+                self.logger.error("Invalid elementPath format. Expected: 'SECTION.ATTRIBUTE'")
+                return None
+
+            section_name, attribute = keys
+
+            # Search for the section in the STEP file (e.g., FILE_NAME(...);)
+            section_pattern = rf"{section_name}\((.*?)\);"
+            section_match = re.search(section_pattern, self.step_file_content, re.DOTALL)  # DOTALL allows multiline matches
+
+            if not section_match:
+                self.logger.warning(f"Section '{section_name}' not found in the STEP file.")
+                return None
+
+            section_content = section_match.group(1)
+            values = [value.strip() for value in section_content.split(",")]
+
+            # Define attribute position mappings for known sections
+            metadata = {
+                "FILE_NAME": {
+                    "name": 0,
+                    "time_stamp": 1,
+                    "author": 2,
+                    "organization": 3,
+                    "preprocessor_version": 4,
+                    "originating_system": 5,
+                    "authorization": 6
+                },
+                "FILE_DESCRIPTION": {
+                    "description": 0,
+                    "implementation_level": 1
+                }
+            }
+
+            # Retrieve the value based on the attribute position
+            if section_name in metadata and attribute in metadata[section_name]:
+                index = metadata[section_name][attribute]
+
+                if index < len(values):  # Ensure index is within range
+                    raw_value = values[index]  # Example: /* name */ 'Agri_UAV2'
+
+                    # Extract value enclosed in single or double quotes (e.g., "'Agri_UAV2'" -> "Agri_UAV2")
+                    match = re.search(r"'(.*?)'|\"(.*?)\"", raw_value)
+                    clean_value = match.group(1) if match else raw_value
+
+                    return clean_value
+                else:
+                    self.logger.warning(f"Index {index} out of range for section '{section_name}'.")
+                    return None
+            else:
+                self.logger.warning(f"Attribute '{attribute}' not found in section '{section_name}'.")
+                return None
+             
