@@ -7,25 +7,24 @@ from typing import Any
 # 
 # metadata can here only be added before a class definition and with given "def metadata"
 
-def metadata(name: str, value: Any, unit: str, dataType: str, elementPath : str = None):
+def metadata(name: str, value: Any, unit: str, dataType: str, metadataTag: str = None, elementPath: str = None):
     def wrapper(cls):
-        # Initialize metadata as a list of metadata to store multiple information
-        if not hasattr(cls, "metadata"):
+        if not hasattr(cls, 'metadata'):
             cls.metadata = []
-        # Append metadata to metadata list
         cls.metadata.append({
             "name": name,
             "value": value,
             "unit": unit,
             "dataType": dataType,
-            "elementPath" : elementPath or f"{cls.__name__}.{name}" # classname.name if elementPath not provided automatically generated
+            "metadata_tag": metadataTag,
+            "elementPath": elementPath or f"{cls.__name__}.{name}",
         })
         return cls
     return wrapper
 
-@metadata("mass", "150.70", "g", "float", "Motor.mass")
-@metadata("speed", "100", "rpm", "int", "Motor.speed")
-@metadata("current", "30", "A", "string", "Motor.current")
+@metadata("mass", "150.70", "g", "float", "PCB", "Motor.mass")
+@metadata("speed", "100", "rpm", "int", "PCB", "Motor.speed")
+@metadata("current", "30", "A", "string", "PCB", "Motor.current")
 class Motor:
     def __init__(self, motortype: str, power: float, voltage: str, mass: float, speed: float, torque: float, current: float, efficiency: float):
         self.motortype = motortype,
@@ -37,7 +36,7 @@ class Motor:
         self.current = current, 
         self.efficiency = efficiency
 
-@metadata("mass", "35", "g", "float", elementPath="Blade.mass")
+@metadata("mass", "35", "g", "float", "PCB", elementPath="Blade.mass")
 class Blade:
     def __init__(self, mass : float, length : float):
         self.mass = mass, 

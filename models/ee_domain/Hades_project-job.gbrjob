@@ -24,7 +24,7 @@
   "DesignRules": [
     {
       "Layers": "Outer",
-      "PadToPad": 0.2,
+      "PadToPad": 0.25,
       "PadToTrack": 0.2,
       "TrackToTrack": 0.2,
       "MinLineWidth": 0.1972

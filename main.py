@@ -44,7 +44,7 @@ class GUI:
     Uses Tkinter for the user interface.
     """
     def __init__(self, config, metadatamanager=None, versioncontrol=None): 
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger(__name__ + "-GUI")
        
         self.config = config
         # List acts as the accepted file formats (used inside the map popup)
@@ -73,20 +73,20 @@ class GUI:
         # Create GUI elements
         self.setup_widgets()
         self.setup_layout()
-        self.logger.info(f"GUI initialized")
 
     def setup_widgets(self):
         """Initial creation of widgets inside the GUI."""
-        self.logger.info(f"setup_widgets")
+        #self.logger.info(f"setup_widgets")
 
         # Buttons
         self.btn_edit_sysml_model = ctk.CTkButton(self.main_frame, text="View/Edit SysML Model", command=self.popup_edit_sysml_model)
         self.btn_map_data = ctk.CTkButton(self.main_frame, text="Map Data", command=self.popup_map_data)  
         self.btn_version_control = ctk.CTkButton(self.main_frame, text="Version Control", command=self.popup_version_control)
+        self.btn_verification = ctk.CTkButton(self.main_frame, text="Verification Analysis", command=self.popup_verification)
         
     def setup_layout(self):
         """Sets up the layout of the GUI elements."""
-        self.logger.info(f"setup_layout")
+        #self.logger.info(f"setup_layout")
         self.main_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
         self.root.grid_rowconfigure(0, weight=1)  
         self.root.grid_columnconfigure(0, weight=1) 
@@ -96,6 +96,7 @@ class GUI:
         self.btn_edit_sysml_model.grid(row=0, column=0, padx=5, pady=(10,5), sticky="ew")
         self.btn_map_data.grid(row=1, column=0, padx=5, pady=5, sticky="ew") 
         self.btn_version_control.grid(row=2, column=0, padx=5, pady=5, sticky="ew")
+        self.btn_verification.grid(row=3, column=0, padx=5, pady=5, sticky="ew")
 
     def popup_edit_sysml_model(self):
         """Opens a popup to edit the SysML model.
@@ -110,7 +111,7 @@ class GUI:
             - Show only tagged elements by selected metadata tag 
         """
 
-        self.logger.info(f"popup_edit_sysml_model")
+        #self.logger.info(f"popup_edit_sysml_model")
         popup = tk.Toplevel(self.main_frame)
         popup.title("Edit SysML Model")
         popup.geometry("1000x800")
@@ -162,12 +163,12 @@ class GUI:
                                     
         Returns: Adjusted ctk.Text Widget with highlighted elements 
         """
-        self.logger.info(f"highlight_tagged_elements_by_metadata")
+        #self.logger.info(f"highlight_tagged_elements_by_metadata")
         # Get the current user given sysml path 
         
         # Check if sysml model full path is not None:
         if self.sysml_file_path: 
-            self.logger.debug(f"Found valid sysml model path: {self.sysml_file_path}")
+            #self.logger.debug(f"Found valid sysml model path: {self.sysml_file_path}")
 
             try: 
                 # Create sysml_parser class to get class functions 
@@ -226,7 +227,7 @@ class GUI:
     def popup_map_data(self):
         """Opens a popup to map the data.
         """
-        self.logger.info(f"popup_map_data")
+        #self.logger.info(f"popup_map_data")
         popup = tk.Toplevel(self.main_frame)
         popup.title("Map Data")
         popup.geometry("1500x1000")
@@ -331,7 +332,7 @@ class GUI:
         """ 
         Opens a file dialog to select a SysML file inside the file explorer of the OS 
         """ 
-        self.logger.info(f"select_file")
+        #self.logger.info(f"select_file")
         if model_type == "sysml":
             filetypes = [("SysML files", "*.sysml")]
         else:
@@ -367,7 +368,7 @@ class GUI:
         - metadata_manager has to parse file via file_parser functions to get specific user given path to the element in order to generate UUID and map correctly 
         
         """
-        self.logger.info(f"map_elements")
+        #self.logger.info(f"map_elements")
         # sysml_path = sysml_path.get()
         #self.logger.debug(f"User provided sysml path inside entry: {sysml_path}")
         sysml_element_path = sysml_element_path.get()
@@ -391,28 +392,29 @@ class GUI:
                 # Notify the user about the successful mapping
                 messagebox.showinfo("INFO", "Successfully mapped elements together!")
                 # Show the mapped elements in a new popup
-                def show_mapping_popup():
-                    popup = tk.Toplevel()
-                    popup.title("Mapped Elements")
+                # UNCOMMENT IF NEEDED
+                # def show_mapping_popup():
+                #     popup = tk.Toplevel()
+                #     popup.title("Mapped Elements")
                     
-                    # Create labels for SysML and Domain elements
-                    label = ctk.CTkLabel(popup, text="Mapped Elements", font=("Arial", 14, "bold"), text_color="black")
-                    label.pack(pady=10)
-                    sysml_label = ctk.CTkLabel(popup, text=f"SysML Element: {sysml_element_path} : {sysml_element_value}", font=("Arial", 12), text_color="black")
-                    sysml_label.pack(pady=5)
-                    domain_label = ctk.CTkLabel(popup, text=f"Domain Element: {domain_element_path}: {domain_element_value}", font=("Arial", 12), text_color="black")
-                    domain_label.pack(pady=5)
-                    # Close button for the popup
-                    # close_button = ctk.CTkButton(popup, text="OK", fg="blue", cursor="hand2")
-                    # close_button.pack(pady=10)
-                    # close_button.bind("<Button-1>", lambda e: popup.destroy())
+                #     # Create labels for SysML and Domain elements
+                #     label = ctk.CTkLabel(popup, text="Mapped Elements", font=("Arial", 14, "bold"), text_color="black")
+                #     label.pack(pady=10)
+                #     sysml_label = ctk.CTkLabel(popup, text=f"SysML Element: {sysml_element_path} : {sysml_element_value}", font=("Arial", 12), text_color="black")
+                #     sysml_label.pack(pady=5)
+                #     domain_label = ctk.CTkLabel(popup, text=f"Domain Element: {domain_element_path}: {domain_element_value}", font=("Arial", 12), text_color="black")
+                #     domain_label.pack(pady=5)
+                #     # Close button for the popup
+                #     # close_button = ctk.CTkButton(popup, text="OK", fg="blue", cursor="hand2")
+                #     # close_button.pack(pady=10)
+                #     # close_button.bind("<Button-1>", lambda e: popup.destroy())
             
-                # Call the mapping popup function
-                show_mapping_popup()
+                # # Call the mapping popup function
+                # show_mapping_popup()
 
             else:
                 # Notify the user about the failure of mapping
-                messagebox.showerror(f"ERROR", "Cannot map metadata. Issue inside map_metadata")
+                messagebox.showerror(f"ERROR", "Cannot map metadata.")
 
     def popup_version_control(self): 
         """Opens a popup where the user can select different commits and versions of a selected file 
@@ -424,7 +426,7 @@ class GUI:
             3) after selection and Button press
             4) Display git diff 
         """
-        self.logger.info(f"popup_version_control")
+        #self.logger.info(f"popup_version_control")
         popup = tk.Toplevel(self.main_frame)
         popup.title("Versioncontrol")
         popup.geometry("1200x800")
@@ -513,7 +515,7 @@ class GUI:
         Returns: 
             Updated (tk) Text widget with content (string format)
         """
-        self.logger.info(f"show_version_diff")
+        #self.logger.info(f"show_version_diff")
         # Clear current text widget 
         text_widget.delete("1.0", tk.END)
 
@@ -570,19 +572,7 @@ class GUI:
         """Displays the commit history for user selection (used for popup_version_control)
             inside the treeview widget
         """
-        self.logger.info(f"show_version_history")
-        
-        # Check if file path exists
-        # if file_path == "" or not file_path:
-        #     file_path = filedialog.askopenfilename(title="Select a file for version control", filetypes=[("All files", "*.*"), ("SysML files", "*.sysml")])
-        #     if not file_path: 
-        #         self.logger.error("No file path provided")
-        #         messagebox.showwarning("Warning", f"No File Path provided. Please insert a file path.")
-        #         return
-
-        #     self.file_path_entry.delete(0, tk.END)
-        #     self.file_path_entry.insert(0, file_path)
-
+        #self.logger.info(f"show_version_history")
         
         file_path = filedialog.askopenfilename(title="Select a file for version control", filetypes=[("All files", "*.*"), ("SysML files", "*.sysml")])
         if not file_path: 
@@ -593,7 +583,6 @@ class GUI:
         self.file_path_entry.delete(0, tk.END)
         self.file_path_entry.insert(0, file_path)
 
-
         # Empty treeview before adding elements 
         for row in treeview_widget.get_children():
             treeview_widget.delete(row)
@@ -601,6 +590,76 @@ class GUI:
 
         self.vc.load_commit_history_from_file_path(file_path=file_path, treeview_widget=treeview_widget)
 
+    def popup_verification(self):
+        """
+        Opens a popup to verify constraints inside the SysMLv2 Model
+        NOTE: For demonstration the sysml model is setup to contain mass constraint 
+
+        1) User selects sysml model to verify 
+        2) GUI parses through and returns all constraints inside sysml model
+        3) User selects which constraint he wants to check 
+        4) Program transforms textual notation into real mathematical equation to perfom constraint check
+        5) Shows user if selected constraint is checked or not 
+        """
+        # self.logger.info(f"popup_verification)
+        popup = tk.Toplevel(self.main_frame)
+        popup.title("Verification Analysis")
+        popup.geometry("1500x1000")
+        popup.grid_rowconfigure(0, weight=1)
+        popup.grid_rowconfigure(1, weight=1)
+        popup.grid_columnconfigure(0, weight=1) # to "span" frames to whole popup
+
+        ########## FRAMES ##########
+        # SYSML FRAME: Upper
+        sysml_frame = ctk.CTkFrame(popup, fg_color="lightgrey")
+        sysml_frame.rowconfigure(0, weight=0) # Used for label with set custom height 
+        sysml_frame.rowconfigure(1, weight=1)
+        sysml_frame.columnconfigure(1, weight=1)
+        sysml_frame.columnconfigure(0, weight=1)
+        # VERIFICATION FRAME: Lower
+        verification_frame = ctk.CTkFrame(popup, fg_color="lightgrey") #lightgrey
+        verification_frame.rowconfigure(0, weight=1) # Used for label with set custom height 
+        verification_frame.rowconfigure(1, weight=1)
+        verification_frame.columnconfigure(0, weight=1)
+        verification_frame.columnconfigure(1, weight=0)
+
+        # POPUP LAYOUT 
+        sysml_frame.grid(row=0, column=0, padx=3, pady=3, sticky="nsew") 
+        verification_frame.grid(row=1, column=0, padx=3, pady=3, sticky="nsew") 
+
+
+        ########## WIDGETS ########## 
+        sysml_frame_label = ctk.CTkLabel(sysml_frame, text="SysMLv2", height=30, font=("default",14), text_color="black") 
+        sysml_frame_text_widget = tk.Text(sysml_frame, wrap=tk.WORD)
+        btn_load_model_sysml = ctk.CTkButton(sysml_frame, text="Load SysML Model", command=lambda: self.select_file(model_type="sysml", text_widget=sysml_frame_text_widget))
+
+        verification_frame_label = ctk.CTkLabel(verification_frame, text="Verification Analysis", height=30, font=("default",14), text_color="black") 
+        verification_frame_constraint_label = ctk.CTkLabel(verification_frame, text="Constraint Name", font=("default",12), text_color="black")
+        verification_frame_constraint_entry = ctk.CTkEntry(verification_frame, placeholder_text="Type the constraint name to verify")
+        btn_verify_constraint = ctk.CTkButton(verification_frame, text="Verify", command=lambda: self.verify_selected_constraint(verification_frame_constraint_entry.get()))
+        ########## LAYOUT ##########
+        # SYSML FRAME LAYOUT 
+        sysml_frame_label.grid(row=0, column=0, padx=5, pady=(5,0), sticky="news") 
+        sysml_frame_text_widget.grid(row=1, column=0, columnspan=2, padx=5, pady=5, sticky="nsew") 
+        btn_load_model_sysml.grid(row=0, column=1, padx=5, pady=(5,0), sticky="e")
+
+        verification_frame_label.grid(row=0, column=0, padx=5, pady=(5,0), sticky="news") 
+        verification_frame_constraint_label.grid(row=1, column=0, padx=5, sticky="w")
+        verification_frame_constraint_entry.grid(row=2, column=0, padx=5, sticky="ew")
+        btn_verify_constraint.grid(row=2, column=1, padx=5, pady=(5,0), sticky="ew")
+    
+    def verify_selected_constraint(self, constraint_name): 
+        """
+        Verify user selected constraint (from constraint_entry)
+        """
+        # Load sysml model 
+        # NOTE: By using select_file the file path already sets the sysml model path that the user selected
+        if self.sysml_model: 
+            # Load function from SysmlParser Class (file_parser) to parse and check constraint 
+            self.sysml_model.verify_constraint()
+        else:
+            self.logger.error(f"Could not verify constraint: {constraint_name}")
+            raise ValueError(f"Could not verify constraint: {constraint_name}")
 
 def main(): 
     # Run Initial Log Setup for debugging
@@ -621,7 +680,7 @@ def main():
 
     #metadata = fp_sysml.get_metadata_about_elements()
     #print(metadata)
-    #generated_code = fp_code.generate_code_from_sysml(sysml_file_path="models/se_domain/example_drone_origin.sysml")
+    generated_code = fp_code.generate_code_from_sysml(sysml_file_path="models/se_domain/example_drone_origin.sysml")
     
 
     # TESTING CODE GENERATION

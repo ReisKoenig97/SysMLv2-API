@@ -21,7 +21,9 @@ package DroneExample {
         DroneExample::PartDefinitions::Drone::FlightController; 
     
     @PCB about 
-        DroneExample::PartDefinitions::Drone::ElectronicSpeedController; 
+        DroneExample::PartDefinitions::Drone::ElectronicSpeedController,
+        DroneExample::PartDefinitions::Drone::Motor,
+        DroneExample::PartDefinitions::Drone::Enclosure;
 
     package PartDefinitions{
         part def Drone {
@@ -69,15 +71,15 @@ package DroneExample {
             connect gpsm to cs;  
 
             part def FlightController{
-                attribute id = "123a";
+                attribute id = "test123";
                 attribute name = "fc-123";
                 attribute mass : MassValue; 
                 attribute description = "";
                 
                 part def pcb {
-                    attribute id = "pcb-001-123"; 
+                    attribute id = "STEP_AgriUAV2025";
                     attribute name = "PCB-123";
-                    attribute description = "";
+                    attribute description = 150.7;
                     attribute mass : MassValue; 
                     attribute max_length = 70[mm]; 
                     attribute max_width = 70[mm];  

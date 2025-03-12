@@ -26,7 +26,7 @@ class VersionControl:
             repo_path (str): The path to the Git repository.
             mapping_path (str): Path to the mapping.json file.
         """
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger(__name__ + "-VersionControl")
         #MacOS: /Users/reiskoenig/Nextcloud/MASTER ARBEIT/Code
         #Windows: "C:\Users\tommy\Nextcloud\MASTER ARBEIT\Code\SysMLv2 API Code"
         self.config = config
@@ -34,7 +34,7 @@ class VersionControl:
         self.mapping_path = mapping_path 
         self.repo = git.Repo(repo_path)
 
-        self.logger.info("VersionControl initialized")
+        #self.logger.info("VersionControl initialized")
 
 
     def load_commit_history_from_file_path(self, file_path, treeview_widget):
@@ -48,7 +48,7 @@ class VersionControl:
         Returns: 
             treeview_widget updated/filled with git commits 
         """ 
-        self.logger.info(f"load_commit_history_from_file_path")
+        #self.logger.info(f"load_commit_history_from_file_path")
         # Calling git commands to get the commit history of the specific file (user given file path)
         
         try: 
@@ -63,7 +63,7 @@ class VersionControl:
             for commit in repo.iter_commits(paths=relative_path): 
                 if commit.hexsha == latest_commit_hash: 
                     continue  # skip latest commit 
-                self.logger.debug(f"current commit: {commit}")
+                #self.logger.debug(f"current commit: {commit}")
                 commit_hash = commit.hexsha[:7] # only show the first 7 Hash numbers 
                 message = commit.message.splitlines()[0]
                 date = commit.committed_datetime.strftime('%Y-%m-%d %H:%M:%S')
@@ -82,11 +82,11 @@ class VersionControl:
         Returns:
             str: Git diff output as a string.
         """
-        self.logger.info(f"get_diff_with_specific_commit") 
+        # self.logger.info(f"get_diff_with_specific_commit") 
         try:
             repo = Repo(self.repo_path)
             relative_path = os.path.relpath(file_path, self.repo_path)
-            self.logger.debug(f"Calculating diff for file: {relative_path} and commit: {commit_hash}")
+            #self.logger.debug(f"Calculating diff for file: {relative_path} and commit: {commit_hash}")
 
             # Generate git diff: diff between selected commit and working tree
             diff = repo.git.diff(commit_hash, '--', relative_path)
@@ -102,7 +102,7 @@ class VersionControl:
         Returns: 
             BOOL. True if mapping.json has changed, False if not
         """
-        self.logger.info(f"get_diff_with_latest")    
+        #self.logger.info(f"get_diff_with_latest")    
         try: 
             relative_path = os.path.relpath(file_path, self.repo_path)
             #repo = Repo(self.repo_path)

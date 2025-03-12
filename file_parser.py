@@ -6,38 +6,21 @@ import json
 from utils.json_utils import load_json, save_json
 from utils.config_utils import load_config
 
-# Libraries StepParser
-from OCC.Core.STEPControl import STEPControl_Reader
-from OCC.Core.TopAbs import TopAbs_COMPOUND, TopAbs_COMPSOLID, TopAbs_SOLID, TopAbs_SHELL, TopAbs_FACE, TopAbs_WIRE, TopAbs_EDGE, TopAbs_VERTEX
-from OCC.Core.IFSelect import IFSelect_RetDone
-from OCC.Core.TopExp import TopExp_Explorer
 # Libraries CodeParser
-from jinja2 import Template
 import jinja2
 
 # Contains all standardized (for this masters thesis) file parser as a single class for each file format 
-# Each class should have methods to read, load, save, and extract metadata
+# Each class should have methods to read, load, save, and extract metadata 
+# NOTE: Some have additional writing to mapping.json due to extending information inside the mapping e.g. index from STEP
 # Use 'json_utils' to standardize json file handling such as reading, writing and saving JSON files 
 
 class SysmlParser: 
-    """ Parses specific sysml files by getting "metadata" / "@" (abreviation)
-    searching for a specific Structure
-    
-    DEMONSTRATION 
-        To identify if the sysml file has a metadata that the script can parse: 
-        1) Metadata def with or without content
-            metadata def <name> { ... }
-            metadata def <name>; 
-        
-        2) About paths to tag certain elements of the model
-            metadata<name> about 
-            @<name> about
-        NOTE: 
-            - Inside each line of about paths there can't be any comments after ';'
+    """ 
+    Parses specific sysml files by getting "metadata" / "@" (abreviation) searching for a specific Structure
     """
 
     def __init__(self, config=None, sysml_path=None):
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger(__name__ + "-SysmlParser")
         #self.logger.debug("Initializing SysmlParser")
         self.config = config
         if self.config is None:
@@ -46,14 +29,13 @@ class SysmlParser:
         self.sysml_path = sysml_path
         self.sysml_model = None #sysml_model will be extracted from sysml_path
         self.sysml_model = self.load_sysml_model()
-        self.logger.info(f"SysmlParser initialized")
 
     def load_sysml_model(self): 
         """Parses and loads model from self.sysml_path.
         Returns:
             str: The content of the file as a string.
         """
-        self.logger.info(f"SysmlParser - load_sysml_model")
+        #self.logger.info(f"SysmlParser - load_sysml_model")
         if not self.sysml_path:
             self.logger.debug(f"No SysML model path provided. Using default path: {os.path.join(self.config['base_se_path'], self.config['base_se_model'])}") 
             self.sysml_path = os.path.join(self.config['base_se_path'], self.config['base_se_model'])
@@ -61,15 +43,15 @@ class SysmlParser:
         try:
             with open(self.sysml_path, 'r') as file:
                 content = file.read()
-                self.logger.debug(f"Successfully loaded sysml model")
+                #self.logger.debug(f"Successfully loaded sysml model")
             return content
         except Exception as e:
             self.logger.error(f"Failed to load file {self.sysml_path}: {e}")
 
     def check_metadata_exist(self): 
-        # TODO: REDO this helper function 
-        """Parses the SysML model and extracts metadata definitions and references.
-        
+        """
+        Parses the SysML model and extracts metadata definitions and references.
+        - Currently used to highlight metadata
         NOTE: 
             current metadata to check:    
                 'metadata def test123{ }'
@@ -78,7 +60,7 @@ class SysmlParser:
         Returns:
             List of of the found metadata definitions names or empty list if not found that structure
         """
-        self.logger.info(f"SysmlParser - check_metadata_exist")
+        #self.logger.info(f"check_metadata_exist")
         self.sysml_model = self.load_sysml_model() 
         # 1 Check if sysml model can be loaded from initialized class sysml model path 
         if not self.sysml_model:
@@ -118,7 +100,7 @@ class SysmlParser:
         Parameters: 
             metadata_name : String. Name of the metadata def to search for inside sysml model, if None is provided automatically searches for metadata def 
         """
-        self.logger.info(f"SysmlParser - get_metadata_about_elements")
+        #self.logger.info(f"get_metadata_about_elements")
 
         if not self.sysml_model:
             self.logger.warning("No SysML model loaded. Trying to load model content")
@@ -166,12 +148,12 @@ class SysmlParser:
             
             #self.logger.debug(f"Found elements for '{meta}': {elements}")
             all_elements.extend(elements)
-            self.logger.debug(f"All elements: {all_elements}")
+            #self.logger.debug(f"All elements: {all_elements}")
             
 
             # Search for attributes for each part inside tagged metadata 
             for path in all_elements:
-                self.logger.debug(f"Current metadata tag: {path}")
+                #self.logger.debug(f"Current metadata tag: {path}")
                 part_pattern = (
                     r"part\s+def\s+" + re.escape(path) + r"\s*\{([^}]*)\}"
                 )
@@ -179,6 +161,7 @@ class SysmlParser:
 
                 attributes = []
                 if part_match:
+                    #self.logger.debug(f"Current Match: {part_match}")
                     attributes_block = part_match.group(1)
 
                     # Search for  `attribute name = value; 
@@ -205,22 +188,27 @@ class SysmlParser:
                             "value": attr_value,
                             "unit": unit,
                             "dataType": data_type,
-                            "metadata_path": path
+                            "metadata_path": path, # path inside the sysmlv2 model 
+                            "metadata_tag": meta # tag = namespace of the metadata def <namespace> aka <meta>
                         })
-                    
+                        #self.logger.debug(f"Current attributes: {attributes}")
                     
                 # Add 'metadata tag' to know from which each tagged element is coming from 
-                # result[element] = attributes
-                if path not in result:
-                    result[meta] = attributes
-                else:
-                    result[meta].append(attributes)
+                if meta not in result:
+                    result[path] = []
+                result[path].extend(attributes)
 
-        #self.logger.debug(f"Extracted metadata: {result}")
+        self.logger.debug(f"Extracted metadata: {result}")
         return result
     
     def validate_elementPath(self, elementPath):
-        self.logger.info(f"SysmlParser - validate_elementPath")
+        """ 
+        Checks if elementPath exists inside sysmlv2 model
+
+        Returns:
+            BOOL. True if it exists, else False
+        """
+        #self.logger.info(f"validate_elementPath")
 
         if not self.sysml_model:
             self.logger.warning("SysML model is None! Attempting to load model.")
@@ -281,23 +269,23 @@ class SysmlParser:
 
         self.logger.debug(f"Path '{elementPath}' is valid in SysMLv2 model.")
         return True
+    
+    def verify_constraint(self):
+        """
+        Searches SysMLv2 Model for constraint definitions and usages. 
+        If a constraint def is found, extract mathematical equation and search for the usage inside the model
+        Automatically 
+        """
+        pass 
 
-class GerberParser:    
-    # Parses specific files (Gerber X2/3) from the E/E Engineering Domain 
+class GerberParser:     
     """
-    TODO: 
-    1) Read gerber file 
-    2) Parse through and extract metadata 
-    3) Save Metadata in JSON Formatted file 
+    Parses specific files (Gerber X2/3) from the E/E Engineering Domain 
     """
     def __init__(self, gerber_file_path=None): # check string path with and without "." 
-        self.logger = logging.getLogger(__name__)
-
-        # Contains extracted informations of parsed gerber file 
-        #self.data = {}
+        self.logger = logging.getLogger(__name__ + "-GerberParser")
         # Path to gerber file to be parsed
         self.file_path = gerber_file_path
-        self.logger.info(f"GerberParser initialized")
 
     def get_value(self, elementPath):
         """
@@ -307,45 +295,38 @@ class GerberParser:
         Returns:
             Value of element from given element path (mapping.json), None if key not found 
         """
-        self.logger.info(f"GerberParser - get_gerber_job_file_value")
-        # Load the Gerber job file using the load_json function
-        # try: 
-        #     with open(self.file_path, "r", encoding="utf-8") as f: 
-        #         gbr_job_file = json.load(f)
-        # except Exception as e:
-        #     self.logger.error(f"Failed to load Gerber job file")
+        # self.logger.info(f"get_gerber_job_file_value")
         gbr_job_file = load_json(self.file_path)
 
         keys = elementPath.split(".")  # Split path into individual keys
         current_data = gbr_job_file  # Start from the root of the loaded JSON
 
         for key in keys:
+            self.logger.debug(f"key: {key}")
             # Check if the current key exists in the current level of the JSON data
             if isinstance(current_data, dict) and key in current_data:
                 current_data = current_data[key]  # Navigate deeper into the JSON
+
             else:
                 # If the key is not found, log and return None (or raise an exception if needed)
                 self.logger.warning(f"Element path '{elementPath}' is invalid: '{key}' not found.")
                 return None
 
         # Return the value if the entire path was found
-        self.logger.info(f"Successfully retrieved value for '{elementPath}': {current_data}")
+        # self.logger.info(f"Successfully retrieved value for '{elementPath}': {current_data}")
         return current_data
 
 class CodeParser: 
     """Parses source code that is enriched/annotated with metadata with a specific structure
-    Also generates python code with tagged metadata from the sysmlv2 model and mapped elements """
+    NOTE: generates python code with tagged metadata from the sysmlv2 model """
     def __init__(self, code_file_path = None):
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger(__name__ + "-CodeParser")
         self.mapping_data = load_json("./config/mapping.json")
         self.code_file_path = code_file_path
-        #self.sp = SysmlParser # Object to generate python code with annotated metadata from sysmlv2 model 
-
-        self.logger.info(f"CodeParser initialized")
 
     def save_code(self, code, filename="generated_code.py"):
         """ Saves generated code to a file """
-        self.logger.info("save_code")
+        #self.logger.info("save_code")
         
         output_folder = "models/sw_domain"
         filepath = os.path.join(output_folder, filename)
@@ -365,7 +346,7 @@ class CodeParser:
             NOTE: elementPath is generated by software and has to be used by python decorator structure @metadata(..., "elementPath") 
 
         Returns the value of the elementPath from the mapping.json inside the code and searches for element"""
-        self.logger.info("get_value")
+        #self.logger.info("get_value")
         # 1) Load file 
         # Check if code file path is set
         if not self.code_file_path: 
@@ -392,11 +373,14 @@ class CodeParser:
         # Looping through source code content
         for line in code_content: 
             line = line.strip()
+            self.logger.debug(f"LINE: {line}")
             metadata_match = metadata_pattern.search(line)
             if metadata_match: 
+                self.logger.debug(f"metadata match found: {metadata_match}")
                 name, value, unit, dataType, metadata_tag, path = metadata_match.groups()
+                self.logger.debug(f"path: {path}")
                 if path == elementPath: 
-                    self.logger.debug(f"[CodeParser - get_value] Found value: {value}")
+                    #self.logger.debug(f"Found value: {value}")
                     return value
             
         # 4) Error if we looped through and found nothing
@@ -412,7 +396,7 @@ class CodeParser:
             sysml_file_path (str): Path to the SysMLv2 model file.
             output_file (str): Name of the output Python file (default: generated_code.py).
         """ 
-        self.logger.debug("generate_code_from_sysml")
+        #self.logger.debug("generate_code_from_sysml")
 
         self.sp = SysmlParser(sysml_path=sysml_file_path)
         
@@ -445,16 +429,16 @@ def metadata(name: str, value: Any, unit: str, dataType: str, metadataTag: str =
         return cls
     return wrapper
 
-{% for metadata_path, attribute_list in sysml_metadata.items() %}
-{% set class_name = attribute_list[0].metadata_path %}
-{% for attributes in attribute_list -%}
-@metadata("{{ attributes.name }}", "{{ attributes.value }}", "{{ attributes.unit }}", "{{ attributes.dataType }}", "{{ metadata_path }}", "{{ attributes.metadata_path }}.{{ attributes.name }}")
+{% for element_name, attribute_list in sysml_metadata.items() %}
+{% for attribute in attribute_list -%}
+@metadata("{{ attribute.name }}", "{{ attribute.value }}", "{{ attribute.unit }}", "{{ attribute.dataType }}", "{{ attribute.metadata_tag }}", "{{ attribute.metadata_path }}.{{ attribute.name }}")
 {% endfor %}
-class {{ class_name }}:
+class {{ element_name }}:
     def __init__(self, **kwargs):
-        {% for attributes in attribute_list -%}
-        self.{{ attributes.name }} = "{{ attributes.value }}"
+        {% for attribute in attribute_list -%}
+        self.{{ attribute.name }} = "{{ attribute.value }}"
         {% endfor %}
+
 {% endfor %}
 """)
 
@@ -472,7 +456,6 @@ class {{ class_name }}:
         #self.logger.info(f"Python source code generated and saved to: {output_path}")
         return generated_code
         
-
 class StepParser:
     """A parser for STEP files (STEP AP242) used in Mechanical Engineering."""
 
@@ -483,17 +466,16 @@ class StepParser:
         Parameters:
             step_file_path (str, optional): Path to the STEP file. Defaults to None.
         """
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger(__name__ + "-StepParser")
         self.step_file_path = step_file_path
-        self.step_file_content = self.load_step_file(filepath=self.step_file_path)
-        self.logger.info("StepParser initialized")
+        self.step_file_content = None #self.load_step_file(step_file_path=self.step_file_path)
 
-    def load_step_file(self, filepath=None):
+    def load_step_file(self, step_file_path=None):
         """
         Load the content of a STEP file.
 
-        Note:
-            - STEP files lack a predefined metadata structure (unlike JSON or XML).
+        NOTE:
+            - STEP files lack a predefined metadata structure (unlike JSON or XML). 
             - Metadata must be extracted from the raw content using reading and regex if needed.
 
         Parameters:
@@ -502,18 +484,20 @@ class StepParser:
         Returns:
             str: File content as a string, or an empty string ("") if loading fails.
         """
-        self.logger.info("Loading STEP file")
-        if not filepath:
-            self.logger.warning("No file path provided")
+        #self.logger.info("load_step_file")
+        if not step_file_path:
+            self.logger.warning("No file path provided. Returning ''")
             return ""
 
         try:
-            with open(filepath, 'r') as file:
+            with open(step_file_path, 'r') as file:
                 content = file.read()
-                self.logger.debug("STEP file loaded successfully")
+                # Set loaded step file content to content
+                self.step_file_content = content
+                #self.logger.debug("STEP file loaded successfully")
                 return content
         except Exception as e:
-            self.logger.error(f"Failed to load STEP file '{filepath}': {e}")
+            self.logger.error(f"Failed to load STEP file '{step_file_path}': {e}")
             return ""
    
     def get_value(self, elementPath):
@@ -528,15 +512,10 @@ class StepParser:
         Returns:
             str | None: The extracted value, or None if not found.
         """
-        self.logger.info(f"get_value")
+        #self.logger.info(f"get_value")
 
-        # Ensure STEP file content is loaded
-        if not self.step_file_content:
-            self.logger.warning("STEP file content is empty. Attempting to reload...")
-            self.step_file_content = self.load_step_file(filepath=self.step_file_path)
-            if not self.step_file_content:
-                self.logger.error("STEP file content could not be loaded")
-                return None
+        # Load step file content
+        self.step_file_content = self.load_step_file(step_file_path=self.step_file_path)
 
         # Differentiate between HEADER data and DATA section
         if elementPath.startswith("DATA."):
