@@ -172,7 +172,7 @@ class GUI:
 
             try: 
                 # Create sysml_parser class to get class functions 
-                self.sysml_model = SysmlParser(sysml_path=self.sysml_file_path)
+                self.sysml_model = SysmlParser(sysml_path=self.sysml_file_path) 
                 #self.logger.debug(f"Successfully created sysml_parser class instance")
                 # Check if sysml model has a certain metadata structure 
                 found_metadata = self.sysml_model.check_metadata_exist()
@@ -353,8 +353,10 @@ class GUI:
         try:
             with open(file_path, 'r') as file:
                 content = file.read()
-            text_widget.delete("1.0", tk.END)  # Clear previous text 
-            text_widget.insert(tk.END, content)  # Write new content to text widget 
+                text_widget.config(state=tk.NORMAL)  # Set text widget to normal and paste the content
+                text_widget.delete("1.0", tk.END)  # Clear previous text 
+                text_widget.insert(tk.END, content)  # Write new content to text widget 
+                text_widget.config(state=tk.DISABLED)  # Set text widget to read only 
             return content 
         
         except Exception as e:
@@ -618,8 +620,8 @@ class GUI:
         sysml_frame.columnconfigure(0, weight=1)
         # VERIFICATION FRAME: Lower
         verification_frame = ctk.CTkFrame(popup, fg_color="lightgrey") #lightgrey
-        verification_frame.rowconfigure(0, weight=1) # Used for label with set custom height 
-        verification_frame.rowconfigure(1, weight=1)
+        verification_frame.rowconfigure(0, weight=0) # Used for label with set custom height 
+        verification_frame.rowconfigure((1,2), weight=0)
         verification_frame.columnconfigure(0, weight=1)
         verification_frame.columnconfigure(1, weight=0)
 
@@ -634,8 +636,8 @@ class GUI:
         btn_load_model_sysml = ctk.CTkButton(sysml_frame, text="Load SysML Model", command=lambda: self.select_file(model_type="sysml", text_widget=sysml_frame_text_widget))
 
         verification_frame_label = ctk.CTkLabel(verification_frame, text="Verification Analysis", height=30, font=("default",14), text_color="black") 
-        verification_frame_constraint_label = ctk.CTkLabel(verification_frame, text="Constraint Name", font=("default",12), text_color="black")
-        verification_frame_constraint_entry = ctk.CTkEntry(verification_frame, placeholder_text="Type the constraint name to verify")
+        verification_frame_constraint_label = ctk.CTkLabel(verification_frame, text="Constraint Name (Usage)", font=("default",12), text_color="black")
+        verification_frame_constraint_entry = ctk.CTkEntry(verification_frame, placeholder_text="Type the constraint name to verify e.g. ")
         btn_verify_constraint = ctk.CTkButton(verification_frame, text="Verify", command=lambda: self.verify_selected_constraint(verification_frame_constraint_entry.get()))
         ########## LAYOUT ##########
         # SYSML FRAME LAYOUT 
@@ -644,19 +646,27 @@ class GUI:
         btn_load_model_sysml.grid(row=0, column=1, padx=5, pady=(5,0), sticky="e")
 
         verification_frame_label.grid(row=0, column=0, padx=5, pady=(5,0), sticky="news") 
-        verification_frame_constraint_label.grid(row=1, column=0, padx=5, sticky="w")
-        verification_frame_constraint_entry.grid(row=2, column=0, padx=5, sticky="ew")
-        btn_verify_constraint.grid(row=2, column=1, padx=5, pady=(5,0), sticky="ew")
+        verification_frame_constraint_label.grid(row=1, column=0, padx=5, pady=(5,0), sticky="w")
+        verification_frame_constraint_entry.grid(row=2, column=0, padx=5, pady=(3,0), sticky="ew")
+        btn_verify_constraint.grid(row=2, column=1, padx=5, pady=5, sticky="ew")
     
     def verify_selected_constraint(self, constraint_name): 
         """
         Verify user selected constraint (from constraint_entry)
         """
+        self.logger.info(f"verify_selected_constraint")
         # Load sysml model 
         # NOTE: By using select_file the file path already sets the sysml model path that the user selected
+        self.logger.debug(f"Current sysml file path: {self.sysml_file_path}")
+        self.sysml_model = SysmlParser(sysml_path=self.sysml_file_path)
+
         if self.sysml_model: 
             # Load function from SysmlParser Class (file_parser) to parse and check constraint 
-            self.sysml_model.verify_constraint()
+            response = self.sysml_model.verify_constraint(self.sysml_file_path, constraint_name)
+
+            
+            messagebox.showinfo("INFO",response)
+
         else:
             self.logger.error(f"Could not verify constraint: {constraint_name}")
             raise ValueError(f"Could not verify constraint: {constraint_name}")

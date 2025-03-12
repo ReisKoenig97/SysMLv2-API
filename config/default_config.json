@@ -1,5 +1,6 @@
 
 {
   "base_url": "http://localhost:9000",
-  "repo_path" : "C:\\Users\\tommy\\Nextcloud\\MASTER ARBEIT\\Code\\SysMLv2 API Code"
+  "repo_path" : "C:\\Users\\tommy\\Nextcloud\\MASTER ARBEIT\\Code\\SysMLv2 API Code",
+  "repo_path_macOS" : "/Users/reiskoenig/Nextcloud/MASTER ARBEIT/Code/SysMLv2 API Code"
 }

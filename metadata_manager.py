@@ -21,7 +21,8 @@ class MetadataManager:
         self.config = config
         self.mapping_template_file_path = "./config/mapping_template.json"
         self.mapping_file_path = "./config/mapping.json"
-        self.repo_path = self.config["repo_path"]
+        # NOTE: not only dependend on repo path inside config.json also dependend on which OS the mapping has been made
+        self.repo_path = self.config["repo_path"] # Change it between windows and macOS 
         self.vc = versioncontrol
         self.fp_gerber = gerberparser
         self.fp_step = stepparser 
@@ -251,8 +252,6 @@ class MetadataManager:
                 else:
                     self.logger.warning(f"Unsupported domain model: {domain_name}. Please add a file parser for this domain model.")
                     continue
-
-
 
                 #####################
                 if current_domain_element_value:

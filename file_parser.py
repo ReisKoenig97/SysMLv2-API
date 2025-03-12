@@ -270,13 +270,139 @@ class SysmlParser:
         self.logger.debug(f"Path '{elementPath}' is valid in SysMLv2 model.")
         return True
     
-    def verify_constraint(self):
+    def verify_constraint(self, sysml_file_path, constraint_name):
         """
         Searches SysMLv2 Model for constraint definitions and usages. 
         If a constraint def is found, extract mathematical equation and search for the usage inside the model
         Automatically 
+
+        NOTE: Assumptions for the script to parse and verify constraint
+        
+        Parameters: 
+            constraint_name : String. namespace of constraint def usage 
+
+        Returns:
+            Boolean. True if constraint is verified, else false 
         """
-        pass 
+        self.logger.debug(f"verify_constraint")
+
+        # 1) Search sysmlv2 model for constraint def 
+        # 2) Search for constraint def usages 
+        # 3) Extract relevant information (attributes, parts, ...) for constraint usages 
+        # 4) Extract equation from constraint def 
+        # 5) Calculate mathematical equation from constraint def 
+        # 6) return Bool
+
+        # 1
+        constraint_def, constraint_content = self.find_constraint_definitions(sysml_file_path, constraint_name)
+        #self.logger.debug(f"Found: {constraint_def}")
+        #self.logger.debug(f"With content: {constraint_content}")
+        if not constraint_def or not constraint_content:
+            self.logger.error(f"No Constraint definition: {constraint_name} found or empty definition")
+            return "Could not find provided constraint name or empty constraint definition"
+        
+        # 2
+        constraint_usage, constraint_usage_content = self.find_constraint_usages(sysml_file_path, constraint_name)
+        self.logger.debug(f"Found: {constraint_usage}")
+        self.logger.debug(f"With content: {constraint_usage_content}")
+
+        # 3 
+        constraint_usage_info = self.get_constraint_usage_information(constraint_usage_content)
+        self.logger.debug(f"extracted info: {constraint_usage_info}")
+
+        # 4 
+
+    def find_constraint_definitions(self, sysml_file_path, constraint_name):
+        """
+        Searches for 'constraint def' definitions and returns name and body/content inside '{...}'
+        
+        Parameters:
+            sysml_file_path : String. file path, that the user selected 
+            constraint_name : String. To search for 
+        
+        Returns: 
+            constraint_name, content inside '{}' if found, else None 
+        """
+        try:
+            with open(sysml_file_path, "r", encoding="utf-8") as file:
+                sysml_text = file.read()
+        except FileNotFoundError:
+            self.logger.error(f"Error (find_constraint_definitions): File '{sysml_file_path}' not found.")
+            return None, None
+
+        # Regex für Constraint-Definitionen
+        constraint_pattern = r"constraint def (\w+)\s*\{(.*?)\}"
+        matches = re.findall(constraint_pattern, sysml_text, re.DOTALL)
+
+        for name, body in matches:
+            if name == constraint_name:
+                return name, body  # Inhalt zurückgeben, ohne Leerzeichen
+
+        return None, None  # Falls keine passende Constraint gefunden wurde
+
+    def find_constraint_usages(self, sysml_file_path, constraint_name):
+        """
+        Searches for usages of a given constraint definition inside the SysMLv2 model.
+        
+        Parameters:
+            sysml_file_path : String. Path to the SysMLv2 file.
+            constraint_name : String. The name of the constraint definition to search for.
+
+        Returns:
+            List of tuples (usage_name, usage_content) if found, else an empty list.
+        """
+        try:
+            with open(sysml_file_path, "r", encoding="utf-8") as file:
+                sysml_text = file.read()
+        except FileNotFoundError:
+            self.logger.error(f"Error (find_constraint_usages): File '{sysml_file_path}' not found.")
+            return None, None 
+
+        # Regex for Constraint-Usages (e.g. "constraint massCheck : MassConstraint { ... }")
+        usage_pattern = rf"constraint (\w+)\s*:\s*{constraint_name}\s*\{{(.*?)\}}"
+        matches = re.findall(usage_pattern, sysml_text, re.DOTALL)
+
+        if not matches:
+            self.logger.warning(f"No usages found for constraint: {constraint_name}")
+            return None, None 
+
+        usage_name, usage_body = matches[0]
+        return usage_name, usage_body
+
+    def get_constraint_usage_information(self, usage_content):
+        """
+        Dynamically extracts relevant attributes and their assigned values from a constraint usage block.
+
+        Parameters:
+            usage_content : String. The content inside a constraint usage block.
+
+        Returns:
+            Dictionary with extracted attributes and their values.
+        """
+        extracted_data = {}
+
+        # Split the content into lines and analyze each line separately
+        lines = usage_content.split(";")
+        for line in lines:
+            line = line.strip()
+            if not line:  # Skip empty lines
+                continue
+
+            # Look for assignments in the form: "in variableName = value;"
+            match = re.match(r"in\s+(\w+)\s*=\s*(.+)", line)
+            if match:
+                var_name, var_value = match.groups()
+                
+                # If the value is a list (e.g., (x, y, z))
+                if var_value.startswith("(") and var_value.endswith(")"):
+                    extracted_data[var_name] = [v.strip() for v in var_value[1:-1].split(",")]
+                else:
+                    extracted_data[var_name] = var_value.strip()
+
+        return extracted_data if extracted_data else None
+
+    def 
+
 
 class GerberParser:     
     """

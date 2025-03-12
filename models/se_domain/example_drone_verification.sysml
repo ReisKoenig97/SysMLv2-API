@@ -1,7 +1,7 @@
 package DroneExample {
 
     public import SI::*; 
-    public import RequirementsDefinitions::*; 
+    public import ISQ::*; 
     public import PartDefinitions::*; 
     public import PartDefinitions::Drone::*; // for concerns 
     public import Views::*; // for views and viewpoints
@@ -31,12 +31,11 @@ package DroneExample {
             attribute name = "Drone";
             attribute description = "Hello Drone";
             attribute mass : MassValue; //actual mass of the drone
-
-            attribute massLimit = 1000[g];
+            
             constraint massCheck : MassConstraint{
                 in partMasses = (fc.mass, cs.mass, enc.mass, motor.mass, prop.mass, 
                 cam.mass, batt.mass, pdb.mass, esc.mass, trans.mass, rec.mass, gpsm.mass);
-                in massLimit = massLimit;
+                in massLimit = 1000[g];
             }
 
             part fc : FlightController;
