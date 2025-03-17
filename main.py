@@ -671,17 +671,15 @@ class GUI:
                 label = tk.Label(popup, text=message, font=("Arial", 12, "bold"), fg=text_color)
                 label.pack(pady=20)
 
-                popup.transient()  # Bleibt im Vordergrund
-                popup.grab_set()  # Verhindert Interaktion mit Hauptfenster
+                popup.transient()  # stays in the foreground
+                popup.grab_set()  # prevents interaction with main window
 
-            # Easy messagebox
-            #messagebox.showinfo("INFO",response)
             custom_messagebox("INFO", response)
 
         else:
             self.logger.error(f"Could not verify constraint: {constraint_name}")
             raise ValueError(f"Could not verify constraint: {constraint_name}")
-
+        
 def main(): 
     # Run Initial Log Setup for debugging
     setup_logging() 

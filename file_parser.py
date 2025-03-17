@@ -348,7 +348,6 @@ class SysmlParser:
         # last return is an error
         return "Unsupported equation type"
 
-
     def find_constraint_definitions(self, sysml_file_path, constraint_name):
         """
         Searches for 'constraint def' definitions and returns name and body/content inside '{...}'
@@ -535,8 +534,6 @@ class SysmlParser:
         except Exception as e:
             self.logger.error(f"Error parsing SysML model: {e}")
             return [0.0] * len(attribute_paths)
-
-
 
 class GerberParser:     
     """
