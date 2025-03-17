@@ -1,18 +1,17 @@
- git.util - DEBUG - Failed checking if running in CYGWIN due to: FileNotFoundError(2, 'No such file or directory')
- metadata_manager-MetadataManager - WARNING - File path does not exist: C:/Users/tommy/Nextcloud/MASTER ARBEIT/Code/SysMLv2 API Code/models/me_domain/STEP_AgriUAV.stp
- metadata_manager-MetadataManager - WARNING - File path does not exist: C:/Users/tommy/Nextcloud/MASTER ARBEIT/Code/SysMLv2 API Code/models/sw_domain/existent_code_metadata.py
- metadata_manager-MetadataManager - ERROR - SysMLv2 file does not exist: C:\Users\tommy\Nextcloud\MASTER ARBEIT\Code\SysMLv2 API Code/C:/Users/tommy/Nextcloud/MASTER ARBEIT/Code/SysMLv2 API Code/models/se_domain/example_drone_origin.sysml
- metadata_manager-MetadataManager - ERROR - SysMLv2 file does not exist: C:\Users\tommy\Nextcloud\MASTER ARBEIT\Code\SysMLv2 API Code/C:/Users/tommy/Nextcloud/MASTER ARBEIT/Code/SysMLv2 API Code/models/se_domain/example_drone_origin.sysml
- file_parser-SysmlParser - DEBUG - No specific metadata_name provided. Automatic search for 'metdata def' found: ['PCBDesign', 'PCB']
- file_parser-SysmlParser - DEBUG - Extracted metadata: {'FlightController': [{'name': 'id', 'value': 'test123', 'unit': '', 'dataType': 'string', 'metadata_path': 'FlightController', 'metadata_tag': 'PCB'}, {'name': 'name', 'value': 'fc-123', 'unit': '', 'dataType': 'string', 'metadata_path': 'FlightController', 'metadata_tag': 'PCB'}, {'name': 'description', 'value': '', 'unit': '', 'dataType': 'string', 'metadata_path': 'FlightController', 'metadata_tag': 'PCB'}, {'name': 'id', 'value': 'STEP_AgriUAV2025', 'unit': '', 'dataType': 'string', 'metadata_path': 'FlightController', 'metadata_tag': 'PCB'}, {'name': 'name', 'value': 'PCB-123', 'unit': '', 'dataType': 'string', 'metadata_path': 'FlightController', 'metadata_tag': 'PCB'}, {'name': 'description', 'value': '150.7', 'unit': '', 'dataType': 'float', 'metadata_path': 'FlightController', 'metadata_tag': 'PCB'}, {'name': 'max_length', 'value': '70', 'unit': 'mm', 'dataType': 'int', 'metadata_path': 'FlightController', 'metadata_tag': 'PCB'}, {'name': 'max_width', 'value': '70', 'unit': 'mm', 'dataType': 'int', 'metadata_path': 'FlightController', 'metadata_tag': 'PCB'}], 'ElectronicSpeedController': [{'name': 'id', 'value': 'esc-001', 'unit': '', 'dataType': 'string', 'metadata_path': 'ElectronicSpeedController', 'metadata_tag': 'PCB'}, {'name': 'name', 'value': 'ESC 30A', 'unit': '', 'dataType': 'string', 'metadata_path': 'ElectronicSpeedController', 'metadata_tag': 'PCB'}, {'name': 'description', 'value': '', 'unit': '', 'dataType': 'string', 'metadata_path': 'ElectronicSpeedController', 'metadata_tag': 'PCB'}, {'name': 'max_current', 'value': '30', 'unit': 'A', 'dataType': 'int', 'metadata_path': 'ElectronicSpeedController', 'metadata_tag': 'PCB'}, {'name': 'input_voltage', 'value': '11.1', 'unit': 'V', 'dataType': 'float', 'metadata_path': 'ElectronicSpeedController', 'metadata_tag': 'PCB'}, {'name': 'pwm_frequency', 'value': '500', 'unit': 'Hz', 'dataType': 'int', 'metadata_path': 'ElectronicSpeedController', 'metadata_tag': 'PCB'}], 'Motor': [{'name': 'id', 'value': 'motor-001', 'unit': '', 'dataType': 'string', 'metadata_path': 'Motor', 'metadata_tag': 'PCB'}, {'name': 'name', 'value': 'Brushless Motor', 'unit': '', 'dataType': 'string', 'metadata_path': 'Motor', 'metadata_tag': 'PCB'}, {'name': 'description', 'value': '', 'unit': '', 'dataType': 'string', 'metadata_path': 'Motor', 'metadata_tag': 'PCB'}, {'name': 'max_speed', 'value': '15000', 'unit': '1/min^-1', 'dataType': 'int', 'metadata_path': 'Motor', 'metadata_tag': 'PCB'}, {'name': 'max_voltage', 'value': '11.1', 'unit': 'V', 'dataType': 'float', 'metadata_path': 'Motor', 'metadata_tag': 'PCB'}, {'name': 'max_current', 'value': '30', 'unit': 'A', 'dataType': 'int', 'metadata_path': 'Motor', 'metadata_tag': 'PCB'}], 'Enclosure': [{'name': 'id', 'value': 'enclosure-001', 'unit': '', 'dataType': 'string', 'metadata_path': 'Enclosure', 'metadata_tag': 'PCB'}, {'name': 'name', 'value': 'Enclosure XPF01a', 'unit': '', 'dataType': 'string', 'metadata_path': 'Enclosure', 'metadata_tag': 'PCB'}, {'name': 'description', 'value': 'Casing/Enclosure', 'unit': '', 'dataType': 'string', 'metadata_path': 'Enclosure', 'metadata_tag': 'PCB'}, {'name': 'max_length', 'value': '200', 'unit': 'mm', 'dataType': 'int', 'metadata_path': 'Enclosure', 'metadata_tag': 'PCB'}, {'name': 'max_width', 'value': '200', 'unit': 'mm', 'dataType': 'int', 'metadata_path': 'Enclosure', 'metadata_tag': 'PCB'}, {'name': 'max_height', 'value': '80', 'unit': 'mm', 'dataType': 'int', 'metadata_path': 'Enclosure', 'metadata_tag': 'PCB'}]}
- __main__-GUI - INFO - load_file_content
- __main__-GUI - INFO - verify_selected_constraint
- __main__-GUI - DEBUG - Current sysml file path: /Users/reiskoenig/Nextcloud/MASTER ARBEIT/Code/SysMLv2 API Code/models/se_domain/example_drone_verification.sysml
- file_parser-SysmlParser - DEBUG - verify_constraint
- file_parser-SysmlParser - DEBUG - Found: massCheck
- file_parser-SysmlParser - DEBUG - With content: 
-                in partMasses = (fc.mass, cs.mass, enc.mass, motor.mass, prop.mass, 
-                cam.mass, batt.mass, pdb.mass, esc.mass, trans.mass, rec.mass, gpsm.mass);
-                in massLimit = 1000[g];
-            
- file_parser-SysmlParser - DEBUG - extracted info: {'partMasses': '(fc.mass, cs.mass, enc.mass, motor.mass, prop.mass,', 'massLimit': '1000[g]'}
+ file_parser-SysmlParser - DEBUG - Given SysML model: package DroneExample {
+
+    public import SI::*; 
+    public import ISQ::*; 
+    public import PartDefinitions::*; 
+    public import PartDefinitions::Drone::*; // for concerns 
+    public import Views::*; // for views and viewpoints
+    public import ModelingMetadata::*; // includes the Metadata SysML Library (comes with SysMLv2)
+    public import ScalarValues::*; // Real, ... includes the ScalarValues SysML Library (comes with SysMLv2)
+    public import Constraints::*; // for constraints 
+
+    item def Person;
+    item def Commands;
+
+    // PACKAGE APPROACH using metadata to tag certain elements 
+ file_parser-SysmlParser - DEBUG - metadata def matches: ['PCBDesign', 'PCB']
+ file_parser-SysmlParser - DEBUG - 'Metadata def' names: ['PCBDesign', 'PCB']

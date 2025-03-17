@@ -79,14 +79,14 @@ package DroneExample {
             part def FlightController{
                 attribute id = "abc123"; 
                 attribute name = "fc-123";
-                attribute mass : MassValue; 
+                attribute mass = 50[g]; 
                 attribute description = "";
                 
                 part def pcb {
                     attribute id = "pcb-001-123"; 
                     attribute name = "PCB-123";
                     attribute description = "";
-                    attribute mass : MassValue; 
+                    attribute mass =20[g]; 
                     attribute max_length = 70[mm]; 
                     attribute max_width = 70[mm];  
                 
@@ -96,7 +96,7 @@ package DroneExample {
             part def Chassis {
                 attribute id = "chassis-001"; 
                 attribute name = "Chassis";
-                attribute mass : MassValue; 
+                attribute mass = 100[g]; 
                 attribute description = "";
             }
 
@@ -104,7 +104,7 @@ package DroneExample {
                 attribute id = "enclosure-001";
                 attribute name = "Enclosure XPF01a";
                 attribute description = "Casing/Enclosure";
-                attribute mass : MassValue; 
+                attribute mass = 80[g]; 
                 attribute max_length = 200[mm];
                 attribute max_width = 200[mm];
                 attribute max_height = 80[mm];
@@ -115,7 +115,7 @@ package DroneExample {
                 attribute id = "motor-001";
                 attribute name = "Brushless Motor";
                 attribute description = "";
-                attribute mass : MassValue; 
+                attribute mass = 60[g]; 
                 attribute max_speed = 15000[1/min^-1];
                 attribute max_voltage = 11.1[V];
                 attribute max_current = 30[A];
@@ -125,7 +125,7 @@ package DroneExample {
                 attribute id = "propellor-001";
                 attribute name = "propellor";
                 attribute description = "";
-                attribute mass : MassValue; 
+                attribute mass = 5[g]; 
 
                 part blade : Blade[2..4]; 
 
@@ -133,7 +133,7 @@ package DroneExample {
                     attribute id = "blade-001";
                     attribute name = "blade";
                     attribute description = "";
-                    attribute mass : MassValue; 
+                    attribute mass = 2[g]; 
                 }
             }
 
@@ -141,7 +141,7 @@ package DroneExample {
                 attribute id = "camera-001";
                 attribute name = "4K Camera";
                 attribute description = "";
-                attribute mass : MassValue; 
+                attribute mass = 30[g]; 
                 attribute resolution = "3840x2160";
                 attribute max_framerate = 60;
                 attribute lens_angle = 120[degree];
@@ -151,7 +151,7 @@ package DroneExample {
                 attribute id = "battery-001";
                 attribute name = "LiPo Battery 3S";
                 attribute description = "";
-                attribute mass : MassValue; // e.g. 180[g]
+                attribute mass = 280[g]; // e.g. 180[g]
                 attribute capacity = 2200[milli*ampere*h];
                 attribute voltage = 11.1[V];
             }
@@ -160,7 +160,7 @@ package DroneExample {
                 attribute id = "pdb-001";
                 attribute name = "Power Distribution Board";
                 attribute description = "";
-                attribute mass : MassValue; 
+                attribute mass = 40[g]; 
                 attribute max_current = 120[A];
                 attribute min_voltage_input = 11.1 [V]; 
                 attribute max_voltage_input = 14.8 [V]; 
@@ -170,7 +170,7 @@ package DroneExample {
                 attribute id = "esc-001";
                 attribute name = "ESC 30A";
                 attribute description = "";
-                attribute mass : MassValue; 
+                attribute mass = 25[g]; 
                 attribute max_current = 30[A];
                 attribute input_voltage = 11.1[V];
                 attribute pwm_frequency = 500[Hz];
@@ -181,7 +181,7 @@ package DroneExample {
                 attribute id = "transmitter-001";
                 attribute name = "FPV Transmitter";
                 attribute description = "";
-                attribute mass : MassValue; 
+                attribute mass = 15[g]; 
                 attribute frequency = "5.8[GHz]";
                 attribute power = 600[milli*W];
                 attribute range = 1000[m];
@@ -191,7 +191,7 @@ package DroneExample {
                 attribute id = "receiver-001";
                 attribute name = "FPV Receiver";
                 attribute description = "";
-                attribute mass : MassValue; 
+                attribute mass = 10[g]; 
                 attribute frequency = "5.8[GHz]";
                 attribute sensitivity = -90[dB*milli*W];
                 attribute channels = 40;
@@ -201,7 +201,7 @@ package DroneExample {
                 attribute id = "gpsmodule-001";
                 attribute name = "GPS MX2";
                 attribute description = "";
-                attribute mass : MassValue; 
+                attribute mass = 5[g]; 
 
                 part gps_pcb : GPSModulePCB; 
                 part ss : SpeedSensor; 
@@ -213,14 +213,14 @@ package DroneExample {
                     attribute id = "gpsmodule-pcb-001";
                     attribute name = "Custom PCB";
                     attribute description = "";
-                    attribute mass : MassValue; 
+                    attribute mass = 2[g]; 
                 }
 
                 part def SpeedSensor {
                     attribute id = "speed-sensor-001";
                     attribute name = "Speed Sensor";
                     attribute description = "";
-                    attribute mass : MassValue; 
+                    attribute mass = 1[g]; 
                     attribute max_range = 60[km/h];
                 }
 
@@ -228,7 +228,7 @@ package DroneExample {
                     attribute id = "height-sensor-001";
                     attribute name = "Height Sensor";
                     attribute description = "";
-                    attribute mass : MassValue; 
+                    attribute mass = 1[g]; 
                     attribute max_range = 1000[m];
                 }
 
@@ -236,7 +236,7 @@ package DroneExample {
                     attribute id = "position-sensor-001";
                     attribute name = "Position Sensor";
                     attribute description = "";
-                    attribute mass : MassValue; 
+                    attribute mass= 1[g]; 
                     attribute technology = "GPS";
                 }  
             } 

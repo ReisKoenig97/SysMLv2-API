@@ -11,9 +11,7 @@ from file_parser import SysmlParser
 from file_parser import StepParser
 from file_parser import CodeParser
 
-from sysmlv2_api_client import SysMLv2APIClient
 from utils.config_utils import save_config, load_config
-from utils.json_utils import save_json, load_json
 from metadata_manager import MetadataManager
 from versioncontrol import VersionControl 
 
@@ -349,7 +347,7 @@ class GUI:
             
     def load_file_content(self, file_path, text_widget):
         """Loads file content into the given text widget."""
-        self.logger.info(f"load_file_content")
+        #self.logger.info(f"load_file_content")
         try:
             with open(file_path, 'r') as file:
                 content = file.read()
@@ -654,7 +652,7 @@ class GUI:
         """
         Verify user selected constraint (from constraint_entry)
         """
-        self.logger.info(f"verify_selected_constraint")
+        #self.logger.info(f"verify_selected_constraint")
         # Load sysml model 
         # NOTE: By using select_file the file path already sets the sysml model path that the user selected
         self.logger.debug(f"Current sysml file path: {self.sysml_file_path}")
@@ -664,8 +662,21 @@ class GUI:
             # Load function from SysmlParser Class (file_parser) to parse and check constraint 
             response = self.sysml_model.verify_constraint(self.sysml_file_path, constraint_name)
 
-            
-            messagebox.showinfo("INFO",response)
+            def custom_messagebox(title, message):
+                popup = tk.Toplevel()
+                popup.title(title)
+                popup.geometry("500x100")
+
+                text_color = "green" if "(TRUE)" else "red"
+                label = tk.Label(popup, text=message, font=("Arial", 12, "bold"), fg=text_color)
+                label.pack(pady=20)
+
+                popup.transient()  # Bleibt im Vordergrund
+                popup.grab_set()  # Verhindert Interaktion mit Hauptfenster
+
+            # Easy messagebox
+            #messagebox.showinfo("INFO",response)
+            custom_messagebox("INFO", response)
 
         else:
             self.logger.error(f"Could not verify constraint: {constraint_name}")

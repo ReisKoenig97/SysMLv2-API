@@ -114,7 +114,7 @@ class SysmlParser:
         if metadata_name is None: 
             # Find metadata def { ... }
             metadata_def_list = re.findall(r"\bmetadata\s+def\s+(\w+)\s*(?:\{[^}]*\}|;)", self.sysml_model) #\bmetadata\s+def\s+(\w+)\s*\{
-            self.logger.debug(f"No specific metadata_name provided. Automatic search for 'metdata def' found: {metadata_def_list}")
+            #self.logger.debug(f"No specific metadata_name provided. Automatic search for 'metdata def' found: {metadata_def_list}")
         else:
             metadata_def_list = [metadata_name]
 
@@ -198,7 +198,7 @@ class SysmlParser:
                     result[path] = []
                 result[path].extend(attributes)
 
-        self.logger.debug(f"Extracted metadata: {result}")
+        #self.logger.debug(f"Extracted metadata: {result}")
         return result
     
     def validate_elementPath(self, elementPath):
@@ -284,7 +284,7 @@ class SysmlParser:
         Returns:
             Boolean. True if constraint is verified, else false 
         """
-        self.logger.debug(f"verify_constraint")
+        #self.logger.debug(f"verify_constraint")
 
         # 1) Search sysmlv2 model for constraint def 
         # 2) Search for constraint def usages 
@@ -301,16 +301,53 @@ class SysmlParser:
             self.logger.error(f"No Constraint definition: {constraint_name} found or empty definition")
             return "Could not find provided constraint name or empty constraint definition"
         
-        # 2
+        # 2) Search for constraint def usages
         constraint_usage, constraint_usage_content = self.find_constraint_usages(sysml_file_path, constraint_name)
-        self.logger.debug(f"Found: {constraint_usage}")
-        self.logger.debug(f"With content: {constraint_usage_content}")
+        if not constraint_usage or not constraint_usage_content:
+            self.logger.error(f"No usage found for constraint: {constraint_name}")
+            return "No usage found for the provided constraint"
 
-        # 3 
+        # 3) Extract relevant information from constraint usage
         constraint_usage_info = self.get_constraint_usage_information(constraint_usage_content)
-        self.logger.debug(f"extracted info: {constraint_usage_info}")
+        #self.logger.debug(f"info: {constraint_usage_info}")
+        if not constraint_usage_info: 
+            self.logger.error(f"No usage information/description found for constraint: {constraint_name}")
+            return "No usage information found for the provided constraint"
 
-        # 4 
+        # 4) Extract equation as a string
+        equation = self.get_constraint_def_equation(constraint_content)
+        if not equation:
+            self.logger.error(f"Could not extract equation from constraint: {constraint_name}")
+            return "Failed to extract equation from constraint definition"
+        
+        # 5) NOTE: for demonstration only one case will be verified
+        # FIXME: For later 
+        if "sum(partMasses)" in equation and "<=" in equation: 
+            try:
+                part_masses = self.get_attribute_value(constraint_usage_info.get("partMasses", []), sysml_file_path=sysml_file_path)
+                #self.logger.debug(f"partMasses list: {part_masses}")
+                part_masses = sum(part_masses)
+                #self.logger.debug(f"partMasses summed up: {part_masses}")
+                # Get the numeric value from constraint usage information e.g. "massLimit" : "1000[g]"
+                mass_limit_str = constraint_usage_info.get("massLimit", "0[g]")
+                mass_limit = float(re.search(r"[-+]?\d*\.?\d+", mass_limit_str).group(0))
+                #self.logger.debug(f"MassLimit: {mass_limit}")
+
+                result = part_masses <= mass_limit
+                #self.logger.debug(f"Verification result: {result}")
+
+                if result:
+                    return f"Constraint ({part_masses} <= {mass_limit}) verified -> ({str(result).upper()})"
+                else:
+                    return f"Constraint ({part_masses}) <= {mass_limit} violated -> ({str(result).upper()})"
+                
+            except ValueError as e:
+                self.logger.error(f"Error verifying equation: {e}")
+                return f"Verification failed: {str(e)}"
+            
+        # last return is an error
+        return "Unsupported equation type"
+
 
     def find_constraint_definitions(self, sysml_file_path, constraint_name):
         """
@@ -381,27 +418,124 @@ class SysmlParser:
         """
         extracted_data = {}
 
-        # Split the content into lines and analyze each line separately
-        lines = usage_content.split(";")
-        for line in lines:
-            line = line.strip()
-            if not line:  # Skip empty lines
+        # Remove unnecessary whitespace and normalize line breaks
+        usage_content = usage_content.strip()
+
+        # Split into individual statements based on semicolons, but preserve content across lines
+        # Use a regex to handle statements that might span multiple lines
+        statements = re.split(r';\s*(?![^\(]*\))', usage_content)  # Split on ; unless inside parentheses
+
+        for statement in statements:
+            statement = statement.strip()
+            if not statement:  # Skip empty statements
                 continue
 
-            # Look for assignments in the form: "in variableName = value;"
-            match = re.match(r"in\s+(\w+)\s*=\s*(.+)", line)
+            # Look for assignments in the form: "in variableName = value"
+            match = re.match(r"in\s+(\w+)\s*=\s*(.+)", statement, re.DOTALL)
             if match:
                 var_name, var_value = match.groups()
-                
-                # If the value is a list (e.g., (x, y, z))
-                if var_value.startswith("(") and var_value.endswith(")"):
-                    extracted_data[var_name] = [v.strip() for v in var_value[1:-1].split(",")]
+                var_value = var_value.strip()
+
+                # If the value is a list (e.g., (x, y, z)), handle multi-line content
+                if var_value.startswith("(") and ")" in var_value:
+                    # Extract content inside parentheses
+                    list_content = re.search(r'\((.+)\)', var_value, re.DOTALL).group(1)
+                    # Split by commas and strip whitespace
+                    extracted_data[var_name] = [v.strip() for v in list_content.split(",") if v.strip()]
                 else:
-                    extracted_data[var_name] = var_value.strip()
+                    extracted_data[var_name] = var_value
 
         return extracted_data if extracted_data else None
 
-    def 
+    def get_constraint_def_equation(self, constraint_content):
+        """
+        Parses constraint definition content and searches for equations
+        """
+        # self.logger.info(f"get_constraint_def_equation)
+
+        # Remove white spaces 
+        constraint_content = constraint_content.strip()
+
+        # Simple pattern: Look for a line with a mathematical operator after 'in' declarations
+        lines = constraint_content.splitlines()
+        for line in lines[::-1]:  # Start from last element due to equation often beeing the last element
+            line = line.strip()
+            if not line.startswith("in") and any(op in line for op in ["<=", ">=", "<", ">", "=", "!="]):
+                #self.logger.debug(f"Extracted equation: {line}")
+                return line
+        self.logger.warning(f"No equation found in constraint definition content: {constraint_content}")
+        return None
+
+    def get_attribute_value(self, attribute_paths : list[str], sysml_file_path : str) -> list[float]: 
+        """
+        Parses through Sysml model and extracts numeric values for given attribute paths e.g. fc.mass (attribute mass of part FlightController) -> MassValue
+        """
+        part_name_map = {
+        'fc': 'FlightController',
+        'cs': 'Chassis',
+        'enc': 'Enclosure',
+        'motor': 'Motor',
+        'prop': 'Propellor',
+        'cam': 'Camera',
+        'batt': 'Battery',
+        'pdb': 'PowerDistributionBoard',
+        'esc': 'ElectronicSpeedController',
+        'trans': 'Transmitter',
+        'rec': 'Receiver',
+        'gpsm': 'GPSModule'
+        }
+
+        # Multiplicity map
+        multiplicity_map = {
+            'motor': 4,  # motor[4]
+            'prop': 4    # prop[4]
+        }
+
+        try:
+            # Load Sysml model 
+            with open(sysml_file_path, "r", encoding="utf-8") as file:
+                sysml_text = file.read()
+            
+            pattern = r"part def (\w+)\s*\{[^}]*attribute mass\s*=\s*(\d+\.?\d*)\[g\][^}]*\}"
+            parts = dict(re.findall(pattern, sysml_text, re.DOTALL))
+            #self.logger.debug(f"Extracted parts with mass: {parts}")
+
+            # list for numeric values 
+            values = []
+            for path in attribute_paths:
+                # Check if path is format abbreviation.attribute (e.g. fc.mass)
+                if '.' not in path or path.split('.')[-1] != 'mass':
+                    self.logger.warning(f"Invalid attribute path: {path}, expected 'part.mass'")
+                    values.append(0.0)
+                    continue
+                    
+                # extract abbreviation from path (e.g. "fc" from "fc.mass")
+                part_short = path.split('.')[0] # first element 
+                part_name = part_name_map.get(part_short) #get full name from part name map 
+                if not part_name:
+                    self.logger.warning(f"Unknown part short name: {part_short}")
+                    values.append(0.0)
+                    continue
+
+                # get numeric value
+                mass_str = parts.get(part_name, '0')
+                mass_value = float(mass_str)
+
+                # if needed, use multiplicity
+                multiplicity = multiplicity_map.get(part_short, 1)
+                total_mass = mass_value * multiplicity
+                values.append(total_mass)
+                #self.logger.debug(f"Resolved {path} -> {part_name}.mass = {total_mass}[g]")
+
+            return values
+
+        except FileNotFoundError:
+            self.logger.error(f"File not found: {sysml_file_path}")
+            return [0.0] * len(attribute_paths)
+        except Exception as e:
+            self.logger.error(f"Error parsing SysML model: {e}")
+            return [0.0] * len(attribute_paths)
+
 
 
 class GerberParser:     
@@ -499,12 +633,12 @@ class CodeParser:
         # Looping through source code content
         for line in code_content: 
             line = line.strip()
-            self.logger.debug(f"LINE: {line}")
+            #self.logger.debug(f"LINE: {line}")
             metadata_match = metadata_pattern.search(line)
             if metadata_match: 
-                self.logger.debug(f"metadata match found: {metadata_match}")
+                #self.logger.debug(f"metadata match found: {metadata_match}")
                 name, value, unit, dataType, metadata_tag, path = metadata_match.groups()
-                self.logger.debug(f"path: {path}")
+                #self.logger.debug(f"path: {path}")
                 if path == elementPath: 
                     #self.logger.debug(f"Found value: {value}")
                     return value
