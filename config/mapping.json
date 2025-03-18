@@ -1,66 +1,10 @@
 {
     "SysMLv2": [
-        {
-            "uuid": "bd69d79b-edf4-4b2f-b9ae-ead01662c75c",
-            "name": "id",
-            "value": "0.123",
-            "unit": "",
-            "dataType": "Real",
-            "elementPath": "DroneExample.PartDefinitions.Drone.FlightController.pcb.id",
-            "filePath": "C:/Users/tommy/Nextcloud/MASTER ARBEIT/Code/SysMLv2 API Code/models/se_domain/example_drone_origin.sysml",
-            "created": "11.03.2025",
-            "lastModified": "11.03.2025"
-        },
-        {
-            "uuid": "63ed586c-50d3-4ddc-abe7-0d34cc7c6166",
-            "name": "description",
-            "value": "",
-            "unit": "",
-            "dataType": "String",
-            "elementPath": "DroneExample.PartDefinitions.Drone.FlightController.pcb.description",
-            "filePath": "C:/Users/tommy/Nextcloud/MASTER ARBEIT/Code/SysMLv2 API Code/models/se_domain/example_drone_origin.sysml",
-            "created": "11.03.2025",
-            "lastModified": "11.03.2025"
-        }
     ],
     "Mappings": [
-        {
-            "sourceUUID": "2b78641c-b52e-4161-aa73-d12d5916643c",
-            "targetUUID": "bd69d79b-edf4-4b2f-b9ae-ead01662c75c",
-            "created": "11.03.2025"
-        },
-        {
-            "sourceUUID": "a7f56a4d-ad2e-4bdc-9b9c-1fae552e4e54",
-            "targetUUID": "63ed586c-50d3-4ddc-abe7-0d34cc7c6166",
-            "created": "11.03.2025"
-        }
     ],
     "STEP": [
-        {
-            "uuid": "2b78641c-b52e-4161-aa73-d12d5916643c",
-            "name": "name",
-            "value": "STEP_AgriUAV2025",
-            "unit": "",
-            "index": "",
-            "dataType": "String",
-            "elementPath": "FILE_NAME.name",
-            "filePath": "C:/Users/tommy/Nextcloud/MASTER ARBEIT/Code/SysMLv2 API Code/models/me_domain/STEP_AgriUAV.stp",
-            "created": "11.03.2025",
-            "lastModified": "11.03.2025"
-        }
     ],
     "Source Code": [
-        {
-            "uuid": "a7f56a4d-ad2e-4bdc-9b9c-1fae552e4e54",
-            "name": "mass",
-            "value": "150.70",
-            "unit": "",
-            "index": "",
-            "dataType": "Real",
-            "elementPath": "Motor.mass",
-            "filePath": "C:/Users/tommy/Nextcloud/MASTER ARBEIT/Code/SysMLv2 API Code/models/sw_domain/existent_code_metadata.py",
-            "created": "11.03.2025",
-            "lastModified": "11.03.2025"
-        }
     ]
 }

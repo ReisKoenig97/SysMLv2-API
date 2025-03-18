@@ -1,11 +1,58 @@
-import tkinter as tk
-from tkinter import ttk, messagebox
-from tkinter import StringVar # used for Dropdown menus 
-from tkinter import filedialog # used for loading files via file explorer of the OS 
 import os
 import logging
 import sys # Used for installing requirements and checking docker 
 import subprocess # Used for SysON visualization and loading Docker-Compose file
+
+def check_virtualenv():
+    """ Check if we are in a virtual environment or a Conda environment """
+    logger = logging.getLogger(__name__)
+    
+    # Prüfe, ob eine venv aktiv ist
+    in_venv = hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix)
+
+    # Prüfe, ob eine Conda-Umgebung aktiv ist
+    in_conda = os.environ.get("CONDA_PREFIX") is not None
+
+    if in_venv:
+        logger.info("Virtual environment (venv) is active.")
+    elif in_conda:
+        logger.info("Conda environment is active.")
+    else:
+        logger.error(
+            "You are not in a virtual environment or a Conda environment.\n"
+            "To create a venv, run: 'python -m venv your_env_name'\n"
+            "To activate (Windows): 'your_env_name\\Scripts\\activate'\n"
+            "To activate (Linux/macOS): 'source your_env_name/bin/activate'\n"
+            "To create a Conda env, run: 'conda create --name your_env_name python=3.x'\n"
+            "To activate Conda env: 'conda activate your_env_name'"
+        )
+        sys.exit(1)
+
+def install_requirements():
+    """Install dependencies from requirements.txt if they are not already installed."""
+    if not os.path.exists('requirements.txt'):
+        print("Error: The requirements.txt file was not found!")
+        sys.exit(1)
+
+    try:
+        print("Installing dependencies...")
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
+    except Exception as e:
+        print(f"Something went wrong during installation of requirements: {e}")
+        sys.exit(1)
+
+
+# Check 
+check_virtualenv()
+# Check Requirements     
+install_requirements() 
+
+
+import tkinter as tk
+from tkinter import ttk, messagebox
+from tkinter import StringVar # used for Dropdown menus 
+from tkinter import filedialog # used for loading files via file explorer of the OS 
+import customtkinter as ctk
 import threading # Used for parellized tasks (running docker file)
 import webview # Used for SysON visualization. To install use pip install pywebview
 
@@ -19,10 +66,6 @@ from utils.config_utils import save_config, load_config
 from metadata_manager import MetadataManager
 from versioncontrol import VersionControl 
 
-import customtkinter as ctk
-
-# External Libraries has to be installed in the local git folder / venv 
-#import requests
 
 # Initial centralized Logging Setup to control all logs. Takes all logs from each .py file etc
 def setup_logging(): 
@@ -55,7 +98,7 @@ def check_docker():
     except FileNotFoundError:
         logger.error("Docker command not found. Is it installed?")
         sys.exit(1)
-
+    
 class DockerManager:
     """Executing and managing Docker files"""
     def __init__(self):
@@ -127,6 +170,7 @@ class GUI:
         #self.logger.info(f"setup_widgets")
 
         # Buttons
+        #self.select_sysml_model = ctk.CTkButton(self.main_frame, text="Select SysML Model", command=self.select_sysml_model)
         self.btn_visualize_sysml_model = ctk.CTkButton(self.main_frame, text="Visualize SysML Model", command=self.popup_syson)
         #self.btn_edit_sysml_model = ctk.CTkButton(self.main_frame, text="View/Edit SysML Model", command=self.popup_edit_sysml_model)
         self.btn_map_data = ctk.CTkButton(self.main_frame, text="Map Data", command=self.popup_map_data)  
@@ -140,9 +184,10 @@ class GUI:
         self.root.grid_rowconfigure(0, weight=1)  
         self.root.grid_columnconfigure(0, weight=1) 
         self.main_frame.columnconfigure(0, weight=1)
-        self.main_frame.rowconfigure((0,1,2,3,4), weight=0)
+        self.main_frame.rowconfigure((0,1,2,3,4,5), weight=0)
 
-        self.btn_visualize_sysml_model.grid(row=0, column=0, padx=5, pady=(10,5), sticky="ew")
+        #self.select_sysml_model.grid(row=0, column=0, padx=5, pady=(10,5), sticky="ew")
+        self.btn_visualize_sysml_model.grid(row=1, column=0, padx=5, pady=(10,5), sticky="ew")
         #self.btn_edit_sysml_model.grid(row=1, column=0, padx=5, pady=(10,5), sticky="ew")
         self.btn_map_data.grid(row=2, column=0, padx=5, pady=5, sticky="ew") 
         self.btn_version_control.grid(row=3, column=0, padx=5, pady=5, sticky="ew")
@@ -156,7 +201,6 @@ class GUI:
         webview.create_window("SysON Model Visualization", url=self.syson_url, width=1600, height=1200, resizable=True)
         webview.start()
         
-
     def popup_edit_sysml_model(self):
         """Opens a popup to edit the SysML model.
         Functions: 
@@ -386,6 +430,15 @@ class GUI:
         map_frame_domain_unit_dropdown.grid(row=6, column=2, columnspan=2, padx=(5,10), pady=(2,5), sticky="ew")
 
         btn_map_elements.grid(row=7, column=1, columnspan=2, padx=(5,5), pady=(10,10), sticky="ew")
+
+    def select_sysml_model(self):
+        """
+        Opens a file dialog to select a SysML file. 
+        """
+        file_path = filedialog.askopenfilename(title="Select SysML File", filetypes=[("SysML Files", "*.sysml"), ("All Files", "*.*")])
+
+        if file_path: 
+            self.sysml_file_path = file_path
 
     def select_file(self, model_type, text_widget):
         """ 
@@ -742,10 +795,12 @@ class GUI:
             raise ValueError(f"Could not verify constraint: {constraint_name}")
         
 def main(): 
+    
     # Run Initial Log Setup for debugging
     setup_logging() 
     # Docker Check
     check_docker()  # Check if Docker is installed and running
+ 
     # Initialize DockerManager to build the Neo4j database and Syson visualization Docker container
     docker = DockerManager()
     docker.start_docker_services()
@@ -755,20 +810,20 @@ def main():
     DEFAULT_CONFIG = load_config(DEFAULT_CONFIG_FILE)
 
     # Create Parser object classes for functions that can read, parse and edit these specific files
-    fp_sysml = SysmlParser(sysml_path="models/se_domain/example_drone_origin.sysml")
+    fp_sysml = SysmlParser() # #"models/se_domain/example_drone_origin.sysml"
     fp_code = CodeParser(code_file_path = "models/sw_domain/generated_code.py")
     fp_gerber = GerberParser(gerber_file_path="models/ee_domain/Hades_project-job.gbrjob")
     fp_step = StepParser(step_file_path="models/me_domain/STEP_AgriUAV.stp")
     vc = VersionControl(config=DEFAULT_CONFIG)
     mm = MetadataManager(config=DEFAULT_CONFIG, versioncontrol=vc, gerberparser=fp_gerber, stepparser=fp_step, codeparser=fp_code, sysmlparser=fp_sysml) 
     
+    # Automatic update (fetching new data from domain files and writing new values to sysmlv2 model and mapping file)
     mm.update_sysml_model()
 
     #metadata = fp_sysml.get_metadata_about_elements()
     #print(metadata)
     #generated_code = fp_code.generate_code_from_sysml(sysml_file_path="models/se_domain/example_drone_origin.sysml")
     
-
     # TESTING CODE GENERATION
     # fp_code = CodeParser()
     # python_code = fp_code.generate_code()

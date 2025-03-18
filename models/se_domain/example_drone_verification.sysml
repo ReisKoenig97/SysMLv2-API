@@ -133,7 +133,7 @@ package DroneExample {
                     attribute id = "blade-001";
                     attribute name = "blade";
                     attribute description = "";
-                    attribute mass = 2[g]; 
+                    attribute mass = 2[g];
                 }
             }
 

@@ -36,7 +36,7 @@ class Motor:
         self.current = current, 
         self.efficiency = efficiency
 
-@metadata("mass", "35", "g", "float", "PCB", elementPath="Blade.mass")
+@metadata("mass", "35", "g", "float", "PCB", "Blade.mass")
 class Blade:
     def __init__(self, mass : float, length : float):
         self.mass = mass, 

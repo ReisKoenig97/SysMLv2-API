@@ -1,6 +1,8 @@
 # SysMLv2-API
 Source Code and Documentation of SysMLv2 API to other engineering domain models
 
+After cloning git repo to local: Install python requirements: pip install -r requirements.txt
+
 - 'config/': Contains default config files. 
 
 - 'utils/': Contains helper functions for standardized methods that are be used frequently.

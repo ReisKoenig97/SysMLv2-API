@@ -29,7 +29,7 @@ class MetadataManager:
         self.fp_code = codeparser
         self.fp_sysml = sysmlparser
         
-        # Parameters will be set later by functions  
+        # Parameters will be set later by functions 
         self.sysml_model = None
         self.domain_model = None
         # List of keywords for regex search inside the sysml file 
