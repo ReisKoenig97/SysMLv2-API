@@ -62,7 +62,7 @@ class DockerManager:
         super().__init__() 
         self.logger = logging.getLogger(__name__)
         #self.logger.info(f"Initialized DockerManager")
-        self.compose_file_path = "./docker/docker-compose-master.yml"
+        self.compose_file_path = "./docker_master/docker-compose-master.yml"
 
         #self.start_docker_services()
 
@@ -71,8 +71,8 @@ class DockerManager:
         self.logger.info(f"start_docker_services")
         # Helper Function
         def run_compose_file(): 
-            try: 
-                subprocess.run(["docker-compose", "-f", self.compose_file_path, "up", "-d"], check=True)
+            try: # --build to build with latest build instructions from docker compose file
+                subprocess.run(["docker-compose", "-f", self.compose_file_path, "up", "--build", "-d"], check=True) # docker compose -f docker-compose-master.yml --build 
                 self.logger.info("Docker Compose started successfully")
             except FileNotFoundError:
                 self.logger.error("docker-compose not found. Please install Docker.")
@@ -128,7 +128,7 @@ class GUI:
 
         # Buttons
         self.btn_visualize_sysml_model = ctk.CTkButton(self.main_frame, text="Visualize SysML Model", command=self.popup_syson)
-        self.btn_edit_sysml_model = ctk.CTkButton(self.main_frame, text="View/Edit SysML Model", command=self.popup_edit_sysml_model)
+        #self.btn_edit_sysml_model = ctk.CTkButton(self.main_frame, text="View/Edit SysML Model", command=self.popup_edit_sysml_model)
         self.btn_map_data = ctk.CTkButton(self.main_frame, text="Map Data", command=self.popup_map_data)  
         self.btn_version_control = ctk.CTkButton(self.main_frame, text="Version Control", command=self.popup_version_control)
         self.btn_verification = ctk.CTkButton(self.main_frame, text="Verification Analysis", command=self.popup_verification)
@@ -143,7 +143,7 @@ class GUI:
         self.main_frame.rowconfigure((0,1,2,3,4), weight=0)
 
         self.btn_visualize_sysml_model.grid(row=0, column=0, padx=5, pady=(10,5), sticky="ew")
-        self.btn_edit_sysml_model.grid(row=1, column=0, padx=5, pady=(10,5), sticky="ew")
+        #self.btn_edit_sysml_model.grid(row=1, column=0, padx=5, pady=(10,5), sticky="ew")
         self.btn_map_data.grid(row=2, column=0, padx=5, pady=5, sticky="ew") 
         self.btn_version_control.grid(row=3, column=0, padx=5, pady=5, sticky="ew")
         self.btn_verification.grid(row=4, column=0, padx=5, pady=5, sticky="ew")
