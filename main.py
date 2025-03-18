@@ -4,6 +4,10 @@ from tkinter import StringVar # used for Dropdown menus
 from tkinter import filedialog # used for loading files via file explorer of the OS 
 import os
 import logging
+import sys # Used for installing requirements and checking docker 
+import subprocess # Used for SysON visualization and loading Docker-Compose file
+import threading # Used for parellized tasks (running docker file)
+import webview # Used for SysON visualization. To install use pip install pywebview
 
 # Utils and module references
 from file_parser import GerberParser
@@ -36,6 +40,49 @@ def setup_logging():
         ]
     )
 
+def check_docker():
+    """ Check if Docker is installed and running """
+    logger = logging.getLogger(__name__)
+    logger.info("Checking if Docker is installed on the system.")
+    try:
+        logger.info("Checking Docker version...")
+        result = subprocess.run(["docker", "--version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        if result.returncode == 0:
+            logger.info(f"Docker is installed: {result.stdout.strip()}")
+        else:
+            logger.error("Docker is not running or installed. Please install and/or run Docker Desktop.")
+            sys.exit(1)
+    except FileNotFoundError:
+        logger.error("Docker command not found. Is it installed?")
+        sys.exit(1)
+
+class DockerManager:
+    """Executing and managing Docker files"""
+    def __init__(self):
+        super().__init__() 
+        self.logger = logging.getLogger(__name__)
+        #self.logger.info(f"Initialized DockerManager")
+        self.compose_file_path = "./docker/docker-compose-master.yml"
+
+        #self.start_docker_services()
+
+    def start_docker_services(self): 
+        """Starts the docker compose services"""
+        self.logger.info(f"start_docker_services")
+        # Helper Function
+        def run_compose_file(): 
+            try: 
+                subprocess.run(["docker-compose", "-f", self.compose_file_path, "up", "-d"], check=True)
+                self.logger.info("Docker Compose started successfully")
+            except FileNotFoundError:
+                self.logger.error("docker-compose not found. Please install Docker.")
+            except subprocess.CalledProcessError as e:
+                self.logger.error(f"Error while starting Docker Compose: {e}")
+
+        # daemon threads are closed automatically when main program is closed and avoid blocking the main program
+        self.logger.debug("Runnung docker compose file in a new thread")
+        threading.Thread(target=run_compose_file, daemon=True).start()
+
 class GUI:
     """
     Main application for the GUI, managing user interaction.
@@ -58,6 +105,9 @@ class GUI:
         self.mm = metadatamanager
         self.vc = versioncontrol
 
+        # SysON Webview
+        self.syson_url = "http://localhost:8081/projects"
+
         self.root = ctk.CTk() 
         self.root.title("GUI")
         self.root.geometry("250x400")
@@ -77,6 +127,7 @@ class GUI:
         #self.logger.info(f"setup_widgets")
 
         # Buttons
+        self.btn_visualize_sysml_model = ctk.CTkButton(self.main_frame, text="Visualize SysML Model", command=self.popup_syson)
         self.btn_edit_sysml_model = ctk.CTkButton(self.main_frame, text="View/Edit SysML Model", command=self.popup_edit_sysml_model)
         self.btn_map_data = ctk.CTkButton(self.main_frame, text="Map Data", command=self.popup_map_data)  
         self.btn_version_control = ctk.CTkButton(self.main_frame, text="Version Control", command=self.popup_version_control)
@@ -89,12 +140,22 @@ class GUI:
         self.root.grid_rowconfigure(0, weight=1)  
         self.root.grid_columnconfigure(0, weight=1) 
         self.main_frame.columnconfigure(0, weight=1)
-        self.main_frame.rowconfigure((0,1), weight=0)
+        self.main_frame.rowconfigure((0,1,2,3,4), weight=0)
 
-        self.btn_edit_sysml_model.grid(row=0, column=0, padx=5, pady=(10,5), sticky="ew")
-        self.btn_map_data.grid(row=1, column=0, padx=5, pady=5, sticky="ew") 
-        self.btn_version_control.grid(row=2, column=0, padx=5, pady=5, sticky="ew")
-        self.btn_verification.grid(row=3, column=0, padx=5, pady=5, sticky="ew")
+        self.btn_visualize_sysml_model.grid(row=0, column=0, padx=5, pady=(10,5), sticky="ew")
+        self.btn_edit_sysml_model.grid(row=1, column=0, padx=5, pady=(10,5), sticky="ew")
+        self.btn_map_data.grid(row=2, column=0, padx=5, pady=5, sticky="ew") 
+        self.btn_version_control.grid(row=3, column=0, padx=5, pady=5, sticky="ew")
+        self.btn_verification.grid(row=4, column=0, padx=5, pady=5, sticky="ew")
+
+    def popup_syson(self):
+        """
+        Opens the SysON web interface inside the popup window of the GUI
+        Uses: webview (pywebview) library
+        """
+        webview.create_window("SysON Model Visualization", url=self.syson_url, width=1600, height=1200, resizable=True)
+        webview.start()
+        
 
     def popup_edit_sysml_model(self):
         """Opens a popup to edit the SysML model.
@@ -683,6 +744,12 @@ class GUI:
 def main(): 
     # Run Initial Log Setup for debugging
     setup_logging() 
+    # Docker Check
+    check_docker()  # Check if Docker is installed and running
+    # Initialize DockerManager to build the Neo4j database and Syson visualization Docker container
+    docker = DockerManager()
+    docker.start_docker_services()
+
     # Load Default Config File from config folder   
     DEFAULT_CONFIG_FILE = "config/default_config.json" 
     DEFAULT_CONFIG = load_config(DEFAULT_CONFIG_FILE)
@@ -699,7 +766,7 @@ def main():
 
     #metadata = fp_sysml.get_metadata_about_elements()
     #print(metadata)
-    generated_code = fp_code.generate_code_from_sysml(sysml_file_path="models/se_domain/example_drone_origin.sysml")
+    #generated_code = fp_code.generate_code_from_sysml(sysml_file_path="models/se_domain/example_drone_origin.sysml")
     
 
     # TESTING CODE GENERATION

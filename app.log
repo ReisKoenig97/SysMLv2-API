@@ -1,0 +1,6 @@
+ __main__ - INFO - Checking if Docker is installed on the system.
+ __main__ - INFO - Checking Docker version...
+ __main__ - INFO - Docker is installed: Docker version 27.3.1, build ce12230
+ __main__ - INFO - start_docker_services
+ __main__ - DEBUG - Runnung docker compose file in a new thread
+ __main__ - INFO - Docker Compose started successfully

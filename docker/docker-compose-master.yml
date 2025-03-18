@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  # PostgreSQL Database Service
+  database:
+    image: postgres:12
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+    networks:
+      - master_network
+    container_name: master_postgres_db
+
+  # SysON App Service
+  app_syson_master:
+    image: "${IMAGE_TAG:-eclipsesyson/syson:v2025.2.0}"
+    ports:
+      - "8081:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://master_postgres_db/postgres
+      SPRING_DATASOURCE_USERNAME: username
+      SPRING_DATASOURCE_PASSWORD: password
+      SIRIUS_COMPONENTS_CORS_ALLOWEDORIGINPATTERNS: "*"
+      SERVER_PORT: 8080
+    depends_on:
+      - database
+    networks:
+      - master_network
+    container_name: master_app_syson
+
+networks:
+  master_network:
+    driver: bridge
