@@ -2,6 +2,13 @@
 Source Code and Documentation of SysMLv2 API to other engineering domain models
 
 After cloning git repo to local: Install python requirements: pip install -r requirements.txt
+To install and activate virtual environment:
+            "To create a venv, run: 'python -m venv your_env_name'\n"
+            "To activate (Windows): 'your_env_name\\Scripts\\activate'\n"
+            "To activate (Linux/macOS): 'source your_env_name/bin/activate'\n"
+            "To create a Conda env, run: 'conda create --name your_env_name python=3.x'\n"
+            "To activate Conda env: 'conda activate your_env_name'
+
 
 - 'config/': Contains default config files. 
 

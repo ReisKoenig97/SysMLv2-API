@@ -54,7 +54,7 @@ from tkinter import StringVar # used for Dropdown menus
 from tkinter import filedialog # used for loading files via file explorer of the OS 
 import customtkinter as ctk
 import threading # Used for parellized tasks (running docker file)
-import webview # Used for SysON visualization. To install use pip install pywebview
+import webbrowser #webview # Used for SysON visualization. To install use pip install pywebview
 
 # Utils and module references
 from file_parser import GerberParser
@@ -198,8 +198,9 @@ class GUI:
         Opens the SysON web interface inside the popup window of the GUI
         Uses: webview (pywebview) library
         """
-        webview.create_window("SysON Model Visualization", url=self.syson_url, width=1600, height=1200, resizable=True)
-        webview.start()
+        # webview.create_window("SysON Model Visualization", url=self.syson_url, width=1600, height=1200, resizable=True)
+        # webview.start()
+        webbrowser.open(self.syson_url)
         
     def popup_edit_sysml_model(self):
         """Opens a popup to edit the SysML model.
