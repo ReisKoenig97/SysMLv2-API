@@ -15,8 +15,8 @@ package metadata_test{
         partC;
     
     part def partA{
-        attribute id = "SIEMENS PLM Software NX2406.1700";
-        attribute mass = "#56"; // 50.1
+        attribute id = "Hades_project02";
+        attribute mass = 12.2; // 50.1
     }
     part def partB{
         attribute id = "TViPro1_WS2425_HA2_Aufgabe4_Gruppe311_1.stp";

@@ -559,7 +559,7 @@ class GerberParser:
         current_data = gbr_job_file  # Start from the root of the loaded JSON
 
         for key in keys:
-            self.logger.debug(f"key: {key}")
+            #self.logger.debug(f"key: {key}")
             # Check if the current key exists in the current level of the JSON data
             if isinstance(current_data, dict) and key in current_data:
                 current_data = current_data[key]  # Navigate deeper into the JSON

@@ -1,10 +1,66 @@
 {
     "SysMLv2": [
+        {
+            "uuid": "13f989d1-cf31-4bf7-91fc-74fdc7dd4a46",
+            "name": "id",
+            "value": "SIEMENS PLM Software NX2406.1700",
+            "unit": "",
+            "dataType": "String",
+            "elementPath": "metadata_test.partA.id",
+            "filePath": "D:/UNI MASTER/Masterarbeit/SysMLv2-API/models/se_domain/metadata_test.sysml",
+            "created": "24.04.2025",
+            "lastModified": "24.04.2025"
+        },
+        {
+            "uuid": "dd17347a-4be3-4cb6-8a64-81e08790050b",
+            "name": "mass",
+            "value": "\"#56\"",
+            "unit": "",
+            "dataType": "String",
+            "elementPath": "metadata_test.partA.mass",
+            "filePath": "D:/UNI MASTER/Masterarbeit/SysMLv2-API/models/se_domain/metadata_test.sysml",
+            "created": "25.04.2025",
+            "lastModified": "25.04.2025"
+        }
     ],
     "Mappings": [
+        {
+            "sourceUUID": "6e4cee68-6d54-4ad7-b181-b00152b9ea48",
+            "targetUUID": "13f989d1-cf31-4bf7-91fc-74fdc7dd4a46",
+            "created": "24.04.2025"
+        },
+        {
+            "sourceUUID": "bd328b80-4b11-4e38-a4d6-521f1a3d574a",
+            "targetUUID": "dd17347a-4be3-4cb6-8a64-81e08790050b",
+            "created": "25.04.2025"
+        }
     ],
-    "STEP": [
-    ],
-    "Source Code": [
+    "STEP": [],
+    "Source Code": [],
+    "GerberJobFile": [
+        {
+            "uuid": "6e4cee68-6d54-4ad7-b181-b00152b9ea48",
+            "name": "Name",
+            "value": "Hades_project02",
+            "unit": "",
+            "index": "",
+            "dataType": "String",
+            "elementPath": "GeneralSpecs.ProjectId.Name",
+            "filePath": "D:/UNI MASTER/Masterarbeit/SysMLv2-API/models/ee_domain/Hades_project-job.gbrjob",
+            "created": "24.04.2025",
+            "lastModified": "24.04.2025"
+        },
+        {
+            "uuid": "bd328b80-4b11-4e38-a4d6-521f1a3d574a",
+            "name": "X",
+            "value": 12.2,
+            "unit": "",
+            "index": "",
+            "dataType": "Real",
+            "elementPath": "GeneralSpecs.Size.X",
+            "filePath": "D:/UNI MASTER/Masterarbeit/SysMLv2-API/models/ee_domain/Hades_project-job.gbrjob",
+            "created": "25.04.2025",
+            "lastModified": "25.04.2025"
+        }
     ]
 }

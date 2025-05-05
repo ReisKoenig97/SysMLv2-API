@@ -1,6 +1,7 @@
 # SysMLv2-API
 Source Code and Documentation of SysMLv2 API to other engineering domain models
 
+To generate requirements.txt : "pip freeze > requirements.txt" OR CONDA: "conda list --export > requirements.txt"
 After cloning git repo to local: Install python requirements: pip install -r requirements.txt
 To install and activate virtual environment:
             "To create a venv, run: 'python -m venv your_env_name'\n"

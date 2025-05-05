@@ -1,7 +1,7 @@
 import os
 import logging
 import sys # Used for installing requirements and checking docker 
-import subprocess # Used for SysON visualization and loading Docker-Compose file
+import subprocess # Used for SysON visualization and loading Docker-Compose file; used to run external commands
 
 def check_virtualenv():
     """ Check if we are in a virtual environment or a Conda environment """
@@ -53,7 +53,7 @@ from tkinter import ttk, messagebox
 from tkinter import StringVar # used for Dropdown menus 
 from tkinter import filedialog # used for loading files via file explorer of the OS 
 import customtkinter as ctk
-import threading # Used for parellized tasks (running docker file)
+import threading # Used for parellized tasks (running docker file); used for threading DURING program execution
 import webbrowser #webview # Used for SysON visualization. To install use pip install pywebview
 
 # Utils and module references
@@ -195,6 +195,7 @@ class GUI:
 
     def popup_syson(self):
         """
+        NOTE: OPTIONAL "PLUGIN" TO VISUALIZE THE SYSML MODEL IN A WEB INTERFACE
         Opens the SysON web interface inside the popup window of the GUI
         Uses: webview (pywebview) library
         """
