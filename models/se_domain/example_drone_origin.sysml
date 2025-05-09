@@ -77,11 +77,11 @@ package DroneExample {
                 attribute description = "";
                 
                 part def pcb {
-                    attribute id = "STEP_AgriUAV2025";
+                    attribute id = "pcb-001";
                     attribute name = "PCB-123";
                     attribute description = 150.7;
                     attribute mass : MassValue; 
-                    attribute max_length = 70[mm]; 
+                    attribute max_length = 12.2[mm];
                     attribute max_width = 70[mm];  
                 
                 }

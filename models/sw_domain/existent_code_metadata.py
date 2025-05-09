@@ -1,5 +1,5 @@
 # This file represents the scenario that source code already exists and is already using metadata annotations.
-from typing import Any
+
 
 # NOTE: 
 # Use Case: The Software Engineer has to code the metadata usage himself which means if he wants to make the code 
@@ -7,7 +7,11 @@ from typing import Any
 # 
 # metadata can here only be added before a class definition and with given "def metadata"
 
-def metadata(name: str, value: Any, unit: str, dataType: str, metadataTag: str = None, elementPath: str = None):
+
+from typing import Any
+
+def metadata(name: str, value: Any, unit: str, dataType: str,
+             metadataTag: str = None, elementPath: str = None):
     def wrapper(cls):
         if not hasattr(cls, 'metadata'):
             cls.metadata = []
@@ -26,7 +30,8 @@ def metadata(name: str, value: Any, unit: str, dataType: str, metadataTag: str =
 @metadata("speed", "100", "rpm", "int", "PCB", "Motor.speed")
 @metadata("current", "30", "A", "string", "PCB", "Motor.current")
 class Motor:
-    def __init__(self, motortype: str, power: float, voltage: str, mass: float, speed: float, torque: float, current: float, efficiency: float):
+    def __init__(self, motortype: str, power: float, voltage: str, mass: float,
+                 speed: float, torque: float, current: float, efficiency: float):
         self.motortype = motortype,
         self.power = power, 
         self.voltage = voltage,

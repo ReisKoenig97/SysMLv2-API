@@ -4,10 +4,4 @@
  __main__ - INFO - start_docker_services
  __main__ - DEBUG - Runnung docker compose file in a new thread
  file_parser-SysmlParser - DEBUG - No SysML model path provided.
- file_parser-GerberParser - DEBUG - key: GeneralSpecs
- file_parser-GerberParser - DEBUG - key: ProjectId
- file_parser-GerberParser - DEBUG - key: Name
- file_parser-GerberParser - DEBUG - key: GeneralSpecs
- file_parser-GerberParser - DEBUG - key: Size
- file_parser-GerberParser - DEBUG - key: X
  __main__ - INFO - Docker Compose started successfully

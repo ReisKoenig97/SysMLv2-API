@@ -139,7 +139,7 @@ class GUI:
         self.available_file_formats = ["GerberJobFile", "STEP", "Source Code"]
         # List for available datatypes and si units
         self.available_datatypes = ["int", "float", "string", "bool"]
-        self.available_units = ["", "m", "kg", "s", "A", "K", "mol", "m^2", "m^3", "N", "Pa", "J", "W", "C", "V", "F"]
+        self.available_units = ["", "m", "cm", "mm", "kg", "s", "A", "K", "mol", "m^2", "m^3", "N", "Pa", "J", "W", "C", "V", "F"]
 
         self.sysml_model = None #initialized object from sysml parser of file_parser sysml_parser
         self.sysml_file_path = ""

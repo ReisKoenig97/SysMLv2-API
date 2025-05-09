@@ -878,4 +878,3 @@ class StepParser:
             else:
                 self.logger.warning(f"Attribute '{attribute}' not found in section '{section_name}'.")
                 return None
-             
