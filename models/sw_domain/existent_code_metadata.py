@@ -28,17 +28,17 @@ def metadata(name: str, value: Any, unit: str, dataType: str,
 
 @metadata("mass", "150.70", "g", "float", "PCB", "Motor.mass")
 @metadata("speed", "100", "rpm", "int", "PCB", "Motor.speed")
-@metadata("current", "30", "A", "string", "PCB", "Motor.current")
+@metadata("max_current", "30", "A", "string", "PCB", "Motor.max_current")
 class Motor:
     def __init__(self, motortype: str, power: float, voltage: str, mass: float,
-                 speed: float, torque: float, current: float, efficiency: float):
+                 speed: float, torque: float, max_current: float, efficiency: float):
         self.motortype = motortype,
         self.power = power, 
         self.voltage = voltage,
         self.mass = mass,
         self.speed = speed,
         self.torque = torque,
-        self.current = current, 
+        self.current = max_current, 
         self.efficiency = efficiency
 
 @metadata("mass", "35", "g", "float", "PCB", "Blade.mass")

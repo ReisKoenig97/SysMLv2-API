@@ -83,6 +83,9 @@ package DroneExample {
                     attribute mass : MassValue; 
                     attribute max_length = 12.2[mm];
                     attribute max_width = 70[mm];  
+
+                    attribute max_current = 20[A];
+                    attribute min_voltage_input = 3.3[V];
                 
                 }
             }
