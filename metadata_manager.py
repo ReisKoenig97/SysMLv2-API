@@ -77,7 +77,9 @@ class MetadataManager:
         if not os.path.exists(domain_path):
             self.logger.error(f"Domain file does not exist: {domain_path}")
             raise FileNotFoundError(f"Domain file does not exist: {domain_path}")
-        
+        self.logger.info(f"VALIDATION: SysMLv2 filepath: {sysml_path}, VALID: True")
+        self.logger.info(f"VALIDATION: Domain filepath: {domain_path}, VALID: True")
+
         # Load existing mapping.json to extend with data 
         mapping = load_json(file_path=self.mapping_file_path)
 
@@ -91,14 +93,38 @@ class MetadataManager:
 
         # Determine datatype 
         def get_datatype(value): 
-            try: 
-                value = float(value)
+            # try: 
+            #     value = float(value)
+            #     return "Real"
+            # except ValueError: 
+            #     return "String"
+            # if isinstance(value, int):
+            #     return "Integer"
+            # elif isinstance(value, float):
+            #     return "Real"
+            # elif isinstance(value, str):
+            #     try:
+            #         float(value)
+            #         return "Real"
+            #     except ValueError:
+            #         return "String"
+            # return "Unknown"
+            try:
+                float(value)
                 return "Real"
-            except ValueError: 
-                return "String"
-            
+            except (ValueError, TypeError):
+                return "String"        
+
         sysml_element_datatype = get_datatype(sysml_element_value)
         domain_element_datatype = get_datatype(domain_element_value)
+        # Check datatype consistency
+        # Both elements have the same datatype and ensure they match
+        if sysml_element_datatype and domain_element_datatype:
+            if sysml_element_datatype != domain_element_datatype:
+                self.logger.error(f"Datatype mismatch: SysMLv2: {sysml_element_datatype}, Domain: {domain_element_datatype}")
+                messagebox.showerror("Datatype Mismatch", f"Datatype mismatch: SysMLv2: {sysml_element_datatype}, Domain: {domain_element_datatype}")
+                raise ValueError(f"Datatype mismatch: SysMLv2: {sysml_element_datatype}, Domain: {domain_element_datatype}")
+
 
         # Check Unit consistency
         # Both elements have the same units and ensure they match
@@ -113,6 +139,8 @@ class MetadataManager:
             messagebox.showerror("Unit Mismatch", f"Unit mismatch: SysMLv2: {sysml_element_unit}, Domain: {domain_element_unit}")
             raise ValueError(f"Unit mismatch: SysMLv2: {sysml_element_unit}, Domain: {domain_element_unit}")
         # If neither element has a unit, no validation is needed
+        self.logger.info(f"VALIDATION: SysMLv2 unit: {sysml_element_unit}, VALID: True")
+        self.logger.info(f"VALIDATION: Domain unit: {domain_element_unit}, VALID: True")
 
         # Create new element template for mapping.json
         sysml_element = {
@@ -132,7 +160,7 @@ class MetadataManager:
             "name" : domain_element_path.split(".")[-1], #last element from element path 
             "value" : domain_element_value,
             "unit" : domain_element_unit, 
-            "index" : "", # Used for precise positioning e.g. #10=CONTEXT_DEPENDENT_SHAPE_REPRESENTATION(#56,#116) -> index : 1 for value #116
+            "index" : "0", # Used for precise positioning e.g. #10=CONTEXT_DEPENDENT_SHAPE_REPRESENTATION(#56,#116) -> index : 1 for value #116
             "dataType" : domain_element_datatype,
             "elementPath" : domain_element_path,
             "filePath" : domain_path, 
@@ -145,6 +173,23 @@ class MetadataManager:
             "targetUUID" : uuid_sysml_element,
             "created" : timestamp
         }
+
+        def log_completeness(element, element_type, required_fields=None):
+            # Checks if required fields are existing + if fields have values that are not None, "", []
+            if required_fields is None:
+                required_fields = element.keys()  
+            
+            missing_fields = [field for field in required_fields 
+                            if field not in element or element[field] in [None, "", []]]
+            
+            if missing_fields:
+                error_msg = f"{element_type} is missing the following fields: {', '.join(missing_fields)}"
+                self.logger.error(error_msg)
+                raise ValueError(error_msg)
+            else:
+                self.logger.info(f"VALIDATION: {element_type} is complete with all required fields.")
+
+
         
         #self.logger.debug(f"CHECKING EXISTING MAPPINGS")
         # Check if user selected elements have been already mapped 
@@ -154,6 +199,7 @@ class MetadataManager:
             self.logger.warning(f"SysMLv2 element already exists: {sysml_element_path} at {sysml_path}")
             messagebox.showinfo("Element Exists", f"The SysMLv2 element {sysml_element_path} already exists in the mapping.")
             return False  # Skip adding new mapping
+
 
         # Check if Domain element already exists in mapping.json
         domain_exists = any(e for e in mapping.get(domain_file_format, []) if e["elementPath"] == domain_element_path) # and e["filePath"] == domain_path
@@ -177,6 +223,14 @@ class MetadataManager:
            if not value:
                self.logger.warning(f"Domain Path is not valid!")
                return False
+
+        # Completeness check for sysml_element and domain_element
+        # Check if all fields inside sysml_element and domain_element are filled
+        required_sysml_fields = ["uuid", "name", "value", "unit", "dataType", "elementPath", "filePath", "created", "lastModified"]
+        required_domain_fields = required_sysml_fields + ["index"]
+
+        log_completeness(sysml_element, "SysMLv2", required_fields=required_sysml_fields)
+        log_completeness(domain_element, domain_file_format, required_fields=required_domain_fields)
 
         # Append elements to sysmlv2
         mapping["SysMLv2"].append(sysml_element)
@@ -233,7 +287,7 @@ class MetadataManager:
                     self.logger.warning(f"File path does not exist: {domain_element_filePath}")
                     continue
 
-                # FIXME: select right file parser based on domain file format,  instead of static file parser, select right file parser based on domain file format 
+                # TODO: select right file parser based on domain file format,  instead of static file parser, select right file parser based on domain file format 
                 # Retrieve CURRENT domain element value
                 if domain_name == "GerberJobFile": 
                     self.fp_gerber.file_path = domain_element_filePath # Overwrite current file path in file parser object

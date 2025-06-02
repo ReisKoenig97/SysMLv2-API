@@ -10,6 +10,28 @@
             "filePath": "D:/UNI MASTER/Masterarbeit/SysMLv2-API/models/se_domain/example_drone_origin.sysml",
             "created": "06.05.2025",
             "lastModified": "06.05.2025"
+        },
+        {
+            "uuid": "d78b264b-ea0f-4ddf-9d21-92ed0a756db1",
+            "name": "name",
+            "value": "PCB-123",
+            "unit": "",
+            "dataType": "String",
+            "elementPath": "DroneExample.PartDefinitions.Drone.FlightController.pcb.name",
+            "filePath": "C:/Users/tommy/Nextcloud/MASTER ARBEIT/Code/SysMLv2 API Code/models/se_domain/example_drone_origin.sysml",
+            "created": "13.05.2025",
+            "lastModified": "13.05.2025"
+        },
+        {
+            "uuid": "660bf84a-0f90-4d13-bad4-80e28123ea96",
+            "name": "description",
+            "value": "150.7",
+            "unit": "",
+            "dataType": "Real",
+            "elementPath": "DroneExample.PartDefinitions.Drone.FlightController.pcb.description",
+            "filePath": "C:/Users/tommy/Nextcloud/MASTER ARBEIT/Code/SysMLv2 API Code/models/se_domain/example_drone_origin.sysml",
+            "created": "15.05.2025",
+            "lastModified": "15.05.2025"
         }
     ],
     "Mappings": [
@@ -17,6 +39,16 @@
             "sourceUUID": "3a278df8-1012-40de-abb5-53b0b18031f8",
             "targetUUID": "e8f252fb-1303-411e-8ddf-d09adfac84eb",
             "created": "06.05.2025"
+        },
+        {
+            "sourceUUID": "5dc5c9e9-a0fe-44da-b163-224abfc478f3",
+            "targetUUID": "d78b264b-ea0f-4ddf-9d21-92ed0a756db1",
+            "created": "13.05.2025"
+        },
+        {
+            "sourceUUID": "3f5cb9aa-cf82-4854-a2d1-685ee15dc757",
+            "targetUUID": "660bf84a-0f90-4d13-bad4-80e28123ea96",
+            "created": "15.05.2025"
         }
     ],
     "STEP": [],
@@ -33,6 +65,30 @@
             "filePath": "D:/UNI MASTER/Masterarbeit/SysMLv2-API/models/ee_domain/Hades_project-job.gbrjob",
             "created": "06.05.2025",
             "lastModified": "06.05.2025"
+        },
+        {
+            "uuid": "5dc5c9e9-a0fe-44da-b163-224abfc478f3",
+            "name": "Name",
+            "value": "Hades_project02_a01",
+            "unit": "",
+            "index": "",
+            "dataType": "String",
+            "elementPath": "GeneralSpecs.ProjectId.Name",
+            "filePath": "C:/Users/tommy/Nextcloud/MASTER ARBEIT/Code/SysMLv2 API Code/models/ee_domain/Hades_project-job.gbrjob",
+            "created": "13.05.2025",
+            "lastModified": "13.05.2025"
+        },
+        {
+            "uuid": "3f5cb9aa-cf82-4854-a2d1-685ee15dc757",
+            "name": "Version",
+            "value": "8.0.6",
+            "unit": "",
+            "index": "0",
+            "dataType": "Real",
+            "elementPath": "Header.GenerationSoftware.Version",
+            "filePath": "C:/Users/tommy/Nextcloud/MASTER ARBEIT/Code/SysMLv2 API Code/models/ee_domain/Hades_project-job.gbrjob",
+            "created": "15.05.2025",
+            "lastModified": "15.05.2025"
         }
     ]
 }

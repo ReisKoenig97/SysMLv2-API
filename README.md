@@ -20,3 +20,6 @@ To install and activate virtual environment:
 - 'file_parser.py' : Contains all file parser classes (one for each file format). Some have additional writing to mapping.json due to extending information inside the mapping e.g. index from STEP
 
 - 'metadata_manager.py': Manages metadata between SysMLv2 and domain models with mapping.json. Creates mapping.json template and checks values if they're changing inside domain files to update mapping and sysml model file
+
+## Unit Tests and Validation
+- python -m unittest tests/test_mapping.py

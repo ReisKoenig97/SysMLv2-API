@@ -29,7 +29,7 @@ package DroneExample {
         part def Drone {
             attribute id = "drone-001";
             attribute name = "Drone";
-            attribute description = "Hello Drone";
+            attribute description = "Drone Description";
             attribute mass : MassValue; 
 
             part fc : FlightController;
@@ -55,7 +55,7 @@ package DroneExample {
                 attribute isCustom : Boolean; 
             }  
 
-            ref item pilot : Person; //system model may reference discrete items that interact with or pass through the system
+            ref item pilot : Person; 
             ref item cmds : Commands; 
 
             connect fc to cs;
@@ -70,7 +70,7 @@ package DroneExample {
             connect rec to cs; 
             connect gpsm to cs;  
 
-            part def FlightController{
+            part def FlightController {
                 attribute id = "test123";
                 attribute name = "fc-123";
                 attribute mass : MassValue; 
@@ -78,8 +78,8 @@ package DroneExample {
                 
                 part def pcb {
                     attribute id = "pcb-001";
-                    attribute name = "PCB-123";
-                    attribute description = 150.7;
+                    attribute name = "Hades_project02_a01";
+                    attribute description = "8.0.6";
                     attribute mass : MassValue; 
                     attribute max_length = 12.2[mm];
                     attribute max_width = 70[mm];  

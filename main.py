@@ -478,10 +478,11 @@ class GUI:
             text_widget.delete("1.0", tk.END)  # Clear previous text 
             text_widget.insert(tk.END, f"Error loading file: {e}")  
 
-    def map_elements(self, sysml_path, sysml_element_path, sysml_element_value, sysml_element_unit, domain_file_format, domain_path, domain_element_path, domain_element_value, domain_element_unit): 
-        # TODO: Use and reference functions from class METADATA MANAGER! 
+    def map_elements(self, sysml_path, sysml_element_path, sysml_element_value, sysml_element_unit, 
+                     domain_file_format, domain_path, domain_element_path, domain_element_value, domain_element_unit): 
         """
-        - metadata_manager has to parse file via file_parser functions to get specific user given path to the element in order to generate UUID and map correctly 
+        - metadata_manager has to parse file via file_parser functions to get specific user given path 
+        to the element in order to generate UUID and map correctly 
         
         """
         #self.logger.info(f"map_elements")
@@ -501,32 +502,15 @@ class GUI:
         # Validate user given element path (function from file parser)
         if not self.sysml_model.validate_elementPath(elementPath=sysml_element_path): 
             self.logger.warning(f"User provided an invalid sysml element pathing: {sysml_element_path}")
-            messagebox.showinfo("INFO", "Provided SysML element path is invalid.")
-
+            messagebox.showerror("ERROR", "Provided SysML element path is invalid.")
+        
         else:
-            if self.mm.map_metadata(sysml_path, sysml_element_path, sysml_element_value, sysml_element_unit, domain_file_format, domain_path, domain_element_path, domain_element_value, domain_element_unit):
+            self.logger.info(f"VALIDATION: SysMLv2 elementpath: {sysml_element_path}, VALID: True")
+            if self.mm.map_metadata(sysml_path, sysml_element_path, sysml_element_value, sysml_element_unit, 
+                                    domain_file_format, domain_path, domain_element_path, domain_element_value, 
+                                    domain_element_unit):
                 # Notify the user about the successful mapping
                 messagebox.showinfo("INFO", "Successfully mapped elements together!")
-                # Show the mapped elements in a new popup
-                # UNCOMMENT IF NEEDED
-                # def show_mapping_popup():
-                #     popup = tk.Toplevel()
-                #     popup.title("Mapped Elements")
-                    
-                #     # Create labels for SysML and Domain elements
-                #     label = ctk.CTkLabel(popup, text="Mapped Elements", font=("Arial", 14, "bold"), text_color="black")
-                #     label.pack(pady=10)
-                #     sysml_label = ctk.CTkLabel(popup, text=f"SysML Element: {sysml_element_path} : {sysml_element_value}", font=("Arial", 12), text_color="black")
-                #     sysml_label.pack(pady=5)
-                #     domain_label = ctk.CTkLabel(popup, text=f"Domain Element: {domain_element_path}: {domain_element_value}", font=("Arial", 12), text_color="black")
-                #     domain_label.pack(pady=5)
-                #     # Close button for the popup
-                #     # close_button = ctk.CTkButton(popup, text="OK", fg="blue", cursor="hand2")
-                #     # close_button.pack(pady=10)
-                #     # close_button.bind("<Button-1>", lambda e: popup.destroy())
-            
-                # # Call the mapping popup function
-                # show_mapping_popup()
 
             else:
                 # Notify the user about the failure of mapping

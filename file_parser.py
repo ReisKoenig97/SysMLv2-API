@@ -37,7 +37,7 @@ class SysmlParser:
         """
         #self.logger.info(f"SysmlParser - load_sysml_model")
         if not self.sysml_path:
-            self.logger.debug(f"No SysML model path provided.") 
+            self.logger.error(f"No SysML model path provided.") 
             return
         
         try:
