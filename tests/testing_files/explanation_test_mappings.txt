@@ -1,0 +1,64 @@
+many to one no value change: in sysml_file.sysml: sysml_elem_m2o_nvc
+
+    sysml_attrib_1: AUTOSAR updated by other domain
+        AUTOSAR snd_Value_1 SHORT-NAME wp 10
+        gerber_param_3 wp 20
+        code port_name wp 20
+
+        value for all: snd_Value_1
+    
+    sysml_attrib_2: AUTOSAR updates sysml and domain
+        AUTOSAR DATA-ELEMENT-REF wp 20
+        gerber_param_1 wp 0
+        code path wp 0
+
+        value for all: /PortInterfaces/Comp_1_to_Comp_2/Comp_1_value_1
+
+    sysml_attrib_3: AUTOSAR updated by sysml
+        AUTOSAR Component_1 SHORT-NAME wp 0
+        
+        Value for all: Component_1
+
+
+many to one value changed: : in sysml_file.sysml: sysml_elem_m2o_vc; all values are updated from theri domain files
+    sysml_attrib_1: AUTOSAR updated by other domain
+        sysml value: newSndValue1sysml_notUpdated -> newSndValue1sysml
+        AUTOSAR snd_Value_1 SHORT-NAME wp 10: snd_Value_1_notUpdated -> snd_Value_1
+        gerber_param_3 wp 20: newSndValue1Gerber_notUpdated -> newSndValue1Gerber
+        code port_name wp 20: newSndValue1Code_notUpdated -> newSndValue1Code
+    
+    sysml_attrib_2: AUTOSAR updates sysml and domain
+        sysml value: Path/To/Whereever_notUpdated -> Path/To/Whereever
+        AUTOSAR DATA-ELEMENT-REF wp 20: /PortInterfaces/Comp_1_to_Comp_2/Comp_1_value_1_notUpdated -> /PortInterfaces/Comp_1_to_Comp_2/Comp_1_value_1
+        gerber_param_1 wp 0: Gerber/Path_notUpdated -> Gerber/Path
+        code path wp 0: Code/Path_notUpdated -> Code/Path
+
+    sysml_attrib_3: AUTOSAR updated by sysml
+        sysml value: Component1NewName_notUpdated -> Component1NewName
+        AUTOSAR Component_1 SHORT-NAME wp 0: Component_1_notUpdated -> Component_1
+
+one to one no value change: in sysml_file.sysml: sysml_elem_o2o_nvc
+    sysml_attrib_1: sysml updated by AUTOSAR:
+        AUTOSAR snd_Value_1 SHORT-NAME wp 10
+
+        Value for all: snd_Value_1
+
+    sysml_attrib_3: AUTOSAR updated by sysml:
+        AUTOSAR Component_1 SHORT-NAME wp 0
+
+        Value for all: Component_1
+
+
+one to one value changed: in sysml_file.sysml: sysml_elem_o2o_vc
+    sysml_attrib_1: sysml updated by AUTOSAR; AUTOSAR value changed:
+        sysml value: snd_Value_1_notUpdated
+        AUTOSAR snd_Value_1 SHORT-NAME wp 10: snd_Value_1_notUpdated -> snd_Value_1
+
+    sysml_attrib_3: AUTOSAR updated by sysml: AUTOSAR value changed:(sysmlchanged case in m2o_vc sysml_attrib_3)
+        sysml value: Component_1_notUpdated
+        AUTOSAR Component_1 SHORT-NAME wp 0: Component_1_notUpdated -> Component_1
+        -> renames component in arxml file
+
+    sysml_attrib_2: sysml updated by AUTOSAR, sysml value changed:
+        sysml value: /PortInterfaces/Comp_1_to_Comp_2/Comp_1_value_1 -> /PortInterfaces/Comp_1_to_Comp_2/Comp_1_value_1_new
+        AUTOSAR DATA-ELEMENT-REF wp 20: /PortInterfaces/Comp_1_to_Comp_2/Comp_1_value_1

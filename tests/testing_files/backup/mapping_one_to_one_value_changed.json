@@ -1,0 +1,101 @@
+{
+    "SysMLv2": [
+        {
+            "uuid": "92019528-8c6c-11f0-af85-325096b39f47",
+            "name": "sysml_attrib_1",
+            "value": "snd_Value_1_notUpdated",
+            "unit": "",
+            "dataType": "String",
+            "write_prio": "1",
+            "elementPath": "sysml_elements.sysml_elem_o2o_vc.sysml_attrib_1",
+            "filePath": "C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/tests/testing_files/sysml_file.sysml",
+            "created": "06.05.2025",
+            "lastModified": "06.05.2025"
+        },
+        {
+            "uuid": "9201976c-8c6c-11f0-a2c7-325096b39f47",
+            "name": "sysml_attrib_2",
+            "value": "/PortInterfaces/Comp_1_to_Comp_2/Comp_1_value_1_new",
+            "unit": "",
+            "dataType": "String",
+            "write_prio": "1",
+            "elementPath": "sysml_elements.sysml_elem_o2o_vc.sysml_attrib_2",
+            "filePath": "C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/tests/testing_files/sysml_file.sysml",
+            "created": "13.05.2025",
+            "lastModified": "13.05.2025"
+        },
+        {
+            "uuid": "92019848-8c6c-11f0-849e-325096b39f47",
+            "name": "sysml_attrib_3",
+            "value": "Component_1_notUpdated",
+            "unit": "",
+            "dataType": "String",
+            "write_prio": "1",
+            "elementPath": "sysml_elements.sysml_elem_o2o_vc.sysml_attrib_3",
+            "filePath": "C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/tests/testing_files/sysml_file.sysml",
+            "created": "13.05.2025",
+            "lastModified": "13.05.2025"
+        }        
+    ],
+    "Mappings": [
+        {
+            "sourceUUID": "920199b0-8c6c-11f0-8d9d-325096b39f47",
+            "targetUUID": "92019528-8c6c-11f0-af85-325096b39f47",
+            "created": "06.05.2025"
+        },
+        {
+            "sourceUUID": "9201996a-8c6c-11f0-a611-325096b39f47",
+            "targetUUID": "92019848-8c6c-11f0-849e-325096b39f47",
+            "created": "06.05.2025"
+        },
+        {
+            "sourceUUID": "c86a53a6-8ccc-11f0-a3aa-325096b39f47",
+            "targetUUID": "9201976c-8c6c-11f0-a2c7-325096b39f47",
+            "created": "06.05.2025"
+        }
+    ],
+    "STEP": [],
+    "Source Code": [],
+    "GerberJobFile": [],
+    "AUTOSAR": [
+        {
+            "uuid": "9201996a-8c6c-11f0-a611-325096b39f47",
+            "name": "SHORT-NAME",
+            "value": "Component_1_notUpdated",
+            "unit": "",
+            "index": "",
+            "dataType": "String",
+            "write_prio": "0",
+            "elementPath": "ComponentTypes.Component_1.SHORT-NAME",
+            "filePath": "C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/tests/testing_files/arxml_domain.arxml",
+            "created": "15.05.2025",
+            "lastModified": "15.05.2025"
+        },
+        {
+            "uuid": "920199b0-8c6c-11f0-8d9d-325096b39f47",
+            "name": "SHORT-NAME",
+            "value": "snd_Value_1_notUpdated",
+            "unit": "",
+            "index": "",
+            "dataType": "String",
+            "write_prio": "10",
+            "elementPath": "ComponentTypes.Component_1.snd_Value_1.SHORT-NAME",
+            "filePath": "C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/tests/testing_files/arxml_domain.arxml",
+            "created": "15.05.2025",
+            "lastModified": "15.05.2025"
+        },
+        {
+            "uuid": "c86a53a6-8ccc-11f0-a3aa-325096b39f47",
+            "name": "DATA-ELEMENT-REF",
+            "value": "/PortInterfaces/Comp_1_to_Comp_2/Comp_1_value_1",
+            "unit": "",
+            "index": "",
+            "dataType": "String",
+            "write_prio": "20",
+            "elementPath": "ComponentTypes.Component_1.snd_Value_1.NONQUEUED-SENDER-COM-SPEC.DATA-ELEMENT-REF",
+            "filePath": "C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/tests/testing_files/arxml_domain.arxml",
+            "created": "15.05.2025",
+            "lastModified": "15.05.2025"
+        }
+    ]
+}

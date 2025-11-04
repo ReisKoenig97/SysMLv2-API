@@ -1,0 +1,78 @@
+{
+    "SysMLv2": [
+        {
+            "uuid": "29894c8c-576d-448f-83d1-58a170dc6349",
+            "name": "sysml_attrib_3",
+            "value": "Component1NewName",
+            "unit": "",
+            "dataType": "String",
+            "write_prio": "1",
+            "elementPath": "sysml_elements.sysml_elem_m2o_vc.sysml_attrib_3",
+            "filePath": "C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/tests/testing_files/sysml_file.sysml",
+            "created": "24.09.2025",
+            "lastModified": "24.09.2025"
+        }
+    ],
+    "Mappings": [
+        {
+            "sourceUUID": "39baad7c-f0fb-4d1a-9bbf-71b81fee16fc",
+            "targetUUID": "29894c8c-576d-448f-83d1-58a170dc6349",
+            "created": "24.09.2025"
+        },
+        {
+            "sourceUUID": "77abbf73-7d07-4e30-9219-8092dd9ae845",
+            "targetUUID": "29894c8c-576d-448f-83d1-58a170dc6349",
+            "created": "24.09.2025"
+        },
+        {
+            "sourceUUID": "ee5e5e8f-2d94-4bf7-8e0b-4bd0efb9294b",
+            "targetUUID": "29894c8c-576d-448f-83d1-58a170dc6349",
+            "created": "30.09.2025"
+        }
+    ],
+    "STEP": [],
+    "Source Code": [],
+    "GerberJobFile": [
+        {
+            "uuid": "77abbf73-7d07-4e30-9219-8092dd9ae845",
+            "name": "gerber_param_1",
+            "value": "",
+            "unit": "",
+            "index": "0",
+            "dataType": "String",
+            "write_prio": "0",
+            "elementPath": "o2o_nvc.gerber_param_1",
+            "filePath": "C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/tests/testing_files/gerber_domain.gbrjob",
+            "created": "24.09.2025",
+            "lastModified": "24.09.2025"
+        }
+    ],
+    "AUTOSAR": [
+        {
+            "uuid": "39baad7c-f0fb-4d1a-9bbf-71b81fee16fc",
+            "name": "SHORT-NAME",
+            "value": "Component_1",
+            "unit": "",
+            "index": "0",
+            "dataType": "String",
+            "write_prio": "10",
+            "elementPath": "ComponentTypes.Component_1.SHORT-NAME",
+            "filePath": "C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/tests/testing_files/arxml_domain.arxml",
+            "created": "24.09.2025",
+            "lastModified": "24.09.2025"
+        },
+        {
+            "uuid": "ee5e5e8f-2d94-4bf7-8e0b-4bd0efb9294b",
+            "name": "SHORT-NAME",
+            "value": "AUTOSAR_Platform",
+            "unit": "",
+            "index": "0",
+            "dataType": "String",
+            "write_prio": "5",
+            "elementPath": "AUTOSAR_Platform.SHORT-NAME",
+            "filePath": "C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/tests/testing_files/arxml_domain.arxml",
+            "created": "30.09.2025",
+            "lastModified": "30.09.2025"
+        }
+    ]
+}

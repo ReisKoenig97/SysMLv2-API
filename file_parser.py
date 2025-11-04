@@ -216,7 +216,7 @@ class SysmlParser:
 
         path_splitted = elementPath.split('.')
         self.logger.debug(f"Derived path: {path_splitted}")
-        valid_keywords = ["part def", "part", "attribute", "package"]
+        valid_keywords = ["part def", "part", "attribute", "package",""]
 
         try:
             #self.logger.debug(f"Opening SysMLv2 file with path: {self.sysml_path}")
@@ -534,6 +534,67 @@ class SysmlParser:
         except Exception as e:
             self.logger.error(f"Error parsing SysML model: {e}")
             return [0.0] * len(attribute_paths)
+
+    def get_value(self, elementPath): 
+        """
+            Return value of attribute at elementPath
+            :param elementPath : str. Path to the target element in the SysMLv2 file
+            :returns: value of Attribute at elementPath
+                None if not found
+        """
+        if not elementPath or elementPath == "":
+            self.logger.error("Element path not provided")
+            return None
+
+        keywords = ["part", "part def", "package", "attribute",""]
+        keywords_pattern = "|".join(keywords)
+        content = self.load_sysml_model()
+
+        
+
+        if not content:
+            self.logger.error(f"[SysmlParser:get_value()]: error loading SysMLv2 File at {self.sysml_path}")
+            return None
+        content = content.split("\n")
+        element_path_splitted = elementPath.split(".")
+        self.logger.info(f"[SysmlParser:get_value()]: input Parameter elementPath = {elementPath} is valid. Looking for element at that location")
+        depth = 0
+        in_target_block = False
+
+        #iterate through each line and determine nesting depth and validate path
+        for line in content:
+            stripped_line = line.strip()
+            self.logger.info(f"[SysmlParser:get_value()]:     Depth: {depth}; Current Line: {stripped_line}")
+            match = None
+            # Navigate to the target element
+            if depth < len(element_path_splitted): 
+                if re.match(rf"^\s*({keywords_pattern})\s+{re.escape(element_path_splitted[depth])}\s*\{{?", stripped_line):
+                    self.logger.info(f"[SysmlParser:get_value()]:     found {element_path_splitted[depth]} at depth {depth}")
+                    depth += 1
+                    
+
+                    if depth == (len(element_path_splitted)-1):
+                        in_target_block = True
+                        self.logger.info(f"[SysmlParser:get_value()]:     reached target_block at depth {depth}")
+
+
+                #get attribute line in target Block   
+                if in_target_block: 
+                    match = re.search(r"^\s*(?:attribute\s+)?([\w-]+)\s*(:|=)\s*([^;#]+?)\s*(;)?\s*(#.*)?$", stripped_line) #[^;] .. everything except optional ; 
+                    if match:
+                        depth = (len(element_path_splitted)-1)  # we are at the last element of given path 
+                        attribute_name = match.group(1)
+                        attribute_value = match.group(3)
+                        self.logger.info(f"[SysmlParser:get_value()]:         attribute name: {attribute_name}; attribute value: {attribute_value}")
+                        if attribute_name == element_path_splitted[-1]:
+                            attribute_value = attribute_value.replace('"','')
+                            self.logger.info(f"[SysmlParser:get_value()]: returning {attribute_value}")
+                            return attribute_value
+                        
+        #found nothing at elementPath or could not resolve elementPath
+        self.logger.error(f"[SysmlParser:get_value()]: no attribute found at {elementPath}")
+        return None
+    
 
 class GerberParser:     
     """

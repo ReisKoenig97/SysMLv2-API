@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<AUTOSAR xsi:schemaLocation="http://autosar.org/schema/r4.0 AUTOSAR_00046.xsd" xmlns="http://autosar.org/schema/r4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <elem_000></elem_000>
+    <elem_001>
+        <SHORT-NAME>sn_001</SHORT-NAME>   
+    </elem_001>
+    <elem_010>
+        010 
+    </elem_010>
+    <elem_011>
+        011
+        <SHORT-NAME>sn_011</SHORT-NAME>   
+    </elem_011>
+    <elem_100 attr1="attr_100_1" attr2="attr_100_2"> 
+    </elem_100>
+    <elem_101 attr1="attr_101_1"> 
+        <SHORT-NAME>sn_101</SHORT-NAME> 
+    </elem_101>
+    <elem_110 attr1="attr_110_1" attr2="attr_110_2"> 
+        110
+    </elem_110>
+    <elem_111 attr1="attr_111_1"> 
+        111
+        <SHORT-NAME>sn_111</SHORT-NAME> 
+    </elem_111>
+</AUTOSAR>

@@ -1,0 +1,184 @@
+{
+    "SysMLv2": [
+        {
+            "uuid": "92019528-8c6c-11f0-af85-325096b39f47",
+            "name": "sysml_attrib_1",
+            "value": "",
+            "unit": "",
+            "dataType": "String",
+            "write_prio": "1",
+            "elementPath": "sysml_elements.sysml_elem_1.sysml_attrib_1",
+            "filePath": "D:/UNI MASTER/Masterarbeit/SysMLv2-API/models/se_domain/example_drone_origin.sysml",
+            "created": "06.05.2025",
+            "lastModified": "06.05.2025"
+        },
+        {
+            "uuid": "9201976c-8c6c-11f0-a2c7-325096b39f47",
+            "name": "sysml_attrib_2",
+            "value": "",
+            "unit": "",
+            "dataType": "String",
+            "write_prio": "1",
+            "elementPath": "sysml_elements.sysml_elem_2.sysml_attrib_2",
+            "filePath": "C:/Users/tommy/Nextcloud/MASTER ARBEIT/Code/SysMLv2 API Code/models/se_domain/example_drone_origin.sysml",
+            "created": "13.05.2025",
+            "lastModified": "13.05.2025"
+        },
+        {
+            "uuid": "92019848-8c6c-11f0-849e-325096b39f47",
+            "name": "sysml_attrib_3",
+            "value": "",
+            "unit": "",
+            "dataType": "String",
+            "write_prio": "1",
+            "elementPath": "sysml_elements.sysml_elem_3.sysml_attrib_3",
+            "filePath": "C:/Users/tommy/Nextcloud/MASTER ARBEIT/Code/SysMLv2 API Code/models/se_domain/example_drone_origin.sysml",
+            "created": "13.05.2025",
+            "lastModified": "13.05.2025"
+        },
+        {
+            "uuid": "920199ec-8c6c-11f0-bb23-325096b39f47",
+            "name": "sysml_attrib_4",
+            "value": "",
+            "unit": "",
+            "dataType": "String",
+            "write_prio": "1",
+            "elementPath": "sysml_elements.sysml_elem_4.sysml_attrib_4",
+            "filePath": "C:/Users/tommy/Nextcloud/MASTER ARBEIT/Code/SysMLv2 API Code/models/se_domain/example_drone_origin.sysml",
+            "created": "13.05.2025",
+            "lastModified": "13.05.2025"
+        }
+        
+    ],
+    "Mappings": [
+        {
+            "sourceUUID": "3a278df8-1012-40de-abb5-53b0b18031f8",
+            "targetUUID": "e8f252fb-1303-411e-8ddf-d09adfac84eb",
+            "created": "06.05.2025"
+        }
+    ],
+    "STEP": [],
+    "Source Code": [
+        {
+            "uuid": "9201992e-8c6c-11f0-b985-325096b39f47",
+            "name": "mass",
+            "value": "150.70",
+            "unit": "",
+            "index": "",
+            "dataType": "String",
+            "write_prio": "0",
+            "elementPath": "motor.mass",
+            "filePath": "C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/tests/testing_files/gerber_domain.txt",
+            "created": "15.05.2025",
+            "lastModified": "15.05.2025"
+        },
+        {
+            "uuid": "c86a513a-8ccc-11f0-91ae-325096b39f47",
+            "name": "max_current",
+            "value": "30",
+            "unit": "",
+            "index": "",
+            "dataType": "String",
+            "write_prio": "10",
+            "elementPath": "Motor.max_current",
+            "filePath": "C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/tests/testing_files/gerber_domain.txt",
+            "created": "15.05.2025",
+            "lastModified": "15.05.2025"
+        },
+        {
+            "uuid": "c86a5356-8ccc-11f0-abbc-325096b39f47",
+            "name": "speed",
+            "value": "100",
+            "unit": "",
+            "index": "",
+            "dataType": "String",
+            "write_prio": "20",
+            "elementPath": "Motor.speed",
+            "filePath": "C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/tests/testing_files/gerber_domain.txt",
+            "created": "15.05.2025",
+            "lastModified": "15.05.2025"
+        }
+    ],
+    "GerberJobFile": [
+        {
+            "uuid": "920198a2-8c6c-11f0-b021-325096b39f47",
+            "name": "gerber_param_1",
+            "value": "gp_1",
+            "unit": "",
+            "index": "",
+            "dataType": "String",
+            "write_prio": "0",
+            "elementPath": "root.gerber_param_1",
+            "filePath": "C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/tests/testing_files/gerber_domain.txt",
+            "created": "15.05.2025",
+            "lastModified": "15.05.2025"
+        },
+        {
+            "uuid": "920198e8-8c6c-11f0-9b70-325096b39f47",
+            "name": "gerber_param_2",
+            "value": "gp_2",
+            "unit": "",
+            "index": "",
+            "dataType": "String",
+            "write_prio": "10",
+            "elementPath": "root.gerber_param_2",
+            "filePath": "C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/tests/testing_files/gerber_domain.txt",
+            "created": "15.05.2025",
+            "lastModified": "15.05.2025"
+        },
+        {
+            "uuid": "c86a52f2-8ccc-11f0-aab3-325096b39f47",
+            "name": "gerber_param_3",
+            "value": "gp_3",
+            "unit": "",
+            "index": "",
+            "dataType": "String",
+            "write_prio": "20",
+            "elementPath": "root.gerber_param_3",
+            "filePath": "C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/tests/testing_files/gerber_domain.txt",
+            "created": "15.05.2025",
+            "lastModified": "15.05.2025"
+        }
+    ],
+    "AUTOSAR": [
+        {
+            "uuid": "9201996a-8c6c-11f0-a611-325096b39f47",
+            "name": "SHORT-NAME",
+            "value": "Component_1",
+            "unit": "",
+            "index": "",
+            "dataType": "String",
+            "write_prio": "10",
+            "elementPath": "ComponentTypes.Component_1.SHORT-NAME",
+            "filePath": "C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/tests/testing_files/arxml_domain.arxml",
+            "created": "15.05.2025",
+            "lastModified": "15.05.2025"
+        },
+        {
+            "uuid": "920199b0-8c6c-11f0-8d9d-325096b39f47",
+            "name": "SHORT-NAME",
+            "value": "snd_Value_1",
+            "unit": "",
+            "index": "",
+            "dataType": "String",
+            "write_prio": "10",
+            "elementPath": "ComponentTypes.Component_1.snd_Value_1.SHORT-NAME",
+            "filePath": "C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/tests/testing_files/arxml_domain.arxml",
+            "created": "15.05.2025",
+            "lastModified": "15.05.2025"
+        },
+        {
+            "uuid": "c86a53a6-8ccc-11f0-a3aa-325096b39f47",
+            "name": "DATA-ELEMENT-REF",
+            "value": "/PortInterfaces/Comp_1_to_Comp_2/Comp_1_value_1",
+            "unit": "",
+            "index": "",
+            "dataType": "String",
+            "write_prio": "20",
+            "elementPath": "ComponentTypes.Component_1.snd_Value_1.NONQUEUED-SENDER-COM-SPEC.DATA-ELEMENT-REF",
+            "filePath": "C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/tests/testing_files/arxml_domain.arxml",
+            "created": "15.05.2025",
+            "lastModified": "15.05.2025"
+        }
+    ]
+}

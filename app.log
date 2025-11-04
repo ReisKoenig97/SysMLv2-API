@@ -1,7 +1,126 @@
  __main__ - INFO - Checking if Docker is installed on the system.
  __main__ - INFO - Checking Docker version...
- __main__ - INFO - Docker is installed: Docker version 27.3.1, build ce12230
+ __main__ - INFO - Docker is installed: Docker version 28.3.2, build 578ccf6
  __main__ - INFO - start_docker_services
- __main__ - DEBUG - Runnung docker compose file in a new thread
- file_parser-SysmlParser - ERROR - No SysML model path provided.
- __main__ - INFO - Docker Compose started successfully
+ __main__ - DEBUG - Running docker compose file in a new thread
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:load_file()]: attemting to load AUTOSAR-File at ./example/working_dir/example.arxml
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:load_file()]: file path is valid. Loading contents into Parser...
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:load_file()]: Loading of file was successful. returning self.file_content_tree object
+ git.util - DEBUG - sys.platform='win32', git_executable='git'
+ __main__ - ERROR - Error while starting Docker Compose: Command '['docker-compose', '-f', './docker_master/docker-compose-master.yml', 'up', '--build', '-d']' returned non-zero exit status 1.
+ metadata_manager-MetadataManager - INFO - [MetadataManager:update_sysml_model()]: attemting to update sysml Model at ./example/working_dir/sysml_file.sysml with mapping at ./example/working_dir/mapping.json
+ metadata_manager-MetadataManager - INFO - [MetadataManager:update_sysml_model()]: mapping file was successfully updated. proceeding
+ metadata_manager-MetadataManager - INFO - [MetadataManager:update_sysml_model()]: mapping file was successfully updated. proceeding to consistency management
+ metadata_manager-MetadataManager - INFO - [MetadataManager:manage_consistency()]: starting consistency management
+ metadata_manager-MetadataManager - INFO - [MetadataManager:manage_consistency()]: successfully loaded mapping file
+ metadata_manager-MetadataManager - INFO - [MetadataManager:manage_consistency()]: successfully generated Conflict list of length 0
+ __main__-GUI - INFO - [GUI:select_file()]: attemting to select File
+ __main__-GUI - INFO - [GUI:select_file()]: File selection successful with file C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/models/se_domain/example_drone_origin.sysml. Proceeding to load file by function call of GUI:load_file_content()
+ __main__-GUI - INFO - [GUI:load_file_content()]: attemting to load file content of file C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/models/se_domain/example_drone_origin.sysml
+ __main__-GUI - INFO - [GUI:load_file_content()]: trying to directly load file content into text_widget
+ __main__-GUI - INFO - [GUI:load_file_content()]: content was loaded to text_widget successfully
+ file_parser-SysmlParser - DEBUG - Given SysML model: package DroneExample {
+
+    public import SI::*; 
+    public import RequirementsDefinitions::*; 
+    public import PartDefinitions::*; 
+    public import PartDefinitions::Drone::*; // for concerns 
+    public import Views::*; // for views and viewpoints
+    public import ModelingMetadata::*; // includes the Metadata SysML Library (comes with SysMLv2)
+    public import ScalarValues::*; // Real, ... includes the ScalarValues SysML Library (comes with SysMLv2)
+    
+    item def Person;
+    item def Commands;
+
+    // PACKAGE APPROACH using metadata to tag certain elements 
+    metadata def PCBDesign{
+ file_parser-SysmlParser - DEBUG - metadata def matches: ['PCBDesign', 'PCB']
+ file_parser-SysmlParser - DEBUG - 'Metadata def' names: ['PCBDesign', 'PCB']
+ __main__-GUI - INFO - [GUI:load_file_content()]: attemting to load file content of file C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/models/se_domain/example_drone_origin.sysml
+ __main__-GUI - INFO - [GUI:load_file_content()]: trying to directly load file content into text_widget
+ __main__-GUI - INFO - [GUI:load_file_content()]: content was loaded to text_widget successfully
+ file_parser-SysmlParser - DEBUG - Given SysML model: package DroneExample {
+
+    public import SI::*; 
+    public import RequirementsDefinitions::*; 
+    public import PartDefinitions::*; 
+    public import PartDefinitions::Drone::*; // for concerns 
+    public import Views::*; // for views and viewpoints
+    public import ModelingMetadata::*; // includes the Metadata SysML Library (comes with SysMLv2)
+    public import ScalarValues::*; // Real, ... includes the ScalarValues SysML Library (comes with SysMLv2)
+    
+    item def Person;
+    item def Commands;
+
+    // PACKAGE APPROACH using metadata to tag certain elements 
+    metadata def PCBDesign{
+ file_parser-SysmlParser - DEBUG - metadata def matches: ['PCBDesign', 'PCB']
+ file_parser-SysmlParser - DEBUG - 'Metadata def' names: ['PCBDesign', 'PCB']
+ __main__-GUI - INFO - [GUI:load_file_content()]: attemting to load file content of file C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/models/se_domain/example_drone_origin.sysml
+ __main__-GUI - INFO - [GUI:load_file_content()]: trying to directly load file content into text_widget
+ __main__-GUI - INFO - [GUI:load_file_content()]: content was loaded to text_widget successfully
+ file_parser-SysmlParser - DEBUG - Given SysML model: package DroneExample {
+
+    public import SI::*; 
+    public import RequirementsDefinitions::*; 
+    public import PartDefinitions::*; 
+    public import PartDefinitions::Drone::*; // for concerns 
+    public import Views::*; // for views and viewpoints
+    public import ModelingMetadata::*; // includes the Metadata SysML Library (comes with SysMLv2)
+    public import ScalarValues::*; // Real, ... includes the ScalarValues SysML Library (comes with SysMLv2)
+    
+    item def Person;
+    item def Commands;
+
+    // PACKAGE APPROACH using metadata to tag certain elements 
+    metadata def PCBDesign{
+ file_parser-SysmlParser - DEBUG - metadata def matches: ['PCBDesign', 'PCB']
+ file_parser-SysmlParser - DEBUG - 'Metadata def' names: ['PCBDesign', 'PCB']
+ __main__-GUI - INFO - [GUI:load_file_content()]: attemting to load file content of file C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/models/se_domain/example_drone_origin.sysml
+ __main__-GUI - INFO - [GUI:load_file_content()]: trying to directly load file content into text_widget
+ __main__-GUI - INFO - [GUI:load_file_content()]: content was loaded to text_widget successfully
+ file_parser-SysmlParser - DEBUG - Given SysML model: package DroneExample {
+
+    public import SI::*; 
+    public import RequirementsDefinitions::*; 
+    public import PartDefinitions::*; 
+    public import PartDefinitions::Drone::*; // for concerns 
+    public import Views::*; // for views and viewpoints
+    public import ModelingMetadata::*; // includes the Metadata SysML Library (comes with SysMLv2)
+    public import ScalarValues::*; // Real, ... includes the ScalarValues SysML Library (comes with SysMLv2)
+    
+    item def Person;
+    item def Commands;
+
+    // PACKAGE APPROACH using metadata to tag certain elements 
+    metadata def PCBDesign{
+ file_parser-SysmlParser - DEBUG - metadata def matches: ['PCBDesign', 'PCB']
+ file_parser-SysmlParser - DEBUG - 'Metadata def' names: ['PCBDesign', 'PCB']
+ __main__-GUI - INFO - [GUI:load_file_content()]: attemting to load file content of file C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/models/se_domain/example_drone_origin.sysml
+ __main__-GUI - INFO - [GUI:load_file_content()]: trying to directly load file content into text_widget
+ __main__-GUI - INFO - [GUI:load_file_content()]: content was loaded to text_widget successfully
+ __main__-GUI - INFO - [GUI:select_file()]: attemting to select File
+ __main__-GUI - INFO - [GUI:select_file()]: File selection successful with file C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/models/se_domain/example_drone_origin.sysml. Proceeding to load file by function call of GUI:load_file_content()
+ __main__-GUI - INFO - [GUI:load_file_content()]: attemting to load file content of file C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/models/se_domain/example_drone_origin.sysml
+ __main__-GUI - INFO - [GUI:load_file_content()]: trying to directly load file content into text_widget
+ __main__-GUI - INFO - [GUI:load_file_content()]: content was loaded to text_widget successfully
+ file_parser-SysmlParser - DEBUG - Given SysML model: package DroneExample {
+
+    public import SI::*; 
+    public import RequirementsDefinitions::*; 
+    public import PartDefinitions::*; 
+    public import PartDefinitions::Drone::*; // for concerns 
+    public import Views::*; // for views and viewpoints
+    public import ModelingMetadata::*; // includes the Metadata SysML Library (comes with SysMLv2)
+    public import ScalarValues::*; // Real, ... includes the ScalarValues SysML Library (comes with SysMLv2)
+    
+    item def Person;
+    item def Commands;
+
+    // PACKAGE APPROACH using metadata to tag certain elements 
+    metadata def PCBDesign{
+ file_parser-SysmlParser - DEBUG - metadata def matches: ['PCBDesign', 'PCB']
+ file_parser-SysmlParser - DEBUG - 'Metadata def' names: ['PCBDesign', 'PCB']
+ __main__-GUI - INFO - [GUI:load_file_content()]: attemting to load file content of file C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/models/se_domain/example_drone_origin.sysml
+ __main__-GUI - INFO - [GUI:load_file_content()]: trying to directly load file content into text_widget
+ __main__-GUI - INFO - [GUI:load_file_content()]: content was loaded to text_widget successfully

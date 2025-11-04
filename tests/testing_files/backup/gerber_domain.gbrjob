@@ -1,0 +1,25 @@
+{
+    "m2m_nvc":
+    {
+        "gerber_param_1":"/PortInterfaces/Comp_1_to_Comp_2/Comp_1_value_1",
+        "gerber_param_3":"snd_Value_1"
+    },
+    "m2m_vc":
+    {
+        "gerber_param_1":"Gerber/Path",
+        "gerber_param_3":"newSndValue1Gerber"
+    },
+    "o2o_nvc":
+    {
+        "gerber_param_1":"",
+        "gerber_param_2":"",
+        "gerber_param_3":""
+    },
+    "o2o_vc":
+    {
+        "gerber_param_1":"",
+        "gerber_param_2":"",
+        "gerber_param_3":""
+    }
+
+}

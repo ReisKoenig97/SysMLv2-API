@@ -1,0 +1,61 @@
+{
+    "SysMLv2": [
+        {
+            "uuid": "6e5e32b9-8e41-4e54-9543-dd5fe8eebbd2",
+            "name": "SHORT-NAME",
+            "value": "Component_1_new",
+            "unit": "",
+            "dataType": "String",
+            "write_prio": "1",
+            "elementPath": "AUTOSAR.Component_1.SHORT-NAME",
+            "filePath": "C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/example/working_dir/sysml_file.sysml",
+            "created": "12.10.2025",
+            "lastModified": "12.10.2025"
+        }
+    ],
+    "Mappings": [
+        {
+            "sourceUUID": "668d65bb-7d14-41be-bedf-2cb87cf539e0",
+            "targetUUID": "6e5e32b9-8e41-4e54-9543-dd5fe8eebbd2",
+            "created": "12.10.2025"
+        },
+        {
+            "sourceUUID": "2F094B4E-DE45-45C0-9371-C3B0629E7DF0",
+            "targetUUID": "6e5e32b9-8e41-4e54-9543-dd5fe8eebbd2",
+            "created": "12.10.2025"
+        }
+    ],
+    "STEP": [],
+    "Source Code": [],
+    "GerberJobFile": [
+        {
+            "uuid": "668d65bb-7d14-41be-bedf-2cb87cf539e0",
+            "name": "Name",
+            "value": "Component_1_new",
+            "unit": "",
+            "index": "0",
+            "dataType": "String",
+            "write_prio": "2",
+            "elementPath": "GeneralSpecs.ProjectId.Name",
+            "filePath": "C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/example/working_dir/example.gbrjob",
+            "created": "12.10.2025",
+            "lastModified": "12.10.2025"
+        }
+    ],
+    "AUTOSAR": [
+        {
+            "uuid": "2F094B4E-DE45-45C0-9371-C3B0629E7DF0",
+            "name": "SHORT-NAME",
+            "value": "Component_1_new",
+            "unit": "",
+            "index": 2,
+            "dataType": "String",
+            "write_prio": "0",
+            "elementPath": "ComponentTypes.Component_1_new.SHORT-NAME",
+            "filePath": "C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/example/working_dir/example.arxml",
+            "created": "12.10.2025",
+            "lastModified": "12.10.2025",
+            "parent_uuid": "2F094B4E-DE45-45C0-9371-C3B0629E7DF0"
+        }
+    ]
+}

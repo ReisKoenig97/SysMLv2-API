@@ -48,7 +48,7 @@ class Blade:
         self.length = length
 
 def main():
-    motorA = Motor(motortype="brushless", power=50.0, voltage="12V", mass=150.70, speed=100.0, torque=0.5, current=2.0, efficiency=0.85)
+    motorA = Motor(motortype="brushless", power=50.0, voltage="12V", mass=150.70, speed=100.0, torque=0.5, max_current=2.0, efficiency=0.85)
     print(motorA.metadata)
     bladeA = Blade(mass=30, length=30) #mass=30, length=30
 
