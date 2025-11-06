@@ -7,120 +7,505 @@
  AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:load_file()]: file path is valid. Loading contents into Parser...
  AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:load_file()]: Loading of file was successful. returning self.file_content_tree object
  git.util - DEBUG - sys.platform='win32', git_executable='git'
- __main__ - ERROR - Error while starting Docker Compose: Command '['docker-compose', '-f', './docker_master/docker-compose-master.yml', 'up', '--build', '-d']' returned non-zero exit status 1.
  metadata_manager-MetadataManager - INFO - [MetadataManager:update_sysml_model()]: attemting to update sysml Model at ./example/working_dir/sysml_file.sysml with mapping at ./example/working_dir/mapping.json
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]: input Parameter elementPath = AUTOSAR.Component_1.SHORT-NAME is valid. Looking for element at that location
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 0; Current Line: package AUTOSAR{
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     found AUTOSAR at depth 0
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: part def SWC{
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: attribute Tag: String;
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: attribute SHORT-NAME: String;
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: part PORTS{
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: part Port[0..*] : PORT;
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: }
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: part INTERNAL-BEHAVIOURS{
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: part INTERNAL-BEHAVIOUR[0..*] : INTERNAL-BEHAVIOUR;
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: }
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: }
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: part Component_1 : SWC{
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     found Component_1 at depth 1
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     reached target_block at depth 2
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 2; Current Line: Tag = "APPLICATION-SW-COMPONENT-TYPE";
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:         attribute name: Tag; attribute value: "APPLICATION-SW-COMPONENT-TYPE"
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 2; Current Line: SHORT-NAME = "Component_1_new";
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:         attribute name: SHORT-NAME; attribute value: "Component_1_new"
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]: returning Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:get_value()]: attemting to get value at ComponentTypes.Component_1_new.SHORT-NAME in file at C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/example/working_dir/example.arxml
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]: attemting to get element at elementPath ComponentTypes.Component_1_new.SHORT-NAME. reload_file = True
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:     reloading file at self.file_path = C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/example/working_dir/example.arxml
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:load_file()]: attemting to load AUTOSAR-File at None
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:load_file()]: file path is valid. Loading contents into Parser...
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:load_file()]: Loading of file was successful. returning self.file_content_tree object
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]: input parameters are valid proceeding.
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: AUTOSAR, path: ComponentTypes.Component_1_new.SHORT-NAME
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:         found no match. expaning search to all subelements
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: AR-PACKAGES, path: ComponentTypes.Component_1_new.SHORT-NAME
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:         found AUTOSAR Path match: ComponentTypes
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: AR-PACKAGE, path: Component_1_new.SHORT-NAME
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:         found no match. expaning search to all subelements
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new.SHORT-NAME
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:         found no match. expaning search to all subelements
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: ELEMENTS, path: Component_1_new.SHORT-NAME
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:         found AUTOSAR Path match: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: APPLICATION-SW-COMPONENT-TYPE, path: SHORT-NAME
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]: found element. returning elementTree Object
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:get_value()]: found valid element. returning its value (Component_1_new)
  metadata_manager-MetadataManager - INFO - [MetadataManager:update_sysml_model()]: mapping file was successfully updated. proceeding
  metadata_manager-MetadataManager - INFO - [MetadataManager:update_sysml_model()]: mapping file was successfully updated. proceeding to consistency management
  metadata_manager-MetadataManager - INFO - [MetadataManager:manage_consistency()]: starting consistency management
  metadata_manager-MetadataManager - INFO - [MetadataManager:manage_consistency()]: successfully loaded mapping file
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_mapped_domain_elements()]: attemting to get domain model elements mapped to sysml model element with uuid 6e5e32b9-8e41-4e54-9543-dd5fe8eebbd2
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_mapped_domain_elements()]: input parameters are valid. Proceeding to get mapped elements
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_mapped_domain_elements()]:      found element with uuid = 668d65bb-7d14-41be-bedf-2cb87cf539e0
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_mapped_domain_elements()]:      found element with uuid = 2F094B4E-DE45-45C0-9371-C3B0629E7DF0
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_mapped_domain_elements()]: successfully generated mapped domain element list
+ metadata_manager-MetadataManager - INFO - [MetadataManager:value_conflict_exists()]: attemting to check if value conflict exists
+ metadata_manager-MetadataManager - INFO - [MetadataManager:value_conflict_exists()]: input parameters are valid. Proceeding to check for value conflicts
+ metadata_manager-MetadataManager - INFO - [MetadataManager:value_conflict_exists()]: No Value Conflict found
  metadata_manager-MetadataManager - INFO - [MetadataManager:manage_consistency()]: successfully generated Conflict list of length 0
- __main__-GUI - INFO - [GUI:select_file()]: attemting to select File
- __main__-GUI - INFO - [GUI:select_file()]: File selection successful with file C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/models/se_domain/example_drone_origin.sysml. Proceeding to load file by function call of GUI:load_file_content()
- __main__-GUI - INFO - [GUI:load_file_content()]: attemting to load file content of file C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/models/se_domain/example_drone_origin.sysml
- __main__-GUI - INFO - [GUI:load_file_content()]: trying to directly load file content into text_widget
- __main__-GUI - INFO - [GUI:load_file_content()]: content was loaded to text_widget successfully
- file_parser-SysmlParser - DEBUG - Given SysML model: package DroneExample {
-
-    public import SI::*; 
-    public import RequirementsDefinitions::*; 
-    public import PartDefinitions::*; 
-    public import PartDefinitions::Drone::*; // for concerns 
-    public import Views::*; // for views and viewpoints
-    public import ModelingMetadata::*; // includes the Metadata SysML Library (comes with SysMLv2)
-    public import ScalarValues::*; // Real, ... includes the ScalarValues SysML Library (comes with SysMLv2)
-    
-    item def Person;
-    item def Commands;
-
-    // PACKAGE APPROACH using metadata to tag certain elements 
-    metadata def PCBDesign{
- file_parser-SysmlParser - DEBUG - metadata def matches: ['PCBDesign', 'PCB']
- file_parser-SysmlParser - DEBUG - 'Metadata def' names: ['PCBDesign', 'PCB']
- __main__-GUI - INFO - [GUI:load_file_content()]: attemting to load file content of file C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/models/se_domain/example_drone_origin.sysml
- __main__-GUI - INFO - [GUI:load_file_content()]: trying to directly load file content into text_widget
- __main__-GUI - INFO - [GUI:load_file_content()]: content was loaded to text_widget successfully
- file_parser-SysmlParser - DEBUG - Given SysML model: package DroneExample {
-
-    public import SI::*; 
-    public import RequirementsDefinitions::*; 
-    public import PartDefinitions::*; 
-    public import PartDefinitions::Drone::*; // for concerns 
-    public import Views::*; // for views and viewpoints
-    public import ModelingMetadata::*; // includes the Metadata SysML Library (comes with SysMLv2)
-    public import ScalarValues::*; // Real, ... includes the ScalarValues SysML Library (comes with SysMLv2)
-    
-    item def Person;
-    item def Commands;
-
-    // PACKAGE APPROACH using metadata to tag certain elements 
-    metadata def PCBDesign{
- file_parser-SysmlParser - DEBUG - metadata def matches: ['PCBDesign', 'PCB']
- file_parser-SysmlParser - DEBUG - 'Metadata def' names: ['PCBDesign', 'PCB']
- __main__-GUI - INFO - [GUI:load_file_content()]: attemting to load file content of file C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/models/se_domain/example_drone_origin.sysml
- __main__-GUI - INFO - [GUI:load_file_content()]: trying to directly load file content into text_widget
- __main__-GUI - INFO - [GUI:load_file_content()]: content was loaded to text_widget successfully
- file_parser-SysmlParser - DEBUG - Given SysML model: package DroneExample {
-
-    public import SI::*; 
-    public import RequirementsDefinitions::*; 
-    public import PartDefinitions::*; 
-    public import PartDefinitions::Drone::*; // for concerns 
-    public import Views::*; // for views and viewpoints
-    public import ModelingMetadata::*; // includes the Metadata SysML Library (comes with SysMLv2)
-    public import ScalarValues::*; // Real, ... includes the ScalarValues SysML Library (comes with SysMLv2)
-    
-    item def Person;
-    item def Commands;
-
-    // PACKAGE APPROACH using metadata to tag certain elements 
-    metadata def PCBDesign{
- file_parser-SysmlParser - DEBUG - metadata def matches: ['PCBDesign', 'PCB']
- file_parser-SysmlParser - DEBUG - 'Metadata def' names: ['PCBDesign', 'PCB']
- __main__-GUI - INFO - [GUI:load_file_content()]: attemting to load file content of file C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/models/se_domain/example_drone_origin.sysml
- __main__-GUI - INFO - [GUI:load_file_content()]: trying to directly load file content into text_widget
- __main__-GUI - INFO - [GUI:load_file_content()]: content was loaded to text_widget successfully
- file_parser-SysmlParser - DEBUG - Given SysML model: package DroneExample {
-
-    public import SI::*; 
-    public import RequirementsDefinitions::*; 
-    public import PartDefinitions::*; 
-    public import PartDefinitions::Drone::*; // for concerns 
-    public import Views::*; // for views and viewpoints
-    public import ModelingMetadata::*; // includes the Metadata SysML Library (comes with SysMLv2)
-    public import ScalarValues::*; // Real, ... includes the ScalarValues SysML Library (comes with SysMLv2)
-    
-    item def Person;
-    item def Commands;
-
-    // PACKAGE APPROACH using metadata to tag certain elements 
-    metadata def PCBDesign{
- file_parser-SysmlParser - DEBUG - metadata def matches: ['PCBDesign', 'PCB']
- file_parser-SysmlParser - DEBUG - 'Metadata def' names: ['PCBDesign', 'PCB']
- __main__-GUI - INFO - [GUI:load_file_content()]: attemting to load file content of file C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/models/se_domain/example_drone_origin.sysml
- __main__-GUI - INFO - [GUI:load_file_content()]: trying to directly load file content into text_widget
- __main__-GUI - INFO - [GUI:load_file_content()]: content was loaded to text_widget successfully
- __main__-GUI - INFO - [GUI:select_file()]: attemting to select File
- __main__-GUI - INFO - [GUI:select_file()]: File selection successful with file C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/models/se_domain/example_drone_origin.sysml. Proceeding to load file by function call of GUI:load_file_content()
- __main__-GUI - INFO - [GUI:load_file_content()]: attemting to load file content of file C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/models/se_domain/example_drone_origin.sysml
- __main__-GUI - INFO - [GUI:load_file_content()]: trying to directly load file content into text_widget
- __main__-GUI - INFO - [GUI:load_file_content()]: content was loaded to text_widget successfully
- file_parser-SysmlParser - DEBUG - Given SysML model: package DroneExample {
-
-    public import SI::*; 
-    public import RequirementsDefinitions::*; 
-    public import PartDefinitions::*; 
-    public import PartDefinitions::Drone::*; // for concerns 
-    public import Views::*; // for views and viewpoints
-    public import ModelingMetadata::*; // includes the Metadata SysML Library (comes with SysMLv2)
-    public import ScalarValues::*; // Real, ... includes the ScalarValues SysML Library (comes with SysMLv2)
-    
-    item def Person;
-    item def Commands;
-
-    // PACKAGE APPROACH using metadata to tag certain elements 
-    metadata def PCBDesign{
- file_parser-SysmlParser - DEBUG - metadata def matches: ['PCBDesign', 'PCB']
- file_parser-SysmlParser - DEBUG - 'Metadata def' names: ['PCBDesign', 'PCB']
- __main__-GUI - INFO - [GUI:load_file_content()]: attemting to load file content of file C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/models/se_domain/example_drone_origin.sysml
- __main__-GUI - INFO - [GUI:load_file_content()]: trying to directly load file content into text_widget
- __main__-GUI - INFO - [GUI:load_file_content()]: content was loaded to text_widget successfully
+ __main__ - ERROR - Error while starting Docker Compose: Command '['docker-compose', '-f', './docker_master/docker-compose-master.yml', 'up', '--build', '-d']' returned non-zero exit status 1.
+ metadata_manager-MetadataManager - INFO - [MetadataManager:update_sysml_model()]: attemting to update sysml Model at C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/example/working_dir/sysml_file.sysml with mapping at ./example/working_dir/mapping.json
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]: input Parameter elementPath = AUTOSAR.Component_1.SHORT-NAME is valid. Looking for element at that location
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 0; Current Line: package AUTOSAR{
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     found AUTOSAR at depth 0
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: part def SWC{
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: attribute Tag: String;
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: attribute SHORT-NAME: String;
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: part PORTS{
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: part Port[0..*] : PORT;
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: }
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: part INTERNAL-BEHAVIOURS{
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: part INTERNAL-BEHAVIOUR[0..*] : INTERNAL-BEHAVIOUR;
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: }
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: }
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: part Component_1 : SWC{
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     found Component_1 at depth 1
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     reached target_block at depth 2
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 2; Current Line: Tag = "APPLICATION-SW-COMPONENT-TYPE";
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:         attribute name: Tag; attribute value: "APPLICATION-SW-COMPONENT-TYPE"
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 2; Current Line: SHORT-NAME = "Component_1_new";
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:         attribute name: SHORT-NAME; attribute value: "Component_1_new"
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]: returning Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:get_value()]: attemting to get value at ComponentTypes.Component_1_new.SHORT-NAME in file at C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/example/working_dir/example.arxml
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]: attemting to get element at elementPath ComponentTypes.Component_1_new.SHORT-NAME. reload_file = True
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:     reloading file at self.file_path = C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/example/working_dir/example.arxml
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:load_file()]: attemting to load AUTOSAR-File at None
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:load_file()]: file path is valid. Loading contents into Parser...
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:load_file()]: Loading of file was successful. returning self.file_content_tree object
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]: input parameters are valid proceeding.
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: AUTOSAR, path: ComponentTypes.Component_1_new.SHORT-NAME
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:         found no match. expaning search to all subelements
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: AR-PACKAGES, path: ComponentTypes.Component_1_new.SHORT-NAME
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:         found AUTOSAR Path match: ComponentTypes
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: AR-PACKAGE, path: Component_1_new.SHORT-NAME
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:         found no match. expaning search to all subelements
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new.SHORT-NAME
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:         found no match. expaning search to all subelements
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: ELEMENTS, path: Component_1_new.SHORT-NAME
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:         found no match. expaning search to all subelements
+ AUTOSAR_ParserAUTOSAR_Parser - DEBUG - looking for element with UUID = 2F094B4E-DE45-45C0-9371-C3B0629E7DF0
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]: found Element by uuid and not by elementPath. Updating Element Path 
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:get_AUTOSAR_only_path()]: attemting to get AUTOSAR_only_path of element
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:get_AUTOSAR_only_path()]: input parameters are valid. Proceeding to generate path
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:get_AUTOSAR_only_path()]: path generation was successful. returning /ComponentTypes/Component_1_ne
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:get_value()]: found valid element. returning its value (Component_1_ne)
+ metadata_manager-MetadataManager - INFO - [MetadataManager:update_change_log()]: updating changelog element with uuid = 2F094B4E-DE45-45C0-9371-C3B0629E7DF0 to Component_1_ne with reason: Updated by value change in Domain file
+ metadata_manager-MetadataManager - INFO - [MetadataManager:update_change_log()]: input parameters are valid. proceeding...
+ metadata_manager-MetadataManager - INFO - [MetadataManager:update_change_log()]: successfully updated change log element
+ metadata_manager-MetadataManager - INFO - [MetadataManager:update_sysml_model()]: mapping file was successfully updated. proceeding
+ metadata_manager-MetadataManager - INFO - [MetadataManager:update_sysml_model()]: mapping file was successfully updated. proceeding to consistency management
+ metadata_manager-MetadataManager - INFO - [MetadataManager:manage_consistency()]: starting consistency management
+ metadata_manager-MetadataManager - INFO - [MetadataManager:manage_consistency()]: successfully loaded mapping file
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_mapped_domain_elements()]: attemting to get domain model elements mapped to sysml model element with uuid 6e5e32b9-8e41-4e54-9543-dd5fe8eebbd2
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_mapped_domain_elements()]: input parameters are valid. Proceeding to get mapped elements
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_mapped_domain_elements()]:      found element with uuid = 668d65bb-7d14-41be-bedf-2cb87cf539e0
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_mapped_domain_elements()]:      found element with uuid = 2F094B4E-DE45-45C0-9371-C3B0629E7DF0
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_mapped_domain_elements()]: successfully generated mapped domain element list
+ metadata_manager-MetadataManager - INFO - [MetadataManager:value_conflict_exists()]: attemting to check if value conflict exists
+ metadata_manager-MetadataManager - INFO - [MetadataManager:value_conflict_exists()]: input parameters are valid. Proceeding to check for value conflicts
+ metadata_manager-MetadataManager - INFO - [MetadataManager:value_conflict_exists()]: value Conflict found at mapped domain element with uuid = 2F094B4E-DE45-45C0-9371-C3B0629E7DF0
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_max_write_prio_element()]: attemting to get max write prio element
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_max_write_prio_element()]: input parameters are valid. Proceeding to search for max write prio element
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_max_write_prio_element()]: successfully found max write prio element of write_prio = 2
+ metadata_manager-MetadataManager - INFO - [MetadataManager:manage_consistency()]: successfully generated Conflict list of length 1
+ __main__-GUI - INFO - [GUI:popup_conflict_manager()]: attempting to generate and open conflict manager
+ __main__-GUI - INFO - [GUI:popup_conflict_manager()]: input parameters are valid. Proceeding to generate TopLevel Window
+ __main__-GUI - INFO - [GUI:popup_conflict_manager()]: Generating Conflict entry frames
+ __main__-GUI - INFO - [GUI:generate_conflict_entry_frame()]: attemting to generate conflict entry frame
+ __main__-GUI - INFO - [GUI:generate_conflict_entry_frame()]: input parameters are Valid. Current Conflict sysml element uuid = 6e5e32b9-8e41-4e54-9543-dd5fe8eebbd2. Proceeding to generate Frame
+ __main__-GUI - INFO - [GUI:generate_conflict_entry_frame()]: Conflcit frame generation successful
+ __main__-GUI - INFO - [GUI:popup_conflict_manager()]: conflict manager creation successful
+ metadata_manager-MetadataManager - INFO - [MetadataManager:apply_value_changes_to_mapping()]: attemting to apply changes defined by selection List
+ metadata_manager-MetadataManager - INFO - [MetadataManager:apply_value_changes_to_mapping()]: input parameters are valid. proceeding to load mapping file
+ metadata_manager-MetadataManager - INFO - [MetadataManager:apply_value_changes_to_mapping()]: mapping file loaded successfully. proceeding to change values in mapping and domain files
+ metadata_manager-MetadataManager - INFO - [MetadataManager:apply_value_changes_to_mapping()]: value changes have been saved successfully
+ metadata_manager-MetadataManager - INFO - [MetadataManager:update_sysml_model()]: attemting to update sysml Model at C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/example/working_dir/sysml_file.sysml with mapping at ./example/working_dir/mapping.json
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]: input Parameter elementPath = AUTOSAR.Component_1.SHORT-NAME is valid. Looking for element at that location
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 0; Current Line: package AUTOSAR{
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     found AUTOSAR at depth 0
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: part def SWC{
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: attribute Tag: String;
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: attribute SHORT-NAME: String;
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: part PORTS{
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: part Port[0..*] : PORT;
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: }
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: part INTERNAL-BEHAVIOURS{
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: part INTERNAL-BEHAVIOUR[0..*] : INTERNAL-BEHAVIOUR;
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: }
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: }
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 1; Current Line: part Component_1 : SWC{
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     found Component_1 at depth 1
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     reached target_block at depth 2
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 2; Current Line: Tag = "APPLICATION-SW-COMPONENT-TYPE";
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:         attribute name: Tag; attribute value: "APPLICATION-SW-COMPONENT-TYPE"
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:     Depth: 2; Current Line: SHORT-NAME = "Component_1_new";
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]:         attribute name: SHORT-NAME; attribute value: "Component_1_new"
+ file_parser-SysmlParser - INFO - [SysmlParser:get_value()]: returning Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:get_value()]: attemting to get value at ComponentTypes.Component_1_ne.SHORT-NAME in file at C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/example/working_dir/example.arxml
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]: attemting to get element at elementPath ComponentTypes.Component_1_ne.SHORT-NAME. reload_file = True
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:     reloading file at self.file_path = C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/example/working_dir/example.arxml
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:load_file()]: attemting to load AUTOSAR-File at None
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:load_file()]: file path is valid. Loading contents into Parser...
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:load_file()]: Loading of file was successful. returning self.file_content_tree object
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]: input parameters are valid proceeding.
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: AUTOSAR, path: ComponentTypes.Component_1_ne.SHORT-NAME
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:         found no match. expaning search to all subelements
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: AR-PACKAGES, path: ComponentTypes.Component_1_ne.SHORT-NAME
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:         found AUTOSAR Path match: ComponentTypes
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: AR-PACKAGE, path: Component_1_ne.SHORT-NAME
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:         found no match. expaning search to all subelements
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_ne.SHORT-NAME
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:         found no match. expaning search to all subelements
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: ELEMENTS, path: Component_1_ne.SHORT-NAME
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:         found AUTOSAR Path match: Component_1_ne
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: APPLICATION-SW-COMPONENT-TYPE, path: SHORT-NAME
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]: found element. returning elementTree Object
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:get_value()]: found valid element. returning its value (Component_1_ne)
+ metadata_manager-MetadataManager - INFO - [MetadataManager:update_sysml_model()]: mapping file was successfully updated. proceeding
+ metadata_manager-MetadataManager - INFO - [MetadataManager:update_sysml_model()]: mapping file was successfully updated. proceeding to consistency management
+ metadata_manager-MetadataManager - INFO - [MetadataManager:manage_consistency()]: starting consistency management
+ metadata_manager-MetadataManager - INFO - [MetadataManager:manage_consistency()]: successfully loaded mapping file
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_mapped_domain_elements()]: attemting to get domain model elements mapped to sysml model element with uuid 6e5e32b9-8e41-4e54-9543-dd5fe8eebbd2
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_mapped_domain_elements()]: input parameters are valid. Proceeding to get mapped elements
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_mapped_domain_elements()]:      found element with uuid = 668d65bb-7d14-41be-bedf-2cb87cf539e0
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_mapped_domain_elements()]:      found element with uuid = 2F094B4E-DE45-45C0-9371-C3B0629E7DF0
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_mapped_domain_elements()]: successfully generated mapped domain element list
+ metadata_manager-MetadataManager - INFO - [MetadataManager:value_conflict_exists()]: attemting to check if value conflict exists
+ metadata_manager-MetadataManager - INFO - [MetadataManager:value_conflict_exists()]: input parameters are valid. Proceeding to check for value conflicts
+ metadata_manager-MetadataManager - INFO - [MetadataManager:value_conflict_exists()]: value Conflict found at mapped domain element with uuid = 2F094B4E-DE45-45C0-9371-C3B0629E7DF0
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_max_write_prio_element()]: attemting to get max write prio element
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_max_write_prio_element()]: input parameters are valid. Proceeding to search for max write prio element
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_max_write_prio_element()]: successfully found max write prio element of write_prio = 2
+ metadata_manager-MetadataManager - INFO - [MetadataManager:manage_consistency()]: successfully generated Conflict list of length 1
+ __main__-GUI - INFO - [GUI:popup_conflict_manager()]: attempting to generate and open conflict manager
+ __main__-GUI - INFO - [GUI:popup_conflict_manager()]: input parameters are valid. Proceeding to generate TopLevel Window
+ __main__-GUI - INFO - [GUI:popup_conflict_manager()]: Generating Conflict entry frames
+ __main__-GUI - INFO - [GUI:generate_conflict_entry_frame()]: attemting to generate conflict entry frame
+ __main__-GUI - INFO - [GUI:generate_conflict_entry_frame()]: input parameters are Valid. Current Conflict sysml element uuid = 6e5e32b9-8e41-4e54-9543-dd5fe8eebbd2. Proceeding to generate Frame
+ __main__-GUI - INFO - [GUI:generate_conflict_entry_frame()]: Conflcit frame generation successful
+ __main__-GUI - INFO - [GUI:popup_conflict_manager()]: conflict manager creation successful
+ metadata_manager-MetadataManager - INFO - [MetadataManager:apply_value_changes_to_mapping()]: attemting to apply changes defined by selection List
+ metadata_manager-MetadataManager - INFO - [MetadataManager:apply_value_changes_to_mapping()]: input parameters are valid. proceeding to load mapping file
+ metadata_manager-MetadataManager - INFO - [MetadataManager:apply_value_changes_to_mapping()]: mapping file loaded successfully. proceeding to change values in mapping and domain files
+ metadata_manager-MetadataManager - INFO - [MetadataManager:apply_value_changes_to_mapping()]: attemt to update model_element with uuid = 6e5e32b9-8e41-4e54-9543-dd5fe8eebbd2 to new value = Component_1_new
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_model_element()]: attemting to get model element with uuid = 6e5e32b9-8e41-4e54-9543-dd5fe8eebbd2
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_model_element()]: input parameters are valid. proceeding to search for element
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_model_element()]: found model Element with uuid = 6e5e32b9-8e41-4e54-9543-dd5fe8eebbd2
+ metadata_manager-MetadataManager - INFO - [MetadataManager:apply_value_changes_to_mapping()]: attemt to update model_element with uuid = 668d65bb-7d14-41be-bedf-2cb87cf539e0 to new value = Component_1_new
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_model_element()]: attemting to get model element with uuid = 668d65bb-7d14-41be-bedf-2cb87cf539e0
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_model_element()]: input parameters are valid. proceeding to search for element
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_model_element()]: found model Element with uuid = 668d65bb-7d14-41be-bedf-2cb87cf539e0
+ metadata_manager-MetadataManager - INFO - [MetadataManager:apply_value_changes_to_mapping()]: attemt to update model_element with uuid = 2F094B4E-DE45-45C0-9371-C3B0629E7DF0 to new value = Component_1_new
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_model_element()]: attemting to get model element with uuid = 2F094B4E-DE45-45C0-9371-C3B0629E7DF0
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_model_element()]: input parameters are valid. proceeding to search for element
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_model_element()]: found model Element with uuid = 2F094B4E-DE45-45C0-9371-C3B0629E7DF0
+ metadata_manager-MetadataManager - INFO - [MetadataManager:apply_value_changes_to_mapping()]:     updating value in mapping file because it was different before
+ metadata_manager-MetadataManager - INFO - [MetadataManager:update_change_log()]: updating changelog element with uuid = 2F094B4E-DE45-45C0-9371-C3B0629E7DF0 to Component_1_new with reason: Updated by consistency Management
+ metadata_manager-MetadataManager - INFO - [MetadataManager:update_change_log()]: input parameters are valid. proceeding...
+ metadata_manager-MetadataManager - INFO - [MetadataManager:update_change_log()]: successfully updated change log element
+ metadata_manager-MetadataManager - INFO - [MetadataManager:apply_value_changes_to_mapping()]:     updating value to domain file
+ metadata_manager-MetadataManager - INFO - [MetadataManager:apply_value_changes_to_mapping()]:      model with uuid 2F094B4E-DE45-45C0-9371-C3B0629E7DF0 has to be changed in its domain file and is part of domain AUTOSAR
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:load_file()]: attemting to load AUTOSAR-File at C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/example/working_dir/example.arxml
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:load_file()]: file path is valid. Loading contents into Parser...
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:load_file()]: Loading of file was successful. returning self.file_content_tree object
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:set_value()]: attemting to set value = Component_1_new to Element at ComponentTypes.Component_1_ne.SHORT-NAME at file C:/Studium/Bachelorarbeit/git/demonstrator_repo/SysMLv2-API/example/working_dir/example.arxml
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]: attemting to get element at elementPath ComponentTypes.Component_1_ne.SHORT-NAME. reload_file = False
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]: input parameters are valid proceeding.
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: AUTOSAR, path: ComponentTypes.Component_1_ne.SHORT-NAME
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:         found no match. expaning search to all subelements
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: AR-PACKAGES, path: ComponentTypes.Component_1_ne.SHORT-NAME
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:         found AUTOSAR Path match: ComponentTypes
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: AR-PACKAGE, path: Component_1_ne.SHORT-NAME
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:         found no match. expaning search to all subelements
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_ne.SHORT-NAME
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:         found no match. expaning search to all subelements
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: ELEMENTS, path: Component_1_ne.SHORT-NAME
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:         found AUTOSAR Path match: Component_1_ne
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: APPLICATION-SW-COMPONENT-TYPE, path: SHORT-NAME
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]: found element. returning elementTree Object
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:set_value()]: input parameters are valid. proceeding to set value...
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:get_AUTOSAR_only_path()]: attemting to get AUTOSAR_only_path of element
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:get_AUTOSAR_only_path()]: input parameters are valid. Proceeding to generate path
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:get_AUTOSAR_only_path()]: path generation was successful. returning /ComponentTypes/Component_1_ne
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]: attemting to get element at elementPath ComponentTypes.Component_1_new. reload_file = False
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]: input parameters are valid proceeding.
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: AUTOSAR, path: ComponentTypes.Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:         found no match. expaning search to all subelements
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: AR-PACKAGES, path: ComponentTypes.Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:         found AUTOSAR Path match: ComponentTypes
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: AR-PACKAGE, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: ELEMENTS, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: APPLICATION-SW-COMPONENT-TYPE, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: APPLICATION-SW-COMPONENT-TYPE, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: COMPOSITION-SW-COMPONENT-TYPE, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SWC-IMPLEMENTATION, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SWC-IMPLEMENTATION, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: PORTS, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: INTERNAL-BEHAVIORS, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SYMBOL-PROPS, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: PORTS, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: INTERNAL-BEHAVIORS, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SYMBOL-PROPS, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: COMPONENTS, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: CONNECTORS, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: CODE-DESCRIPTORS, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: BEHAVIOR-REF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: CODE-DESCRIPTORS, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: BEHAVIOR-REF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: P-PORT-PROTOTYPE, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: R-PORT-PROTOTYPE, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SWC-INTERNAL-BEHAVIOR, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SYMBOL, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: R-PORT-PROTOTYPE, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SWC-INTERNAL-BEHAVIOR, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SYMBOL, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SW-COMPONENT-PROTOTYPE, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SW-COMPONENT-PROTOTYPE, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SW-COMPONENT-PROTOTYPE, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: ASSEMBLY-SW-CONNECTOR, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: CODE, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: CODE, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: PROVIDED-COM-SPECS, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: PROVIDED-INTERFACE-TREF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: REQUIRED-COM-SPECS, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: REQUIRED-INTERFACE-TREF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: EVENTS, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: EXPLICIT-INTER-RUNNABLE-VARIABLES, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: HANDLE-TERMINATION-AND-RESTART, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: RUNNABLES, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SUPPORTS-MULTIPLE-INSTANTIATION, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: REQUIRED-COM-SPECS, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: REQUIRED-INTERFACE-TREF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: EVENTS, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: HANDLE-TERMINATION-AND-RESTART, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: RUNNABLES, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SUPPORTS-MULTIPLE-INSTANTIATION, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: TYPE-TREF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: TYPE-TREF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: TYPE-TREF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: PROVIDER-IREF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: REQUESTER-IREF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: ARTIFACT-DESCRIPTORS, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: ARTIFACT-DESCRIPTORS, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: NONQUEUED-SENDER-COM-SPEC, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: MODE-SWITCH-RECEIVER-COM-SPEC, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SWC-MODE-SWITCH-EVENT, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: TIMING-EVENT, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: TIMING-EVENT, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: VARIABLE-DATA-PROTOTYPE, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: RUNNABLE-ENTITY, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: RUNNABLE-ENTITY, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: RUNNABLE-ENTITY, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: NONQUEUED-RECEIVER-COM-SPEC, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: DATA-RECEIVED-EVENT, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: RUNNABLE-ENTITY, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: CONTEXT-COMPONENT-REF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: TARGET-P-PORT-REF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: CONTEXT-COMPONENT-REF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: TARGET-R-PORT-REF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: AUTOSAR-ENGINEERING-OBJECT, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: AUTOSAR-ENGINEERING-OBJECT, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: DATA-ELEMENT-REF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: HANDLE-OUT-OF-RANGE, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: USES-END-TO-END-PROTECTION, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: INIT-VALUE, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: ENHANCED-MODE-API, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: MODE-GROUP-REF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SUPPORTS-ASYNCHRONOUS-MODE-SWITCH, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: START-ON-EVENT-REF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: ACTIVATION, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: MODE-IREFS, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: START-ON-EVENT-REF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: PERIOD, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: START-ON-EVENT-REF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: PERIOD, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SW-DATA-DEF-PROPS, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: TYPE-TREF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: INIT-VALUE, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: MINIMUM-START-INTERVAL, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: CAN-BE-INVOKED-CONCURRENTLY, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: MODE-ACCESS-POINTS, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SYMBOL, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: MINIMUM-START-INTERVAL, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: CAN-BE-INVOKED-CONCURRENTLY, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SYMBOL, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: WRITTEN-LOCAL-VARIABLES, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: MINIMUM-START-INTERVAL, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: CAN-BE-INVOKED-CONCURRENTLY, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: DATA-SEND-POINTS, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: READ-LOCAL-VARIABLES, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SYMBOL, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: DATA-ELEMENT-REF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: HANDLE-OUT-OF-RANGE, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: USES-END-TO-END-PROTECTION, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: ALIVE-TIMEOUT, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: ENABLE-UPDATE, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: FILTER, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: HANDLE-NEVER-RECEIVED, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: INIT-VALUE, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: START-ON-EVENT-REF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: DATA-IREF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: MINIMUM-START-INTERVAL, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: CAN-BE-INVOKED-CONCURRENTLY, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: DATA-RECEIVE-POINT-BY-ARGUMENTS, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SYMBOL, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-LABEL, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: CATEGORY, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-LABEL, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: CATEGORY, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: NUMERICAL-VALUE-SPECIFICATION, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: MODE-IREF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: MODE-IREF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SW-DATA-DEF-PROPS-VARIANTS, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: NUMERICAL-VALUE-SPECIFICATION, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: MODE-ACCESS-POINT, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: VARIABLE-ACCESS, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: VARIABLE-ACCESS, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: VARIABLE-ACCESS, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: DATA-FILTER-TYPE, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: NUMERICAL-VALUE-SPECIFICATION, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: CONTEXT-R-PORT-REF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: TARGET-DATA-ELEMENT-REF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: VARIABLE-ACCESS, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: VALUE, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: CONTEXT-PORT-REF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: CONTEXT-MODE-DECLARATION-GROUP-PROTOTYPE-REF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: TARGET-MODE-DECLARATION-REF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: CONTEXT-PORT-REF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: CONTEXT-MODE-DECLARATION-GROUP-PROTOTYPE-REF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: TARGET-MODE-DECLARATION-REF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SW-DATA-DEF-PROPS-CONDITIONAL, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: VALUE, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: MODE-GROUP-IREF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: ACCESSED-VARIABLE, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: ACCESSED-VARIABLE, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: ACCESSED-VARIABLE, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: VALUE, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SHORT-NAME, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: ACCESSED-VARIABLE, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: SW-CALIBRATION-ACCESS, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: R-MODE-GROUP-IN-ATOMIC-SWC-INSTANCE-REF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: LOCAL-VARIABLE-REF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: AUTOSAR-VARIABLE-IREF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: LOCAL-VARIABLE-REF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: AUTOSAR-VARIABLE-IREF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: CONTEXT-R-PORT-REF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: TARGET-MODE-GROUP-REF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: PORT-PROTOTYPE-REF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: TARGET-DATA-PROTOTYPE-REF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: PORT-PROTOTYPE-REF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:find_elem()]:    current_elem: TARGET-DATA-PROTOTYPE-REF, path: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - ERROR - [AUTOSAR_Parser:find_elem()]: element not found (search_list is empty)
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:set_value()]:     target element is a short_name_tag at path /ComponentTypes/Component_1_ne. All Occurences of that name in the file will be changed to the new name: Component_1_new
+ AUTOSAR_ParserAUTOSAR_Parser - INFO - [AUTOSAR_Parser:set_value()]: value has been set successfully
+ metadata_manager-MetadataManager - INFO - [MetadataManager:apply_value_changes_to_mapping()]: value changes have been saved successfully
+ __main__-GUI - INFO - [GUI:popup_mapping_editor()]: attemtpting to generate and open mapping editor
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_Mappings_elements()]: attemting to get mappings elements
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_Mappings_elements()]: mapping loaded successfully. Proceeding to generate list of mappings
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_model_element()]: attemting to get model element with uuid = 6e5e32b9-8e41-4e54-9543-dd5fe8eebbd2
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_model_element()]: input parameters are valid. proceeding to search for element
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_model_element()]: found model Element with uuid = 6e5e32b9-8e41-4e54-9543-dd5fe8eebbd2
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_model_element()]: attemting to get model element with uuid = 668d65bb-7d14-41be-bedf-2cb87cf539e0
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_model_element()]: input parameters are valid. proceeding to search for element
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_model_element()]: found model Element with uuid = 668d65bb-7d14-41be-bedf-2cb87cf539e0
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_model_element()]: attemting to get model element with uuid = 6e5e32b9-8e41-4e54-9543-dd5fe8eebbd2
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_model_element()]: input parameters are valid. proceeding to search for element
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_model_element()]: found model Element with uuid = 6e5e32b9-8e41-4e54-9543-dd5fe8eebbd2
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_model_element()]: attemting to get model element with uuid = 2F094B4E-DE45-45C0-9371-C3B0629E7DF0
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_model_element()]: input parameters are valid. proceeding to search for element
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_model_element()]: found model Element with uuid = 2F094B4E-DE45-45C0-9371-C3B0629E7DF0
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_Mappings_elements()]: Mappings elements list generated successfully
+ __main__-GUI - INFO - [GUI:popup_mapping_editor()]: generate mapping entry frames
+ __main__-GUI - INFO - [GUI:generate_mapping_entry_frame()]: attemting to generate mapping entry frames
+ __main__-GUI - INFO - [GUI:generate_mapping_entry_frame()]: input parameters are valid. Mapping is target_element = 6e5e32b9-8e41-4e54-9543-dd5fe8eebbd2, source_element = 668d65bb-7d14-41be-bedf-2cb87cf539e0. Proceeding to generate Frame
+ __main__-GUI - INFO - [GUI:generate_mapping_entry_frame()]: mapping entry frame generation successful
+ __main__-GUI - INFO - [GUI:generate_mapping_entry_frame()]: attemting to generate mapping entry frames
+ __main__-GUI - INFO - [GUI:generate_mapping_entry_frame()]: input parameters are valid. Mapping is target_element = 6e5e32b9-8e41-4e54-9543-dd5fe8eebbd2, source_element = 2F094B4E-DE45-45C0-9371-C3B0629E7DF0. Proceeding to generate Frame
+ __main__-GUI - INFO - [GUI:generate_mapping_entry_frame()]: mapping entry frame generation successful
+ __main__-GUI - INFO - [GUI:popup_mapping_editor()]: mapping editor generation succesful
+ metadata_manager-MetadataManager - INFO - [MetadataManager:remove_mapping()]: attemting to remove mapping with target_uuid = 6e5e32b9-8e41-4e54-9543-dd5fe8eebbd2 and source_uuid = 668d65bb-7d14-41be-bedf-2cb87cf539e0
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_mapped_domain_elements()]: attemting to get domain model elements mapped to sysml model element with uuid 6e5e32b9-8e41-4e54-9543-dd5fe8eebbd2
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_mapped_domain_elements()]: input parameters are valid. Proceeding to get mapped elements
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_mapped_domain_elements()]:      found element with uuid = 668d65bb-7d14-41be-bedf-2cb87cf539e0
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_mapped_domain_elements()]:      found element with uuid = 2F094B4E-DE45-45C0-9371-C3B0629E7DF0
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_mapped_domain_elements()]: successfully generated mapped domain element list
+ metadata_manager-MetadataManager - INFO - [MetadataManager:remove_mapping()]: input parameters are valid. Proceeding to remove mapping
+ metadata_manager-MetadataManager - WARNING - [MetadataManager:remove_mapping()]: There are other elements mapped to the sysml_element -> skipping deletion of sysml_element
+ metadata_manager-MetadataManager - INFO - [MetadataManager:delete_change_log_element()]: removing Element with uuid = 668d65bb-7d14-41be-bedf-2cb87cf539e0
+ metadata_manager-MetadataManager - INFO - [MetadataManager:delete_change_log_element()]: input parameter valid. proceeding...
+ metadata_manager-MetadataManager - INFO - [MetadataManager:delete_change_log_element()]: deletion was succesful
+ metadata_manager-MetadataManager - INFO - [MetadataManager:remove_mapping()]: mapping removed successfully
+ metadata_manager-MetadataManager - INFO - [MetadataManager:remove_mapping()]: attemting to remove mapping with target_uuid = 6e5e32b9-8e41-4e54-9543-dd5fe8eebbd2 and source_uuid = 2F094B4E-DE45-45C0-9371-C3B0629E7DF0
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_mapped_domain_elements()]: attemting to get domain model elements mapped to sysml model element with uuid 6e5e32b9-8e41-4e54-9543-dd5fe8eebbd2
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_mapped_domain_elements()]: input parameters are valid. Proceeding to get mapped elements
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_mapped_domain_elements()]:      found element with uuid = 2F094B4E-DE45-45C0-9371-C3B0629E7DF0
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_mapped_domain_elements()]: successfully generated mapped domain element list
+ metadata_manager-MetadataManager - INFO - [MetadataManager:remove_mapping()]: input parameters are valid. Proceeding to remove mapping
+ metadata_manager-MetadataManager - INFO - [MetadataManager:delete_change_log_element()]: removing Element with uuid = 6e5e32b9-8e41-4e54-9543-dd5fe8eebbd2
+ metadata_manager-MetadataManager - INFO - [MetadataManager:delete_change_log_element()]: input parameter valid. proceeding...
+ metadata_manager-MetadataManager - INFO - [MetadataManager:delete_change_log_element()]: deletion was succesful
+ metadata_manager-MetadataManager - INFO - [MetadataManager:delete_change_log_element()]: removing Element with uuid = 2F094B4E-DE45-45C0-9371-C3B0629E7DF0
+ metadata_manager-MetadataManager - INFO - [MetadataManager:delete_change_log_element()]: input parameter valid. proceeding...
+ metadata_manager-MetadataManager - INFO - [MetadataManager:delete_change_log_element()]: deletion was succesful
+ metadata_manager-MetadataManager - INFO - [MetadataManager:remove_mapping()]: mapping removed successfully
+ __main__-GUI - INFO - [GUI:popup_mapping_editor()]: attemtpting to generate and open mapping editor
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_Mappings_elements()]: attemting to get mappings elements
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_Mappings_elements()]: mapping loaded successfully. Proceeding to generate list of mappings
+ metadata_manager-MetadataManager - WARNING - [MetadataManager:get_Mappings_elements()]: mappings_elements list is empty: no 'Mappings' entries available in mapping.json
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_Mappings_elements()]: Mappings elements list generated successfully
+ __main__-GUI - INFO - [GUI:popup_mapping_editor()]: generate mapping entry frames
+ __main__-GUI - INFO - [GUI:popup_mapping_editor()]: mapping editor generation succesful
+ __main__-GUI - INFO - [GUI:popup_mapping_editor()]: attemtpting to generate and open mapping editor
+ metadata_manager-MetadataManager - INFO - [MetadataManager:get_change_log()]: returning change_log
+ __main__-GUI - INFO - [GUI:popup_mapping_editor()]: generate mapping entry frames
+ __main__-GUI - INFO - [GUI:popup_mapping_editor()]: mapping editor generation succesful

@@ -157,6 +157,7 @@ class AUTOSAR_Parser:
                 if AUTOSAR_model_element["parent_uuid"]==uuid:
                     xml_tag_path = AUTOSAR_model_element["elementPath"].split(".")[AUTOSAR_model_element["index"]:]
                     AUTOSAR_model_element["elementPath"]=f"{AUTOSAR_only_path}.{".".join(xml_tag_path)}"
+                    AUTOSAR_model_element["index"]=len(AUTOSAR_only_path.split("."))
                     lookup_str = ""
                     for xml_tag in xml_tag_path[:-1]:   
                         lookup_str = f"{lookup_str}{schema}{xml_tag}."
